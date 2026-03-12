@@ -70,18 +70,19 @@ def _result_text(
     estimated_vocab_size: int,
     confidence: float,
 ) -> str:
+    confidence_pct = round(float(confidence) * 100)
     return (
         "Результат теста словарного запаса\n\n"
-        f"Примерный объём словаря: ≈ {estimated_vocab_size}\n"
-        f"Оценка уровня: {estimated_vocab_band}\n"
-        f"Уверенность оценки: {confidence:.2f}\n\n"
-        "Следующий шаг — пройти полный level test."
+        f"Пассивный словарный запас: ≈ {estimated_vocab_size} слов\n"
+        f"Уверенность оценки: {confidence_pct}% — статистическая уверенность оценки "
+        "(зависит от числа и разброса ответов)."
     )
 
 
 def _result_keyboard() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(
         inline_keyboard=[
+            [InlineKeyboardButton(text="Разбор ответов", callback_data="vocab_review")],
             [InlineKeyboardButton(text="🔁 Пройти заново", callback_data="vocab:start")],
         ]
     )
