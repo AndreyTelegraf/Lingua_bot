@@ -6,8 +6,6 @@ from aiogram.types import CallbackQuery
 from app.container import container
 from services.vocab_runtime.review import render_review
 
-router = Router()
-
 
 async def _load_latest_attempt_answers(telegram_user_id: int) -> list[dict]:
     if container.db is None:
@@ -15,37 +13,30 @@ async def _load_latest_attempt_answers(telegram_user_id: int) -> list[dict]:
 
     conn = container.db
 
-    user_row = await (await conn.execute(
-        """
+    user_row = await (await conn.execute("""
         SELECT id
         FROM users
         WHERE telegram_user_id = ?
         ORDER BY id DESC
         LIMIT 1
-        """,
-        (telegram_user_id,),
-    )).fetchone()
+        """, (telegram_user_id,))).fetchone()
 
     if user_row is None:
         return []
 
-    attempt_row = await (await conn.execute(
-        """
+    attempt_row = await (await conn.execute("""
         SELECT id
         FROM vocab_attempts
         WHERE user_id = ?
           AND id IN (SELECT DISTINCT attempt_id FROM vocab_answers)
         ORDER BY id DESC
         LIMIT 1
-        """,
-        (int(user_row["id"]),),
-    )).fetchone()
+        """, (int(user_row["id"]),))).fetchone()
 
     if attempt_row is None:
         return []
 
-    cursor = await conn.execute(
-        """
+    cursor = await conn.execute("""
         SELECT
             va.id AS answer_id,
             vi.lemma AS word,
@@ -58,23 +49,20 @@ async def _load_latest_attempt_answers(telegram_user_id: int) -> list[dict]:
         LEFT JOIN vocab_choices vc ON vc.id = va.selected_choice_id
         WHERE va.attempt_id = ?
         ORDER BY va.id ASC
-        """,
-        (int(attempt_row["id"]),),
-    )
+        """, (int(attempt_row["id"]),))
     rows = await cursor.fetchall()
     return [dict(r) for r in rows]
 
 
-@router.callback_query(F.data == "vocab_review")
-async def vocab_review(cb: CallbackQuery):
-    answers = await _load_latest_attempt_answers(int(cb.from_user.id))
+def build_vocab_review_router() -> Router:
+    router = Router(name="vocab_review")
 
-    if not answers:
-        text = "Разбор ответов пока недоступен."
-    else:
-        text = render_review(answers)
+    @router.callback_query(F.data == "vocab_review")
+    async def vocab_review(cb: CallbackQuery):
+        answers = await _load_latest_attempt_answers(int(cb.from_user.id))
+        text = "Разбор ответов пока недоступен." if not answers else render_review(answers)
+        if cb.message is not None:
+            await cb.message.answer(text)
+        await cb.answer()
 
-    if cb.message is not None:
-        await cb.message.answer(text)
-
-    await cb.answer()
+    return router
