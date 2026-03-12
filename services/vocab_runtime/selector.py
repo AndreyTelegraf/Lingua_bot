@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import sqlite3
 
 
@@ -23,22 +24,47 @@ def _has_column(conn: sqlite3.Connection, *, table: str, column: str) -> bool:
     return False
 
 
-def get_next_item(conn: sqlite3.Connection, *, attempt_id: int) -> sqlite3.Row | None:
-    conn.row_factory = sqlite3.Row
+def _cooldown_sec() -> int:
+    raw = os.getenv("VOCAB_RUNTIME_ITEM_COOLDOWN_SEC", "86400").strip()
+    try:
+        value = int(raw)
+    except ValueError:
+        return 86400
+    return max(0, value)
 
+
+def _build_selector_sql(conn: sqlite3.Connection, *, apply_cooldown: bool) -> tuple[str, tuple[object, ...]]:
     select_cols = "vi.id, vi.lemma, vi.question_text, vi.correct_answer, vi.pos"
     join_sql = ""
+    where_parts = [
+        "vi.is_active = 1",
+    ]
     order_parts: list[str] = []
+    params: list[object] = []
 
     has_exposure = (
         _table_exists(conn, table="vocab_item_exposure")
         and _has_column(conn, table="vocab_item_exposure", column="item_id")
         and _has_column(conn, table="vocab_item_exposure", column="shown_count")
     )
+
+    has_last_shown_at = has_exposure and _has_column(
+        conn,
+        table="vocab_item_exposure",
+        column="last_shown_at",
+    )
+
     if has_exposure:
         select_cols += ", COALESCE(vie.shown_count, 0) AS global_shown_count"
         join_sql = "LEFT JOIN vocab_item_exposure vie ON vie.item_id = vi.id"
         order_parts.append("COALESCE(vie.shown_count, 0) ASC")
+
+    cooldown_sec = _cooldown_sec()
+    if apply_cooldown and has_last_shown_at and cooldown_sec > 0:
+        where_parts.append(
+            "(vie.last_shown_at IS NULL OR vie.last_shown_at <= datetime('now', '-' || ? || ' seconds'))"
+        )
+        params.append(cooldown_sec)
 
     if _has_column(conn, table="vocab_items", column="freq_rank"):
         order_parts.extend(
@@ -50,22 +76,45 @@ def get_next_item(conn: sqlite3.Connection, *, attempt_id: int) -> sqlite3.Row |
 
     order_parts.append("vi.id ASC")
     order_sql = "ORDER BY " + ", ".join(order_parts)
+    where_sql = " AND ".join(where_parts)
 
-    placeholders = ", ".join("?" for _ in _SHOWN_EVENT_TYPES)
     sql = f'''
         SELECT {select_cols}
         FROM vocab_items vi
         {join_sql}
-        WHERE vi.is_active = 1
-          AND vi.id NOT IN (
-            SELECT item_id
-            FROM vocab_attempt_events
-            WHERE attempt_id = ?
-              AND event_type IN ({placeholders})
-          )
+        WHERE {where_sql}
+        {{shown_filter_sql}}
         {order_sql}
         LIMIT 1
     '''
+    return sql, tuple(params)
 
-    params = (attempt_id, *_SHOWN_EVENT_TYPES)
-    return conn.execute(sql, params).fetchone()
+
+def get_next_item(conn: sqlite3.Connection, *, attempt_id: int) -> sqlite3.Row | None:
+    conn.row_factory = sqlite3.Row
+
+    placeholders = ", ".join("?" for _ in _SHOWN_EVENT_TYPES)
+    shown_filter_sql = f'''
+      AND vi.id NOT IN (
+        SELECT item_id
+        FROM vocab_attempt_events
+        WHERE attempt_id = ?
+          AND event_type IN ({placeholders})
+      )
+    '''
+
+    shown_params = (attempt_id, *_SHOWN_EVENT_TYPES)
+
+    sql_cooldown, base_params_cooldown = _build_selector_sql(conn, apply_cooldown=True)
+    row = conn.execute(
+        sql_cooldown.replace("{shown_filter_sql}", shown_filter_sql),
+        (*base_params_cooldown, *shown_params),
+    ).fetchone()
+    if row is not None:
+        return row
+
+    sql_fallback, base_params_fallback = _build_selector_sql(conn, apply_cooldown=False)
+    return conn.execute(
+        sql_fallback.replace("{shown_filter_sql}", shown_filter_sql),
+        (*base_params_fallback, *shown_params),
+    ).fetchone()

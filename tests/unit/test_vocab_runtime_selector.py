@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import sqlite3
 
 from services.vocab_runtime.repo import log_event, start_attempt
@@ -78,6 +79,55 @@ def _conn_with_exposure() -> sqlite3.Connection:
             (3, 10),
         ],
     )
+    return conn
+
+
+def _conn_with_cooldown() -> sqlite3.Connection:
+    conn = sqlite3.connect(":memory:")
+    _base_schema(conn)
+    conn.execute("CREATE TABLE vocab_items (id INTEGER PRIMARY KEY AUTOINCREMENT, lemma TEXT NOT NULL, question_text TEXT NOT NULL, correct_answer TEXT NOT NULL, pos TEXT, freq_rank INTEGER, is_active INTEGER NOT NULL DEFAULT 0)")
+    conn.execute("CREATE TABLE vocab_item_exposure (item_id INTEGER PRIMARY KEY, shown_count INTEGER NOT NULL DEFAULT 0, last_shown_at TEXT)")
+    conn.executemany(
+        "INSERT INTO vocab_items (id, lemma, question_text, correct_answer, pos, freq_rank, is_active) VALUES (?, ?, ?, ?, ?, ?, ?)",
+        [
+            (1, "recently_shown_best", "q1", "a1", "noun", 100, 1),
+            (2, "older_ok", "q2", "a2", "noun", 400, 1),
+            (3, "never_shown", "q3", "a3", "noun", 900, 1),
+        ],
+    )
+    conn.execute(
+        "INSERT INTO vocab_item_exposure (item_id, shown_count, last_shown_at) VALUES (?, ?, datetime('now'))",
+        (1, 0),
+    )
+    conn.execute(
+        "INSERT INTO vocab_item_exposure (item_id, shown_count, last_shown_at) VALUES (?, ?, datetime('now', '-2 days'))",
+        (2, 0),
+    )
+    conn.commit()
+    return conn
+
+
+def _conn_with_cooldown_fallback_only() -> sqlite3.Connection:
+    conn = sqlite3.connect(":memory:")
+    _base_schema(conn)
+    conn.execute("CREATE TABLE vocab_items (id INTEGER PRIMARY KEY AUTOINCREMENT, lemma TEXT NOT NULL, question_text TEXT NOT NULL, correct_answer TEXT NOT NULL, pos TEXT, freq_rank INTEGER, is_active INTEGER NOT NULL DEFAULT 0)")
+    conn.execute("CREATE TABLE vocab_item_exposure (item_id INTEGER PRIMARY KEY, shown_count INTEGER NOT NULL DEFAULT 0, last_shown_at TEXT)")
+    conn.executemany(
+        "INSERT INTO vocab_items (id, lemma, question_text, correct_answer, pos, freq_rank, is_active) VALUES (?, ?, ?, ?, ?, ?, ?)",
+        [
+            (1, "cooldown_blocked_top", "q1", "a1", "noun", 100, 1),
+            (2, "cooldown_blocked_mid", "q2", "a2", "noun", 200, 1),
+        ],
+    )
+    conn.execute(
+        "INSERT INTO vocab_item_exposure (item_id, shown_count, last_shown_at) VALUES (?, ?, datetime('now'))",
+        (1, 0),
+    )
+    conn.execute(
+        "INSERT INTO vocab_item_exposure (item_id, shown_count, last_shown_at) VALUES (?, ?, datetime('now'))",
+        (2, 1),
+    )
+    conn.commit()
     return conn
 
 
@@ -187,10 +237,60 @@ def test_get_next_item_prefers_lower_global_exposure_before_freq_rank() -> None:
         assert second is not None
         assert str(second["lemma"]) == "mid"
 
-        third = None
         log_event(conn, attempt_id=attempt_id, user_id=42, item_id=int(second["id"]), event_type="shown")
         third = get_next_item(conn, attempt_id=attempt_id)
         assert third is not None
         assert str(third["lemma"]) == "burned"
     finally:
         conn.close()
+
+
+def test_get_next_item_applies_soft_cooldown_when_possible() -> None:
+    old = os.environ.get("VOCAB_RUNTIME_ITEM_COOLDOWN_SEC")
+    os.environ["VOCAB_RUNTIME_ITEM_COOLDOWN_SEC"] = "86400"
+    conn = _conn_with_cooldown()
+    try:
+        attempt_id = start_attempt(conn, user_id=42)
+        first = get_next_item(conn, attempt_id=attempt_id)
+        assert first is not None
+        assert str(first["lemma"]) == "older_ok"
+    finally:
+        conn.close()
+        if old is None:
+            os.environ.pop("VOCAB_RUNTIME_ITEM_COOLDOWN_SEC", None)
+        else:
+            os.environ["VOCAB_RUNTIME_ITEM_COOLDOWN_SEC"] = old
+
+
+def test_get_next_item_falls_back_when_cooldown_empties_pool() -> None:
+    old = os.environ.get("VOCAB_RUNTIME_ITEM_COOLDOWN_SEC")
+    os.environ["VOCAB_RUNTIME_ITEM_COOLDOWN_SEC"] = "86400"
+    conn = _conn_with_cooldown_fallback_only()
+    try:
+        attempt_id = start_attempt(conn, user_id=42)
+        first = get_next_item(conn, attempt_id=attempt_id)
+        assert first is not None
+        assert str(first["lemma"]) == "cooldown_blocked_top"
+    finally:
+        conn.close()
+        if old is None:
+            os.environ.pop("VOCAB_RUNTIME_ITEM_COOLDOWN_SEC", None)
+        else:
+            os.environ["VOCAB_RUNTIME_ITEM_COOLDOWN_SEC"] = old
+
+
+def test_get_next_item_can_disable_cooldown_via_env_zero() -> None:
+    old = os.environ.get("VOCAB_RUNTIME_ITEM_COOLDOWN_SEC")
+    os.environ["VOCAB_RUNTIME_ITEM_COOLDOWN_SEC"] = "0"
+    conn = _conn_with_cooldown()
+    try:
+        attempt_id = start_attempt(conn, user_id=42)
+        first = get_next_item(conn, attempt_id=attempt_id)
+        assert first is not None
+        assert str(first["lemma"]) == "recently_shown_best"
+    finally:
+        conn.close()
+        if old is None:
+            os.environ.pop("VOCAB_RUNTIME_ITEM_COOLDOWN_SEC", None)
+        else:
+            os.environ["VOCAB_RUNTIME_ITEM_COOLDOWN_SEC"] = old
