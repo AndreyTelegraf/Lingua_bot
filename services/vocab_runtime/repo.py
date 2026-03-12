@@ -4,7 +4,12 @@ import json
 import sqlite3
 from typing import Any
 
-from services.vocab_runtime.scoring import build_scoring_input_from_events, score_attempt_v1
+from services.vocab_runtime.scoring import (
+    build_scoring_input_from_events,
+    extract_scoring_rows_from_event_rows,
+    score_attempt_v1,
+)
+
 
 
 def _table_exists(conn: sqlite3.Connection, *, table: str) -> bool:
@@ -50,6 +55,42 @@ def _attempt_correct_from_row(row: sqlite3.Row) -> int:
     if "correct_count" in row.keys():
         return int(row["correct_count"] or 0)
     return 0
+
+def _load_scoring_rows(conn: sqlite3.Connection, *, attempt_id: int) -> list[dict[str, Any]]:
+    conn.row_factory = sqlite3.Row
+
+    has_answers = _table_exists(conn, table="vocab_answers")
+    has_items = _table_exists(conn, table="vocab_items")
+
+    if has_answers and has_items:
+        rows = conn.execute(
+            """
+            SELECT
+                va.is_correct AS is_correct,
+                vi.bin_name AS bin_name,
+                vi.freq_rank AS freq_rank
+            FROM vocab_answers va
+            LEFT JOIN vocab_items vi ON vi.id = va.item_id
+            WHERE va.attempt_id = ?
+            ORDER BY va.id ASC
+            """,
+            (attempt_id,),
+        ).fetchall()
+        return [dict(row) for row in rows]
+
+    rows = conn.execute(
+        """
+        SELECT event_type, payload_json
+        FROM vocab_attempt_events
+        WHERE attempt_id = ?
+        ORDER BY id ASC
+        """,
+        (attempt_id,),
+    ).fetchall()
+
+    plain_rows = [dict(row) for row in rows]
+    return extract_scoring_rows_from_event_rows(plain_rows)
+
 
 
 def _summary_text(

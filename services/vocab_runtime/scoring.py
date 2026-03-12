@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import Any
+import json
 
 
 @dataclass(slots=True)
@@ -94,17 +95,14 @@ def score_attempt_v1(inp: ScoringInput) -> dict[str, Any]:
     if freq_points:
         avg_freq = sum(freq_points) / len(freq_points)
         difficulty_score = min(1.0, avg_freq / 6000.0)
-        spread_score = (
-            min(1.0, (max(freq_points) - min(freq_points)) / 5000.0)
-            if len(freq_points) >= 2 else 0.0
-        )
+        spread_score = min(1.0, (max(freq_points) - min(freq_points)) / 5000.0) if len(freq_points) >= 2 else 0.0
     else:
         difficulty_score = 0.0
         spread_score = 0.0
 
     sample_score = min(1.0, total / 24.0)
-
     raw_accuracy = correct / total
+
     confidence = (
         0.35 * sample_score
         + 0.20 * coverage_score
@@ -127,7 +125,13 @@ def score_attempt_v1(inp: ScoringInput) -> dict[str, Any]:
     }
 
 
-def build_scoring_input_from_events(rows: list[dict[str, Any]], *, attempt_id: int, total_questions: int, correct_answers: int) -> ScoringInput:
+def build_scoring_input_from_events(
+    rows: list[dict[str, Any]],
+    *,
+    attempt_id: int,
+    total_questions: int,
+    correct_answers: int,
+) -> ScoringInput:
     weighted_hits: dict[str, float] = {}
     freq_points: list[int] = []
 
@@ -165,3 +169,57 @@ def build_scoring_input_from_events(rows: list[dict[str, Any]], *, attempt_id: i
         bin_stats=weighted_hits,
         freq_points=freq_points,
     )
+
+
+def extract_scoring_rows_from_event_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    out: list[dict[str, Any]] = []
+
+    for row in rows:
+        event_type = str(row.get("event_type") or "")
+        payload_raw = row.get("payload_json")
+
+        if not payload_raw:
+            continue
+
+        try:
+            payload = json.loads(payload_raw)
+        except Exception:
+            continue
+
+        if not isinstance(payload, dict):
+            continue
+
+        candidate: dict[str, Any] = {}
+
+        if "is_correct" in payload:
+            candidate["is_correct"] = payload.get("is_correct")
+
+        for key in ("bin_name", "freq_rank"):
+            if key in payload:
+                candidate[key] = payload.get(key)
+
+        item_obj = payload.get("item")
+        if isinstance(item_obj, dict):
+            candidate.setdefault("bin_name", item_obj.get("bin_name"))
+            candidate.setdefault("freq_rank", item_obj.get("freq_rank"))
+
+        current_question = payload.get("current_question")
+        if isinstance(current_question, dict):
+            candidate.setdefault("bin_name", current_question.get("bin_name"))
+            candidate.setdefault("freq_rank", current_question.get("freq_rank"))
+
+        selected_choice = payload.get("selected_choice")
+        if isinstance(selected_choice, dict):
+            candidate.setdefault("is_correct", selected_choice.get("is_correct"))
+
+        if candidate.get("is_correct") is None and event_type in {"answer_submitted", "answer", "dont_know"}:
+            # explicit fallback only for answer-like events
+            if payload.get("answer_kind") == "dont_know":
+                candidate["is_correct"] = 0
+
+        if candidate.get("is_correct") is None:
+            continue
+
+        out.append(candidate)
+
+    return out
