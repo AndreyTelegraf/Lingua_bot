@@ -1,0 +1,8 @@
+external_key,lemma,pos,level,freq_rank,ru_gloss,notes
+pol-0001,casa,noun,A1,300,дом,ok
+pol-0002,igreja,noun,A1,900,церковь,church
+pol-0003,lisboa,noun,A1,1000,лиссабон,proper noun
+pol-0004,ônibus,noun,A1,1200,автобус,brazilianism
+pol-0005,machimbombo,noun,A1,1200,автобус,africanism
+pol-0006,trabalhar,verb,A1,980,работать,ok
+pol-0007,cedo,adverb,A2,2600,рано,ok
