@@ -235,9 +235,16 @@ class VocabSelector:
 
     async def pick_next_item(self, *, attempt_id: int) -> aiosqlite.Row | None:
         state = await self.repo.get_selector_state(attempt_id=attempt_id)
+        recent_attempt_ids = await self.repo.get_recent_attempt_item_ids(
+            attempt_id=attempt_id,
+            previous_attempts_limit=1,
+        )
+
+        shown_only_excluded = state.shown_item_ids[:]
+        strict_excluded = list(dict.fromkeys(shown_only_excluded + recent_attempt_ids))
 
         strict_rows = await self._fetch_candidates(
-            excluded_ids=state.shown_item_ids[:],
+            excluded_ids=strict_excluded,
             apply_cooldown=True,
         )
         picked = await self._pick_from_rows(rows=strict_rows, state=state)
@@ -245,7 +252,28 @@ class VocabSelector:
             return picked
 
         relaxed_rows = await self._fetch_candidates(
-            excluded_ids=state.shown_item_ids[:],
+            excluded_ids=strict_excluded,
             apply_cooldown=False,
         )
-        return await self._pick_from_rows(rows=relaxed_rows, state=state)
+        picked = await self._pick_from_rows(rows=relaxed_rows, state=state)
+        if picked is not None:
+            return picked
+
+        if recent_attempt_ids:
+            fallback_strict_rows = await self._fetch_candidates(
+                excluded_ids=shown_only_excluded,
+                apply_cooldown=True,
+            )
+            picked = await self._pick_from_rows(rows=fallback_strict_rows, state=state)
+            if picked is not None:
+                return picked
+
+            fallback_relaxed_rows = await self._fetch_candidates(
+                excluded_ids=shown_only_excluded,
+                apply_cooldown=False,
+            )
+            picked = await self._pick_from_rows(rows=fallback_relaxed_rows, state=state)
+            if picked is not None:
+                return picked
+
+        return None

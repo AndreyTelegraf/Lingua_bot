@@ -306,6 +306,41 @@ class VocabRepository:
 
         await self.conn.commit()
 
+    async def get_recent_attempt_item_ids(
+        self,
+        *,
+        attempt_id: int,
+        previous_attempts_limit: int = 1,
+    ) -> list[int]:
+        cursor = await self.conn.execute(
+            """
+            SELECT DISTINCT va.item_id
+            FROM vocab_answers va
+            WHERE va.attempt_id IN (
+                SELECT prev.id
+                FROM vocab_attempts prev
+                WHERE prev.user_id = (
+                    SELECT user_id
+                    FROM vocab_attempts
+                    WHERE id = ?
+                )
+                  AND prev.id < ?
+                  AND EXISTS (
+                      SELECT 1
+                      FROM vocab_answers va2
+                      WHERE va2.attempt_id = prev.id
+                  )
+                ORDER BY prev.id DESC
+                LIMIT ?
+            )
+            ORDER BY va.item_id ASC
+            """,
+            (attempt_id, attempt_id, previous_attempts_limit),
+        )
+        rows = await cursor.fetchall()
+        return [int(row["item_id"]) for row in rows if row["item_id"] is not None]
+
+
     async def get_selector_state(self, *, attempt_id: int) -> SelectorRuntimeState:
         cursor = await self.conn.execute(
             """
