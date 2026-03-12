@@ -1,31 +1,35 @@
 from __future__ import annotations
 
+def _emoji(answer: dict) -> str:
+    if answer.get("answer_kind") == "dont_know":
+        return "🟨"
+    if answer.get("is_correct"):
+        return "🟩"
+    return "🟥"
+
+def _answers_grid(payload: dict) -> str:
+    answers = payload.get("answers") or []
+    if not answers:
+        return ""
+    return "".join(_emoji(a) for a in answers)
+
+def _confidence_text(conf: float) -> str:
+    pct = round(float(conf) * 100)
+    return f"{pct}% — статистическая уверенность оценки (зависит от числа ответов)"
 
 def present_finished(payload: dict[str, object]) -> str:
-    summary_text = payload.get("summary_text")
-    if summary_text:
-        return str(summary_text)
-
-    total = int(payload.get("total_questions", 0))
-    correct = int(payload.get("correct_answers", 0))
-    accuracy_pct = float(payload.get("accuracy_pct", 0.0))
-    accuracy_text = str(int(accuracy_pct)) if float(accuracy_pct).is_integer() else str(accuracy_pct)
-
-    lines = [f"Vocab finished. Score: {correct}/{total} ({accuracy_text}%)"]
-
-    estimated_vocab_size = payload.get("estimated_vocab_size")
-    estimated_vocab_band = payload.get("estimated_vocab_band")
-    confidence = payload.get("confidence")
-
-    if estimated_vocab_size is not None:
-        lines.append(f"Estimated vocabulary: ~{int(estimated_vocab_size)} words")
-    if estimated_vocab_band:
-        lines.append(f"Band: {estimated_vocab_band}")
-    if confidence is not None:
-        lines.append(f"Confidence: {round(float(confidence) * 100)}%")
-
+    size = payload.get("estimated_vocab_size")
+    conf = payload.get("confidence")
+    lines: list[str] = []
+    if size is not None:
+        lines.append(f"Пассивный словарный запас: ≈ {int(size)} слов")
+    if conf is not None:
+        lines.append(f"Уверенность оценки: {_confidence_text(float(conf))}")
+    grid = _answers_grid(payload)
+    if grid:
+        lines.append("")
+        lines.append(grid)
     return "\n".join(lines)
-
 
 def present_question(view: dict[str, object]) -> str:
     return str(view["text"])

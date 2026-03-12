@@ -73,8 +73,8 @@ def test_handler_layer_happy_path() -> None:
         step2 = handle_vocab_callback(conn=conn, fsm=fsm, callback_data='vocab:pick:201')
         assert step2['ok'] is True
         assert step2['answer_result']['is_correct'] is False
-        assert step2['text'] == 'Vocab finished. Score: 1/2 (50%)\nEstimated vocabulary: ~700 words\nBand: <1.5k\nConfidence: 20%'
-        assert step2['keyboard'] == []
+        assert step2['text'] == 'Пассивный словарный запас: ≈ 700 слов\nУверенность оценки: 20% — статистическая уверенность оценки (зависит от числа ответов)'
+        assert step2['keyboard'] != []
         assert step2['finished'] is True
     finally:
         conn.close()

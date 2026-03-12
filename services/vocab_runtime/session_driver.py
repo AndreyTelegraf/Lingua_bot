@@ -4,6 +4,7 @@ import sqlite3
 
 from services.vocab_runtime.aiogram_glue import handle_callback, handle_start
 from services.vocab_runtime.presenter import present_finished, present_question
+from services.vocab_runtime.keyboards import finished_keyboard
 
 
 def start_session_view(conn: sqlite3.Connection, *, user_id: int) -> dict[str, object]:
@@ -13,7 +14,7 @@ def start_session_view(conn: sqlite3.Connection, *, user_id: int) -> dict[str, o
         return {'fsm': out['fsm'], 'text': 'No questions available.', 'keyboard': []}
 
     if 'status' in view and view['status'] == 'finished':
-        return {'fsm': out['fsm'], 'text': present_finished(view), 'keyboard': []}
+        return {'fsm': out['fsm'], 'text': present_finished(view), 'keyboard': finished_keyboard(), 'finished': True}
 
     return {
         'fsm': out['fsm'],
@@ -44,7 +45,8 @@ def answer_session_view(
             'fsm': out['fsm'],
             'answer_result': out['answer_result'],
             'text': present_finished(next_view),
-            'keyboard': [],
+            'keyboard': finished_keyboard(),
+            'finished': True,
         }
 
     return {

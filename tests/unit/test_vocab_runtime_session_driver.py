@@ -66,7 +66,7 @@ def test_session_driver_happy_path() -> None:
 
         step2 = answer_session_view(conn, fsm=fsm, callback_data='vocab:pick:201')
         assert step2['answer_result']['is_correct'] is False
-        assert step2['text'] == 'Vocab finished. Score: 1/2 (50%)\nEstimated vocabulary: ~700 words\nBand: <1.5k\nConfidence: 20%'
-        assert step2['keyboard'] == []
+        assert step2['text'] == 'Пассивный словарный запас: ≈ 700 слов\nУверенность оценки: 20% — статистическая уверенность оценки (зависит от числа ответов)'
+        assert step2['keyboard'] != []
     finally:
         conn.close()

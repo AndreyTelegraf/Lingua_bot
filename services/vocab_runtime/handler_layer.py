@@ -10,14 +10,14 @@ def handle_vocab_start(*, conn, user_id: int) -> dict[str, object]:
         'fsm': out['fsm'],
         'text': out['text'],
         'keyboard': out['keyboard'],
-        'finished': False,
+        'finished': bool(out.get('finished', False)),
     }
 
 
 def handle_vocab_callback(*, conn, fsm, callback_data: str) -> dict[str, object]:
     out = run_vocab_callback(conn=conn, fsm=fsm, callback_data=callback_data)
 
-    finished = out.get('text', '').startswith('Vocab finished.')
+    finished = bool(out.get('finished', False))
     return {
         'ok': True,
         'fsm': out['fsm'],
