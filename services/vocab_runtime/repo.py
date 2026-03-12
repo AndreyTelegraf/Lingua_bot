@@ -4,6 +4,57 @@ import sqlite3
 from typing import Any
 
 
+def _table_exists(conn: sqlite3.Connection, *, table: str) -> bool:
+    row = conn.execute(
+        "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ? LIMIT 1",
+        (table,),
+    ).fetchone()
+    return row is not None
+
+
+def _has_column(conn: sqlite3.Connection, *, table: str, column: str) -> bool:
+    rows = conn.execute(f"PRAGMA table_info({table})").fetchall()
+    for row in rows:
+        name = row[1] if not isinstance(row, sqlite3.Row) else row["name"]
+        if str(name) == column:
+            return True
+    return False
+
+
+def _bump_item_exposure(conn: sqlite3.Connection, *, item_id: int) -> None:
+    if not _table_exists(conn, table="vocab_item_exposure"):
+        return
+    if not _has_column(conn, table="vocab_item_exposure", column="item_id"):
+        return
+    if not _has_column(conn, table="vocab_item_exposure", column="shown_count"):
+        return
+
+    has_last_shown_at = _has_column(conn, table="vocab_item_exposure", column="last_shown_at")
+
+    if has_last_shown_at:
+        conn.execute(
+            '''
+            INSERT INTO vocab_item_exposure (item_id, shown_count, last_shown_at)
+            VALUES (?, 1, CURRENT_TIMESTAMP)
+            ON CONFLICT(item_id) DO UPDATE SET
+                shown_count = vocab_item_exposure.shown_count + 1,
+                last_shown_at = CURRENT_TIMESTAMP
+            ''',
+            (item_id,),
+        )
+        return
+
+    conn.execute(
+        '''
+        INSERT INTO vocab_item_exposure (item_id, shown_count)
+        VALUES (?, 1)
+        ON CONFLICT(item_id) DO UPDATE SET
+            shown_count = vocab_item_exposure.shown_count + 1
+        ''',
+        (item_id,),
+    )
+
+
 def start_attempt(conn: sqlite3.Connection, *, user_id: int) -> int:
     conn.row_factory = sqlite3.Row
     row = conn.execute(
@@ -48,6 +99,8 @@ def log_event(
             "UPDATE vocab_attempts SET total_questions = COALESCE(total_questions, 0) + 1, correct_answers = COALESCE(correct_answers, 0) + CASE WHEN COALESCE(?, 0) = 1 THEN 1 ELSE 0 END WHERE id = ?",
             (is_correct, attempt_id),
         )
+    if event_type in ("shown", "question_shown"):
+        _bump_item_exposure(conn, item_id=item_id)
     conn.commit()
     return int(cur.lastrowid)
 
