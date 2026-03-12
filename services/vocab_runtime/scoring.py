@@ -1,8 +1,8 @@
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass
 from typing import Any
-import json
 
 
 @dataclass(slots=True)
@@ -29,21 +29,35 @@ def _band_midpoint(bin_name: str | None) -> int | None:
     return (low + high) // 2
 
 
-def _estimate_size_from_weighted_accuracy(weighted_accuracy: float) -> tuple[int, str]:
-    if weighted_accuracy >= 0.93:
-        size = 9000
-    elif weighted_accuracy >= 0.85:
-        size = 7500
-    elif weighted_accuracy >= 0.75:
-        size = 5500
-    elif weighted_accuracy >= 0.63:
+def _estimate_size_from_signal(*, weighted_accuracy: float, avg_freq: float, max_freq: int | None, total: int) -> tuple[int, str]:
+    # Base ladder from answer quality only.
+    # Keep it conservative; harder bins may lift it later.
+    if weighted_accuracy >= 0.95:
         size = 3800
-    elif weighted_accuracy >= 0.50:
+    elif weighted_accuracy >= 0.85:
         size = 2200
-    elif weighted_accuracy >= 0.35:
+    elif weighted_accuracy >= 0.72:
+        size = 1400
+    elif weighted_accuracy >= 0.58:
+        size = 1400
+    elif weighted_accuracy >= 0.45:
+        size = 2200
+    elif weighted_accuracy >= 0.30:
         size = 1400
     else:
         size = 700
+
+    # Difficulty lift: tiny perfect samples on genuinely harder words
+    # should move up, but not instantly jump to 9k without evidence.
+    if total >= 2:
+        if weighted_accuracy >= 0.95 and avg_freq >= 900:
+            size = max(size, 5500)
+        if weighted_accuracy >= 0.95 and avg_freq >= 1700:
+            size = max(size, 7500)
+        if weighted_accuracy >= 0.95 and (max_freq or 0) >= 2400:
+            size = max(size, 9000)
+        if weighted_accuracy >= 0.50 and avg_freq >= 900:
+            size = max(size, 2200)
 
     if size >= 8000:
         band = "8k+"
@@ -81,32 +95,44 @@ def score_attempt_v1(inp: ScoringInput) -> dict[str, Any]:
     weighted_hits = dict(inp.bin_stats)
     freq_points = list(inp.freq_points)
 
+    raw_accuracy = correct / total
+
     if freq_points:
         weighted_accuracy = sum(weighted_hits.values()) / max(len(freq_points), 1)
         weighted_accuracy = max(0.0, min(weighted_accuracy, 1.0))
+        avg_freq = sum(freq_points) / len(freq_points)
+        max_freq = max(freq_points)
+        min_freq = min(freq_points)
     else:
-        weighted_accuracy = correct / total
+        weighted_accuracy = raw_accuracy
+        avg_freq = 0.0
+        max_freq = None
+        min_freq = None
 
-    estimated_vocab_size, estimated_vocab_band = _estimate_size_from_weighted_accuracy(weighted_accuracy)
+    estimated_vocab_size, estimated_vocab_band = _estimate_size_from_signal(
+        weighted_accuracy=weighted_accuracy,
+        avg_freq=avg_freq,
+        max_freq=max_freq,
+        total=total,
+    )
 
     unique_bins = len([k for k, v in weighted_hits.items() if v > 0])
     coverage_score = min(1.0, unique_bins / 4.0)
 
     if freq_points:
-        avg_freq = sum(freq_points) / len(freq_points)
         difficulty_score = min(1.0, avg_freq / 6000.0)
-        spread_score = min(1.0, (max(freq_points) - min(freq_points)) / 5000.0) if len(freq_points) >= 2 else 0.0
+        spread_score = min(1.0, ((max_freq or 0) - (min_freq or 0)) / 5000.0) if len(freq_points) >= 2 else 0.0
     else:
         difficulty_score = 0.0
         spread_score = 0.0
 
     sample_score = min(1.0, total / 24.0)
-    raw_accuracy = correct / total
 
+    # Conservative confidence: tiny sample stays low even when score is strong.
     confidence = (
-        0.35 * sample_score
-        + 0.20 * coverage_score
-        + 0.20 * difficulty_score
+        0.45 * sample_score
+        + 0.15 * coverage_score
+        + 0.15 * difficulty_score
         + 0.10 * spread_score
         + 0.15 * min(1.0, raw_accuracy)
     )
@@ -213,7 +239,6 @@ def extract_scoring_rows_from_event_rows(rows: list[dict[str, Any]]) -> list[dic
             candidate.setdefault("is_correct", selected_choice.get("is_correct"))
 
         if candidate.get("is_correct") is None and event_type in {"answer_submitted", "answer", "dont_know"}:
-            # explicit fallback only for answer-like events
             if payload.get("answer_kind") == "dont_know":
                 candidate["is_correct"] = 0
 

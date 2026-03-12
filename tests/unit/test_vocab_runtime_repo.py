@@ -51,11 +51,11 @@ def test_repo_happy_path() -> None:
         assert stats["correct_answers"] == 1
         assert stats["wrong_answers"] == 0
         assert stats["accuracy_pct"] == 100.0
-        assert stats["estimated_vocab_size"] == 9000
-        assert stats["estimated_vocab_band"] == "8k+"
-        assert stats["confidence"] == 0.23
+        assert stats["estimated_vocab_size"] == 3800
+        assert stats["estimated_vocab_band"] == "2.5k-4k"
+        assert stats["confidence"] == 0.22
         assert stats["scoring_model"] == "runtime_scoring_v1"
-        assert "Estimated vocabulary: ~9000 words" in stats["summary_text"]
+        assert "Estimated vocabulary: ~3800 words" in stats["summary_text"]
 
         finish_attempt(conn, attempt_id=attempt_id, completion_reason="items_exhausted")
         stats2 = get_attempt_stats(conn, attempt_id=attempt_id)
@@ -85,7 +85,7 @@ def test_persist_finished_result_writes_snapshot_and_mode_result() -> None:
         assert stats["completion_reason"] == "items_exhausted"
         assert stats["estimated_vocab_size"] == 2200
         assert stats["estimated_vocab_band"] == "1.5k-2.5k"
-        assert stats["confidence"] == 0.35
+        assert stats["confidence"] == 0.33
 
         row = conn.execute(
             "SELECT step_index, estimated_vocab_band, estimated_vocab_size, confidence, snapshot_payload_json FROM vocab_result_snapshots WHERE attempt_id = ?",

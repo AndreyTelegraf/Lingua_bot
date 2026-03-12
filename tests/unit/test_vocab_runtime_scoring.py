@@ -64,9 +64,9 @@ def test_scoring_v1_single_easy_correct_golden() -> None:
         correct_answers=1,
     )
     out = score_attempt_v1(inp)
-    assert out["estimated_vocab_size"] == 9000
-    assert out["estimated_vocab_band"] == "8k+"
-    assert out["confidence"] == 0.23
+    assert out["estimated_vocab_size"] == 3800
+    assert out["estimated_vocab_band"] == "2.5k-4k"
+    assert out["confidence"] == 0.22
 
 
 def test_scoring_v1_mixed_two_answers_golden() -> None:
@@ -82,16 +82,32 @@ def test_scoring_v1_mixed_two_answers_golden() -> None:
     out = score_attempt_v1(inp)
     assert out["estimated_vocab_size"] == 2200
     assert out["estimated_vocab_band"] == "1.5k-2.5k"
-    assert out["confidence"] == 0.21
+    assert out["confidence"] == 0.2
 
 
-def test_scoring_v1_two_correct_answers_golden() -> None:
+def test_scoring_v1_two_correct_answers_easy_plus_mid_not_beginner() -> None:
     inp = build_scoring_input_from_events(
         [
             {"is_correct": 1, "bin_name": "1K", "freq_rank": 500},
             {"is_correct": 1, "bin_name": "2K", "freq_rank": 1500},
         ],
         attempt_id=3,
+        total_questions=2,
+        correct_answers=2,
+    )
+    out = score_attempt_v1(inp)
+    assert out["estimated_vocab_size"] == 5500
+    assert out["estimated_vocab_band"] == "4k-6k"
+    assert out["confidence"] == 0.31
+
+
+def test_scoring_v1_two_correct_answers_mid_plus_hard_pushes_high() -> None:
+    inp = build_scoring_input_from_events(
+        [
+            {"is_correct": 1, "bin_name": "2K", "freq_rank": 1100},
+            {"is_correct": 1, "bin_name": "5K", "freq_rank": 2400},
+        ],
+        attempt_id=4,
         total_questions=2,
         correct_answers=2,
     )
