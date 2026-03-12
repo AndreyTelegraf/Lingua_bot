@@ -4,6 +4,8 @@ import json
 import sqlite3
 from typing import Any
 
+from services.vocab_runtime.scoring import build_scoring_input_from_events, score_attempt_v1
+
 
 def _table_exists(conn: sqlite3.Connection, *, table: str) -> bool:
     row = conn.execute(
@@ -32,169 +34,22 @@ def _format_accuracy_pct(correct: int, total: int) -> float:
     return round((correct / total) * 100.0, 1)
 
 
-def _band_midpoint(bin_name: str | None) -> int | None:
-    if not bin_name:
-        return None
-    raw = str(bin_name).strip().upper()
-    if raw.endswith("K"):
-        try:
-            n = int(raw[:-1])
-        except ValueError:
-            return None
-        low = max((n - 1) * 1000 + 1, 1)
-        high = n * 1000
-        return (low + high) // 2
-    return None
 
 
-def _row_get(row: sqlite3.Row | None, key: str, default: object = None) -> object:
-    if row is None:
-        return default
-    if key not in row.keys():
-        return default
-    return row[key]
+def _attempt_total_from_row(row: sqlite3.Row) -> int:
+    if "total_questions" in row.keys():
+        return int(row["total_questions"] or 0)
+    if "questions_answered" in row.keys():
+        return int(row["questions_answered"] or 0)
+    return 0
 
 
-def _estimate_vocab_metrics(conn: sqlite3.Connection, *, attempt_id: int, correct: int, total: int) -> dict[str, object]:
-    if total <= 0:
-        return {
-            "estimated_vocab_size": None,
-            "estimated_vocab_band": "insufficient_data",
-            "confidence": 0.0,
-            "scoring_model": "runtime_scoring_v1",
-            "coverage_score": 0.0,
-            "difficulty_score": 0.0,
-            "spread_score": 0.0,
-            "sample_score": 0.0,
-            "weighted_bin_hits": {},
-        }
-
-    conn.row_factory = sqlite3.Row
-
-    has_bin_name = _has_column(conn, table="vocab_items", column="bin_name")
-    has_freq_rank = _has_column(conn, table="vocab_items", column="freq_rank")
-
-    select_bits = [
-        "vae.is_correct AS is_correct",
-    ]
-    if has_bin_name:
-        select_bits.append("vi.bin_name AS bin_name")
-    else:
-        select_bits.append("NULL AS bin_name")
-    if has_freq_rank:
-        select_bits.append("vi.freq_rank AS freq_rank")
-    else:
-        select_bits.append("NULL AS freq_rank")
-
-    sql = f"""
-        SELECT {", ".join(select_bits)}
-        FROM vocab_attempt_events vae
-        LEFT JOIN vocab_items vi ON vi.id = vae.item_id
-        WHERE vae.attempt_id = ?
-          AND vae.event_type = 'answer'
-        ORDER BY vae.id ASC
-    """
-    rows = conn.execute(sql, (attempt_id,)).fetchall()
-
-    weighted_hits: dict[str, float] = {}
-    weighted_correct_sum = 0.0
-    weighted_total_sum = 0.0
-    freq_points: list[int] = []
-    bin_seen: set[str] = set()
-
-    for row in rows:
-        is_correct = 1 if int(_row_get(row, "is_correct", 0) or 0) == 1 else 0
-        bin_name = _row_get(row, "bin_name")
-        freq_rank = _row_get(row, "freq_rank")
-
-        midpoint = None
-        if freq_rank is not None:
-            try:
-                midpoint = int(freq_rank)
-            except (TypeError, ValueError):
-                midpoint = None
-        if midpoint is None:
-            midpoint = _band_midpoint(str(bin_name) if bin_name is not None else None)
-
-        if midpoint is None:
-            midpoint = 3500
-
-        weight = max(1.0, 10000.0 / float(midpoint))
-        weighted_total_sum += weight
-        weighted_correct_sum += weight * is_correct
-        freq_points.append(int(midpoint))
-
-        if bin_name is not None:
-            key = str(bin_name)
-            bin_seen.add(key)
-            weighted_hits[key] = round(weighted_hits.get(key, 0.0) + (weight * is_correct), 3)
-
-    raw_accuracy = correct / total
-    weighted_accuracy = weighted_correct_sum / weighted_total_sum if weighted_total_sum > 0 else raw_accuracy
-
-    score = (0.65 * raw_accuracy) + (0.35 * weighted_accuracy)
-
-    if score >= 0.93:
-        estimated_vocab_size = 9000
-    elif score >= 0.85:
-        estimated_vocab_size = 7500
-    elif score >= 0.75:
-        estimated_vocab_size = 5500
-    elif score >= 0.63:
-        estimated_vocab_size = 3800
-    elif score >= 0.50:
-        estimated_vocab_size = 2200
-    elif score >= 0.35:
-        estimated_vocab_size = 1400
-    else:
-        estimated_vocab_size = 700
-
-    if estimated_vocab_size >= 8000:
-        band = "8k+"
-    elif estimated_vocab_size >= 6000:
-        band = "6k-8k"
-    elif estimated_vocab_size >= 4000:
-        band = "4k-6k"
-    elif estimated_vocab_size >= 2500:
-        band = "2.5k-4k"
-    elif estimated_vocab_size >= 1500:
-        band = "1.5k-2.5k"
-    else:
-        band = "<1.5k"
-
-    unique_bins = len(bin_seen)
-    coverage_score = min(1.0, unique_bins / 4.0)
-
-    if freq_points:
-        avg_freq = sum(freq_points) / len(freq_points)
-        difficulty_score = min(1.0, avg_freq / 6000.0)
-        spread_score = min(1.0, (max(freq_points) - min(freq_points)) / 5000.0) if len(freq_points) >= 2 else 0.0
-    else:
-        difficulty_score = 0.0
-        spread_score = 0.0
-
-    sample_score = min(1.0, total / 24.0)
-
-    confidence = (
-        0.30 * sample_score
-        + 0.20 * coverage_score
-        + 0.15 * difficulty_score
-        + 0.10 * spread_score
-        + 0.25 * min(1.0, score)
-    )
-    confidence = round(max(0.15, min(confidence, 0.95)), 2)
-
-    return {
-        "estimated_vocab_size": estimated_vocab_size,
-        "estimated_vocab_band": band,
-        "confidence": confidence,
-        "scoring_model": "runtime_scoring_v1",
-        "coverage_score": round(coverage_score, 3),
-        "difficulty_score": round(difficulty_score, 3),
-        "spread_score": round(spread_score, 3),
-        "sample_score": round(sample_score, 3),
-        "weighted_bin_hits": weighted_hits,
-    }
+def _attempt_correct_from_row(row: sqlite3.Row) -> int:
+    if "correct_answers" in row.keys():
+        return int(row["correct_answers"] or 0)
+    if "correct_count" in row.keys():
+        return int(row["correct_count"] or 0)
+    return 0
 
 
 def _summary_text(
@@ -214,26 +69,9 @@ def _summary_text(
     if estimated_vocab_band:
         parts.append(f"Band: {estimated_vocab_band}")
     if confidence is not None:
-        conf_pct = round(float(confidence) * 100)
-        parts.append(f"Confidence: {conf_pct}%")
+        parts.append(f"Confidence: {round(float(confidence) * 100)}%")
 
     return "\n".join(parts)
-
-
-def _attempt_total_from_row(row: sqlite3.Row) -> int:
-    if "total_questions" in row.keys():
-        return int(row["total_questions"] or 0)
-    if "questions_answered" in row.keys():
-        return int(row["questions_answered"] or 0)
-    return 0
-
-
-def _attempt_correct_from_row(row: sqlite3.Row) -> int:
-    if "correct_answers" in row.keys():
-        return int(row["correct_answers"] or 0)
-    if "correct_count" in row.keys():
-        return int(row["correct_count"] or 0)
-    return 0
 
 
 def _bump_item_exposure(conn: sqlite3.Connection, *, item_id: int) -> None:
@@ -420,7 +258,32 @@ def get_attempt_stats(conn: sqlite3.Connection, *, attempt_id: int) -> dict[str,
     wrong_answers = max(total_questions - correct_answers, 0)
     accuracy_pct = _format_accuracy_pct(correct_answers, total_questions)
 
-    estimate = _estimate_vocab_metrics(conn, attempt_id=attempt_id, correct=correct_answers, total=total_questions)
+    has_bin_name = _has_column(conn, table="vocab_items", column="bin_name")
+    has_freq_rank = _has_column(conn, table="vocab_items", column="freq_rank")
+
+    select_bits = ["vae.is_correct AS is_correct"]
+    select_bits.append("vi.bin_name AS bin_name" if has_bin_name else "NULL AS bin_name")
+    select_bits.append("vi.freq_rank AS freq_rank" if has_freq_rank else "NULL AS freq_rank")
+
+    event_rows = conn.execute(
+        f"""
+        SELECT {', '.join(select_bits)}
+        FROM vocab_attempt_events vae
+        LEFT JOIN vocab_items vi ON vi.id = vae.item_id
+        WHERE vae.attempt_id = ?
+          AND vae.event_type = 'answer'
+        ORDER BY vae.id ASC
+        """,
+        (attempt_id,),
+    ).fetchall()
+
+    scoring_input = build_scoring_input_from_events(
+        [dict(r) for r in event_rows],
+        attempt_id=attempt_id,
+        total_questions=total_questions,
+        correct_answers=correct_answers,
+    )
+    estimate = score_attempt_v1(scoring_input)
 
     estimated_vocab_size = (
         row["estimated_vocab_size"]

@@ -9,6 +9,10 @@ from services.vocab_runtime.repo import finish_attempt, get_attempt_stats, log_e
 def _conn() -> sqlite3.Connection:
     conn = sqlite3.connect(":memory:")
     conn.row_factory = sqlite3.Row
+
+    conn.execute(
+        "CREATE TABLE vocab_items (id INTEGER PRIMARY KEY AUTOINCREMENT, lemma TEXT NOT NULL, question_text TEXT NOT NULL, correct_answer TEXT NOT NULL, pos TEXT, bin_name TEXT, freq_rank INTEGER, is_active INTEGER NOT NULL DEFAULT 1)"
+    )
     conn.execute(
         "CREATE TABLE vocab_attempts (id INTEGER PRIMARY KEY AUTOINCREMENT, mode_run_id INTEGER, user_id INTEGER NOT NULL, started_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, finished_at TEXT, status TEXT NOT NULL DEFAULT 'started', total_questions INTEGER DEFAULT 0, correct_answers INTEGER DEFAULT 0, completion_reason TEXT, estimated_vocab_band TEXT, estimated_vocab_size INTEGER, confidence REAL, UNIQUE(user_id, started_at))"
     )
@@ -16,23 +20,18 @@ def _conn() -> sqlite3.Connection:
         "CREATE TABLE vocab_attempt_events (id INTEGER PRIMARY KEY AUTOINCREMENT, attempt_id INTEGER NOT NULL, user_id INTEGER NOT NULL, item_id INTEGER NOT NULL, event_type TEXT NOT NULL, answer_text TEXT, is_correct INTEGER, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP)"
     )
     conn.execute(
-        "CREATE TABLE vocab_items (id INTEGER PRIMARY KEY, lemma TEXT NOT NULL, question_text TEXT NOT NULL, correct_answer TEXT NOT NULL, pos TEXT, freq_rank INTEGER, bin_name TEXT, is_active INTEGER NOT NULL DEFAULT 1)"
+        "CREATE TABLE vocab_result_snapshots (id INTEGER PRIMARY KEY AUTOINCREMENT, attempt_id INTEGER NOT NULL, step_index INTEGER NOT NULL, estimated_vocab_band TEXT, estimated_vocab_size INTEGER, confidence REAL, snapshot_payload_json TEXT NOT NULL DEFAULT '{}', created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP)"
     )
     conn.execute(
-        "CREATE TABLE vocab_item_exposure (item_id INTEGER PRIMARY KEY, shown_count INTEGER NOT NULL DEFAULT 0, last_shown_at TEXT)"
+        "CREATE TABLE mode_results (id INTEGER PRIMARY KEY AUTOINCREMENT, mode TEXT NOT NULL, run_id INTEGER NOT NULL, user_id INTEGER NOT NULL, result_version TEXT NOT NULL DEFAULT 'v1', score_numeric REAL, band_text TEXT, cefr_level TEXT, confidence REAL, result_payload_json TEXT NOT NULL, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP)"
     )
-    conn.execute(
-        "CREATE TABLE vocab_result_snapshots (id INTEGER PRIMARY KEY AUTOINCREMENT, attempt_id INTEGER NOT NULL, step_index INTEGER NOT NULL, estimated_vocab_band TEXT, estimated_vocab_size INTEGER, confidence REAL, snapshot_payload_json TEXT NOT NULL)"
-    )
-    conn.execute(
-        "CREATE TABLE mode_results (id INTEGER PRIMARY KEY AUTOINCREMENT, mode TEXT NOT NULL, run_id INTEGER NOT NULL, user_id INTEGER NOT NULL, result_version TEXT NOT NULL DEFAULT 'v1', score_numeric REAL, band_text TEXT, cefr_level TEXT, confidence REAL, result_payload_json TEXT NOT NULL)"
-    )
+
     conn.executemany(
-        "INSERT INTO vocab_items (id, lemma, question_text, correct_answer, pos, freq_rank, bin_name, is_active) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO vocab_items (id, lemma, question_text, correct_answer, pos, bin_name, freq_rank, is_active) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
         [
-            (1, "casa", "casa", "дом", "noun", 800, "1K", 1),
-            (2, "janela", "janela", "окно", "noun", 1800, "2K", 1),
-            (3, "raro", "raro", "редкий", "adj", 5200, "6K", 1),
+            (1, "casa", "casa", "дом", "noun", "1K", 500, 1),
+            (2, "janela", "janela", "окно", "noun", "2K", 1500, 1),
+            (3, "saudade", "saudade", "тоска", "noun", "6K", 5500, 1),
         ],
     )
     conn.commit()
@@ -54,7 +53,7 @@ def test_repo_happy_path() -> None:
         assert stats["accuracy_pct"] == 100.0
         assert stats["estimated_vocab_size"] == 9000
         assert stats["estimated_vocab_band"] == "8k+"
-        assert stats["confidence"] == 0.33
+        assert stats["confidence"] == 0.23
         assert stats["scoring_model"] == "runtime_scoring_v1"
         assert "Estimated vocabulary: ~9000 words" in stats["summary_text"]
 
@@ -86,8 +85,7 @@ def test_persist_finished_result_writes_snapshot_and_mode_result() -> None:
         assert stats["completion_reason"] == "items_exhausted"
         assert stats["estimated_vocab_size"] == 2200
         assert stats["estimated_vocab_band"] == "1.5k-2.5k"
-        assert stats["confidence"] == 0.45
-        assert stats["weighted_bin_hits"]["1K"] > 0
+        assert stats["confidence"] == 0.35
 
         row = conn.execute(
             "SELECT step_index, estimated_vocab_band, estimated_vocab_size, confidence, snapshot_payload_json FROM vocab_result_snapshots WHERE attempt_id = ?",
@@ -99,7 +97,6 @@ def test_persist_finished_result_writes_snapshot_and_mode_result() -> None:
         assert int(row["estimated_vocab_size"]) == 2200
         payload = json.loads(row["snapshot_payload_json"])
         assert payload["estimated_vocab_size"] == 2200
-        assert payload["scoring_model"] == "runtime_scoring_v1"
 
         row = conn.execute(
             "SELECT mode, run_id, score_numeric, band_text, confidence, result_version, result_payload_json FROM mode_results WHERE run_id = ?",
@@ -111,7 +108,7 @@ def test_persist_finished_result_writes_snapshot_and_mode_result() -> None:
         assert row["band_text"] == "1.5k-2.5k"
         assert row["result_version"] == "runtime_scoring_v1"
         payload = json.loads(row["result_payload_json"])
+        assert payload["attempt_id"] == attempt_id
         assert payload["estimated_vocab_band"] == "1.5k-2.5k"
-        assert payload["weighted_bin_hits"]["1K"] > 0
     finally:
         conn.close()

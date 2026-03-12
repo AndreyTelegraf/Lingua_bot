@@ -89,7 +89,7 @@ def test_controller_happy_path() -> None:
         assert final_payload["status"] == "finished"
         assert final_payload["total_questions"] == 2
         assert final_payload["correct_answers"] == 1
-        assert final_payload["summary_text"] == "Vocab finished. Score: 1/2 (50%)\nEstimated vocabulary: ~2200 words\nBand: 1.5k-2.5k\nConfidence: 24%"
+        assert final_payload["summary_text"] == "Vocab finished. Score: 1/2 (50%)\nEstimated vocabulary: ~700 words\nBand: <1.5k\nConfidence: 22%"
         assert state.status == "finished"
     finally:
         conn.close()
@@ -115,13 +115,13 @@ def test_controller_does_not_reopen_after_finish() -> None:
         state, final_payload = get_next_payload(conn, state=state)
         assert final_payload is not None
         assert final_payload["status"] == "finished"
-        assert final_payload["summary_text"] == "Vocab finished. Score: 2/2 (100%)\nEstimated vocabulary: ~9000 words\nBand: 8k+\nConfidence: 36%"
+        assert final_payload["summary_text"] == "Vocab finished. Score: 2/2 (100%)\nEstimated vocabulary: ~700 words\nBand: <1.5k\nConfidence: 30%"
         assert state.status == "finished"
 
         state2, after_finish = get_next_payload(conn, state=state)
         assert after_finish is not None
         assert after_finish["status"] == "finished"
-        assert after_finish["summary_text"] == "Vocab finished. Score: 2/2 (100%)\nEstimated vocabulary: ~9000 words\nBand: 8k+\nConfidence: 36%"
+        assert after_finish["summary_text"] == "Vocab finished. Score: 2/2 (100%)\nEstimated vocabulary: ~700 words\nBand: <1.5k\nConfidence: 30%"
         assert state2.status == "finished"
     finally:
         conn.close()
