@@ -17,6 +17,7 @@ from modes.vocab.dto import (
 from modes.vocab.renderer import VocabRenderer
 from modes.vocab.repo import VocabRepository
 from modes.vocab.selector import VocabSelector
+from services.vocab_runtime.scoring import build_scoring_input_from_events, score_attempt_v1
 
 
 class VocabEngine:
@@ -692,20 +693,18 @@ class VocabEngine:
             estimated_vocab_band = "unknown"
             estimated_vocab_size = 0
             confidence = 0.0
-        else:
-            ratio = correct_answers / total_answers
-            if ratio >= 0.85:
-                estimated_vocab_band = "A2"
-                estimated_vocab_size = 1500
-                confidence = 0.9
-            elif ratio >= 0.60:
-                estimated_vocab_band = "A1+"
-                estimated_vocab_size = 1000
-                confidence = 0.75
-            else:
-                estimated_vocab_band = "A1"
-                estimated_vocab_size = 500
-                confidence = 0.6
+        scoring_rows = await repo.get_scoring_rows(attempt_id=int(active["id"]))
+        scoring_input = build_scoring_input_from_events(
+            scoring_rows,
+            attempt_id=int(active["id"]),
+            total_questions=total_answers,
+            correct_answers=correct_answers,
+        )
+        scoring = score_attempt_v1(scoring_input)
+
+        estimated_vocab_band = str(scoring["estimated_vocab_band"])
+        estimated_vocab_size = int(scoring["estimated_vocab_size"] or 0)
+        confidence = float(scoring["confidence"])
 
         await repo.finish_vocab_attempt(
             vocab_attempt_id=int(active["id"]),

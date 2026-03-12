@@ -556,6 +556,23 @@ class VocabRepository:
         return int(row["n"])
 
 
+    async def get_scoring_rows(self, *, attempt_id: int) -> list[dict[str, object]]:
+        cursor = await self.conn.execute(
+            """
+            SELECT
+                va.is_correct AS is_correct,
+                vi.bin_name AS bin_name,
+                vi.freq_rank AS freq_rank
+            FROM vocab_answers va
+            LEFT JOIN vocab_items vi ON vi.id = va.item_id
+            WHERE va.attempt_id = ?
+            ORDER BY va.id ASC
+            """,
+            (attempt_id,),
+        )
+        rows = await cursor.fetchall()
+        return [dict(row) for row in rows]
+
     async def get_attempt_answer_stats(self, *, attempt_id: int) -> dict[str, int]:
         cursor = await self.conn.execute(
             """
