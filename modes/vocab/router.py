@@ -79,10 +79,10 @@ def _result_text(
     )
 
 
-def _result_keyboard() -> InlineKeyboardMarkup:
+def _result_keyboard(*, attempt_id: int) -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text="Разбор ответов", callback_data="vocab_review")],
+            [InlineKeyboardButton(text="Разбор ответов", callback_data=f"vocab_review:{int(attempt_id)}")],
             [InlineKeyboardButton(text="🔁 Пройти заново", callback_data="vocab:start")],
         ]
     )
@@ -139,7 +139,7 @@ async def _render_finish(callback: CallbackQuery, engine: VocabEngine, reason: s
             estimated_vocab_size=finished.estimated_vocab_size,
             confidence=finished.confidence,
         ),
-        reply_markup=_result_keyboard(),
+        reply_markup=_result_keyboard(attempt_id=int(finished.vocab_attempt_id)),
     )
 
 
@@ -185,7 +185,7 @@ async def _render_next_or_finish(callback: CallbackQuery, engine: VocabEngine) -
                                 "Доступные вопросы закончились раньше завершения теста.\n\n"
                                 "Можно начать попытку заново."
                             ),
-                            reply_markup=_result_keyboard(),
+                            reply_markup=_result_keyboard(attempt_id=int(finished.vocab_attempt_id)),
                         )
                 return
             raise
@@ -215,7 +215,7 @@ async def _render_next_or_finish(callback: CallbackQuery, engine: VocabEngine) -
     if callback.message is not None:
         await callback.message.edit_text(
             "Техническая ошибка при показе задания. Попробуйте начать тест заново.",
-            reply_markup=_result_keyboard(),
+            reply_markup=_result_keyboard(attempt_id=int(finished.vocab_attempt_id)),
         )
 
 
