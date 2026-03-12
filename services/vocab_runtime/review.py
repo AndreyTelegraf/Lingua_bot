@@ -1,14 +1,20 @@
 from __future__ import annotations
 
+
 def render_review(answers: list[dict]) -> str:
     lines = ["Разбор ответов:", ""]
+
     for i, a in enumerate(answers, start=1):
-        if a.get("answer_kind") == "dont_know":
-            mark = "🟨"; status = "Не знаю"
-        elif a.get("is_correct"):
-            mark = "🟩"; status = "Правильно"
+        answer_kind = a.get("answer_kind")
+        is_correct = bool(a.get("is_correct"))
+        word = str(a.get("word") or "?")
+        correct = str(a.get("correct_answer") or "?")
+
+        if answer_kind == "report_error":
+            lines.append(f"🟨 {i}. {word} — сообщить об ошибке")
+        elif is_correct:
+            lines.append(f"🟩 {i}. {word} — правильно")
         else:
-            mark = "🟥"; status = "Неправильно"
-        word = a.get("word") or "?"
-        lines.append(f"{i}. {mark} {word} — {status}")
+            lines.append(f'🟥 {i}. {word} — правильно "{correct}"')
+
     return "\n".join(lines)
