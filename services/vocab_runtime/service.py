@@ -7,6 +7,7 @@ from services.vocab_runtime.repo import (
     get_active_attempt,
     get_attempt_stats,
     log_event,
+    persist_finished_result,
     start_attempt,
 )
 from services.vocab_runtime.selector import get_next_item
@@ -81,17 +82,24 @@ def submit_answer(
         "correct_answer": correct_answer,
         "total_questions": stats["total_questions"],
         "correct_answers": stats["correct_answers"],
+        "wrong_answers": stats["wrong_answers"],
+        "accuracy_pct": stats["accuracy_pct"],
     }
 
 
-def finish_active_attempt(conn: sqlite3.Connection, *, user_id: int) -> dict[str, object] | None:
+def finish_active_attempt(
+    conn: sqlite3.Connection,
+    *,
+    user_id: int,
+    completion_reason: str = "items_exhausted",
+) -> dict[str, object] | None:
     active = get_active_attempt(conn, user_id=user_id)
     if active is None:
         return None
 
     attempt_id = int(active["id"])
-    finish_attempt(conn, attempt_id=attempt_id)
-    return get_attempt_stats(conn, attempt_id=attempt_id)
+    finish_attempt(conn, attempt_id=attempt_id, completion_reason=completion_reason)
+    return persist_finished_result(conn, attempt_id=attempt_id)
 
 
 def submit_choice(
@@ -104,7 +112,7 @@ def submit_choice(
 ) -> dict[str, object]:
     conn.row_factory = sqlite3.Row
     row = conn.execute(
-        'SELECT choice_text, is_correct FROM vocab_choices WHERE id = ? AND item_id = ?',
+        "SELECT choice_text, is_correct FROM vocab_choices WHERE id = ? AND item_id = ?",
         (choice_id, item_id),
     ).fetchone()
     if row is None:
@@ -130,4 +138,6 @@ def submit_choice(
         "selected_answer": answer_text,
         "total_questions": stats["total_questions"],
         "correct_answers": stats["correct_answers"],
+        "wrong_answers": stats["wrong_answers"],
+        "accuracy_pct": stats["accuracy_pct"],
     }

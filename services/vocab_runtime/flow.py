@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import sqlite3
 
+from services.vocab_runtime.repo import get_attempt_stats
 from services.vocab_runtime.service import (
     finish_active_attempt,
     get_next_question,
@@ -25,11 +26,13 @@ def begin_flow(conn: sqlite3.Connection, *, user_id: int) -> VocabSessionState:
 
 def next_step(conn: sqlite3.Connection, *, state: VocabSessionState) -> tuple[VocabSessionState, dict[str, object] | None]:
     if state.status == "finished":
-        return state, {"status": "finished", "attempt_id": state.attempt_id}
+        if state.attempt_id is None:
+            return state, {"status": "finished", "attempt_id": None}
+        return state, get_attempt_stats(conn, attempt_id=int(state.attempt_id))
 
     question = get_next_question(conn, user_id=state.user_id)
     if question is None:
-        finished = finish_active_attempt(conn, user_id=state.user_id)
+        finished = finish_active_attempt(conn, user_id=state.user_id, completion_reason="items_exhausted")
         next_state = finish_session(state)
         return next_state, finished if finished is not None else {"status": "finished", "attempt_id": state.attempt_id}
 

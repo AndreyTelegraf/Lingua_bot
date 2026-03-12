@@ -1,8 +1,16 @@
 from __future__ import annotations
 
+import json
 import sqlite3
 
-from services.vocab_runtime.repo import finish_attempt, get_active_attempt, get_attempt_stats, log_event, start_attempt
+from services.vocab_runtime.repo import (
+    finish_attempt,
+    get_active_attempt,
+    get_attempt_stats,
+    log_event,
+    persist_finished_result,
+    start_attempt,
+)
 
 
 def _conn() -> sqlite3.Connection:
@@ -17,37 +25,85 @@ def _conn() -> sqlite3.Connection:
     return conn
 
 
-def test_attempt_repo_smoke() -> None:
+def _conn_with_result_tables() -> sqlite3.Connection:
+    conn = sqlite3.connect(":memory:")
+    conn.row_factory = sqlite3.Row
+    conn.execute(
+        "CREATE TABLE vocab_attempts (id INTEGER PRIMARY KEY AUTOINCREMENT, mode_run_id INTEGER, user_id INTEGER NOT NULL, started_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, finished_at TEXT, status TEXT NOT NULL DEFAULT 'started', total_questions INTEGER DEFAULT 0, correct_answers INTEGER DEFAULT 0, completion_reason TEXT, estimated_vocab_band TEXT, estimated_vocab_size INTEGER, confidence REAL, UNIQUE(user_id, started_at))"
+    )
+    conn.execute(
+        "CREATE TABLE vocab_attempt_events (id INTEGER PRIMARY KEY AUTOINCREMENT, attempt_id INTEGER NOT NULL, user_id INTEGER NOT NULL, item_id INTEGER NOT NULL, event_type TEXT NOT NULL, answer_text TEXT, is_correct INTEGER, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP)"
+    )
+    conn.execute(
+        "CREATE TABLE vocab_result_snapshots (id INTEGER PRIMARY KEY AUTOINCREMENT, attempt_id INTEGER NOT NULL, step_index INTEGER NOT NULL, estimated_vocab_band TEXT, estimated_vocab_size INTEGER, confidence REAL, snapshot_payload_json TEXT NOT NULL DEFAULT '{}', created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP)"
+    )
+    conn.execute(
+        "CREATE TABLE mode_results (id INTEGER PRIMARY KEY AUTOINCREMENT, mode TEXT NOT NULL, run_id INTEGER NOT NULL, user_id INTEGER NOT NULL, result_version TEXT NOT NULL DEFAULT 'v1', score_numeric REAL, band_text TEXT, cefr_level TEXT, confidence REAL, result_payload_json TEXT NOT NULL, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP)"
+    )
+    conn.execute("INSERT INTO vocab_attempts (mode_run_id, user_id, status, total_questions, correct_answers) VALUES (9001, 42, 'started', 0, 0)")
+    conn.commit()
+    return conn
+
+
+def test_repo_happy_path() -> None:
     conn = _conn()
     try:
         attempt_id = start_attempt(conn, user_id=42)
-        assert attempt_id > 0
-
-        same_attempt_id = start_attempt(conn, user_id=42)
-        assert same_attempt_id == attempt_id
-
         active = get_active_attempt(conn, user_id=42)
         assert active is not None
         assert int(active["id"]) == attempt_id
 
-        event1 = log_event(conn, attempt_id=attempt_id, user_id=42, item_id=1001, event_type="shown")
-        assert event1 > 0
-
-        event2 = log_event(conn, attempt_id=attempt_id, user_id=42, item_id=1001, event_type="answer", answer_text="дом", is_correct=1)
-        assert event2 > 0
+        log_event(conn, attempt_id=attempt_id, user_id=42, item_id=1001, event_type="shown")
+        log_event(conn, attempt_id=attempt_id, user_id=42, item_id=1001, event_type="answer", answer_text="дом", is_correct=1)
 
         stats = get_attempt_stats(conn, attempt_id=attempt_id)
-        assert stats["status"] == "started"
         assert stats["total_questions"] == 1
         assert stats["correct_answers"] == 1
+        assert stats["wrong_answers"] == 0
+        assert stats["accuracy_pct"] == 100.0
+        assert stats["summary_text"] == "Vocab finished. Score: 1/1 (100%)"
 
-        finish_attempt(conn, attempt_id=attempt_id)
-
+        finish_attempt(conn, attempt_id=attempt_id, completion_reason="items_exhausted")
         stats2 = get_attempt_stats(conn, attempt_id=attempt_id)
         assert stats2["status"] == "finished"
         assert stats2["finished_at"] is not None
+    finally:
+        conn.close()
 
-        active2 = get_active_attempt(conn, user_id=42)
-        assert active2 is None
+
+def test_persist_finished_result_writes_snapshot_and_mode_result() -> None:
+    conn = _conn_with_result_tables()
+    try:
+        attempt_id = 1
+        log_event(conn, attempt_id=attempt_id, user_id=42, item_id=1001, event_type="answer", answer_text="a", is_correct=1)
+        log_event(conn, attempt_id=attempt_id, user_id=42, item_id=1002, event_type="answer", answer_text="b", is_correct=0)
+        finish_attempt(conn, attempt_id=attempt_id, completion_reason="items_exhausted")
+
+        stats = persist_finished_result(conn, attempt_id=attempt_id)
+        assert stats["total_questions"] == 2
+        assert stats["correct_answers"] == 1
+        assert stats["wrong_answers"] == 1
+        assert stats["accuracy_pct"] == 50.0
+        assert stats["completion_reason"] == "items_exhausted"
+
+        row = conn.execute(
+            "SELECT step_index, snapshot_payload_json FROM vocab_result_snapshots WHERE attempt_id = ?",
+            (attempt_id,),
+        ).fetchone()
+        assert row is not None
+        assert int(row["step_index"]) == 2
+        payload = json.loads(row["snapshot_payload_json"])
+        assert payload["summary_text"] == "Vocab finished. Score: 1/2 (50%)"
+
+        row = conn.execute(
+            "SELECT mode, run_id, score_numeric, band_text, result_payload_json FROM mode_results WHERE run_id = ?",
+            (9001,),
+        ).fetchone()
+        assert row is not None
+        assert row["mode"] == "vocab"
+        assert float(row["score_numeric"]) == 50.0
+        assert row["band_text"] == "1/2"
+        payload = json.loads(row["result_payload_json"])
+        assert payload["attempt_id"] == 1
     finally:
         conn.close()

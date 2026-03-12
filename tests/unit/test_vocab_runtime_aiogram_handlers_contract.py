@@ -65,7 +65,7 @@ def test_aiogram_handlers_contract_happy_path() -> None:
 
         step2 = callback_handler_contract(conn=conn, fsm=fsm, callback_data='vocab:pick:201')
         assert step2['answer_result']['is_correct'] is False
-        assert step2['text'] == 'Vocab finished. Score: 1/2'
+        assert step2['text'] == 'Vocab finished. Score: 1/2 (50%)'
         assert step2['keyboard'] == []
     finally:
         conn.close()
