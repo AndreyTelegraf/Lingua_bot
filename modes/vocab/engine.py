@@ -375,6 +375,12 @@ class VocabEngine:
             latency_ms=None,
         )
 
+        await repo.bump_attempt_after_answer(
+            attempt_id=int(active["id"]),
+            is_correct=is_correct,
+            is_dont_know=False,
+        )
+
         await repo.insert_result_snapshot(
             attempt_id=int(active["id"]),
             step_index=processing_state.current_step,
