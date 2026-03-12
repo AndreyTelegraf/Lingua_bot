@@ -23,7 +23,8 @@ def _intro_text() -> str:
 def _intro_keyboard() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text="▶ Начать тест", callback_data="vocab:start")],
+            [InlineKeyboardButton(text="➝ Начать тест", callback_data="vocab:start")],
+            [InlineKeyboardButton(text="← Назад", callback_data="menu:root")],
         ]
     )
 
@@ -70,20 +71,19 @@ def _result_text(
     estimated_vocab_size: int,
     confidence: float,
 ) -> str:
-    confidence_pct = round(float(confidence) * 100)
     return (
-        "Результат теста словарного запаса\n\n"
-        f"Пассивный словарный запас: ≈ {estimated_vocab_size} слов\n"
-        f"Уверенность оценки: {confidence_pct}% — статистическая уверенность оценки "
-        "(зависит от числа и разброса ответов)."
+        f"Ваш пассивный словарный запас составляет около {estimated_vocab_size} слов.\n\n"
+        "Это приблизительная оценка, она основана на частотности слов и ваших ответах."
     )
 
 
 def _result_keyboard(*, attempt_id: int) -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text="Разбор ответов", callback_data=f"vocab_review:{int(attempt_id)}")],
-            [InlineKeyboardButton(text="🔁 Пройти заново", callback_data="vocab:start")],
+            [InlineKeyboardButton(text="📊 Разбор ответов", callback_data=f"vocab_review:{int(attempt_id)}")],
+            [InlineKeyboardButton(text="🎓 Уровневый тест", callback_data="level:start")],
+            [InlineKeyboardButton(text="🏠 В меню", callback_data="menu:root")],
+            [InlineKeyboardButton(text="↺ Пройти ещё раз", callback_data="vocab:start")],
         ]
     )
 

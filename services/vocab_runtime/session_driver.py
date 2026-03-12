@@ -14,7 +14,7 @@ def start_session_view(conn: sqlite3.Connection, *, user_id: int) -> dict[str, o
         return {'fsm': out['fsm'], 'text': 'No questions available.', 'keyboard': []}
 
     if 'status' in view and view['status'] == 'finished':
-        return {'fsm': out['fsm'], 'text': present_finished(view), 'keyboard': finished_keyboard(), 'finished': True}
+        return {'fsm': out['fsm'], 'text': present_finished(view), 'keyboard': finished_keyboard(attempt_id=int(view.get("attempt_id")) if view.get("attempt_id") is not None else None), 'finished': True}
 
     return {
         'fsm': out['fsm'],
@@ -45,7 +45,7 @@ def answer_session_view(
             'fsm': out['fsm'],
             'answer_result': out['answer_result'],
             'text': present_finished(next_view),
-            'keyboard': finished_keyboard(),
+            'keyboard': finished_keyboard(attempt_id=int(next_view.get("attempt_id")) if next_view.get("attempt_id") is not None else None),
             'finished': True,
         }
 

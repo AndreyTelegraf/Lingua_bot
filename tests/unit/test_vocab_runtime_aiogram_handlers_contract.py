@@ -65,7 +65,7 @@ def test_aiogram_handlers_contract_happy_path() -> None:
 
         step2 = callback_handler_contract(conn=conn, fsm=fsm, callback_data='vocab:pick:201')
         assert step2['answer_result']['is_correct'] is False
-        assert step2['text'] == 'Пассивный словарный запас: ≈ 700 слов\nУверенность оценки: 20% — статистическая уверенность оценки (зависит от числа ответов)'
+        assert step2['text'] == 'Ваш пассивный словарный запас составляет около 700 слов.\n\nЭто приблизительная оценка, она основана на частотности слов и ваших ответах.'
         assert step2['keyboard'] != []
     finally:
         conn.close()
