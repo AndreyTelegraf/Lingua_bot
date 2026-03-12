@@ -26,6 +26,7 @@ class VocabQuestion:
     question_text: str
     choices: list[dict[str, object]]
     callback_token: str
+    question_limit: int
 
 
 @dataclass(slots=True)

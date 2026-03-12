@@ -103,6 +103,11 @@ class VocabEngine:
         if picked is None:
             raise RuntimeError("no_vocab_items_available")
 
+        attempt_stats = await repo.get_attempt_stats(attempt_id=int(active["id"]))
+        if attempt_stats is None:
+            raise RuntimeError("attempt_stats_not_found")
+
+        question_limit = int(attempt_stats["question_limit"])
         next_step = state.current_step + 1
         callback_token = f"v{int(active['id'])}:{next_step}:{int(picked['id'])}"
         payload = await renderer.build_question_payload(item_id=int(picked["id"]))
@@ -157,6 +162,7 @@ class VocabEngine:
             question_text=str(payload["question_text"]),
             choices=list(payload["choices"]),
             callback_token=callback_token,
+            question_limit=question_limit,
         )
 
     async def confirm_question_shown(

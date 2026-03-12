@@ -8,6 +8,22 @@ from modes.vocab.engine import VocabEngine
 from modes.vocab.repo import VocabRepository
 
 
+def _progress_bar(current: int, total: int, *, width: int = 14) -> str:
+    if total <= 0:
+        total = 1
+    if current < 0:
+        current = 0
+    if current > total:
+        current = total
+
+    filled = round((current / total) * width)
+    if filled < 0:
+        filled = 0
+    if filled > width:
+        filled = width
+    return ("█" * filled) + ("░" * (width - filled))
+
+
 def _intro_text() -> str:
     return (
         "Тест словарного запаса\n\n"
@@ -112,8 +128,15 @@ async def _render_question(callback: CallbackQuery, engine: VocabEngine, questio
     if callback.message is None:
         return
 
+    progress = _progress_bar(int(question.step_index), int(question.question_limit))
+    text = (
+        f"{progress} {int(question.step_index)} / {int(question.question_limit)}\n\n"
+        f"Переведите на русский:\n\n"
+        f"{str(question.question_text)}"
+    )
+
     await callback.message.edit_text(
-        str(question.question_text),
+        text,
         reply_markup=_question_keyboard(question.choices, question.callback_token),
     )
 
