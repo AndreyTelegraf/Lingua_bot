@@ -18,7 +18,7 @@ def _conn() -> sqlite3.Connection:
         "CREATE TABLE vocab_items (id INTEGER PRIMARY KEY AUTOINCREMENT, lemma TEXT NOT NULL, question_text TEXT NOT NULL, correct_answer TEXT NOT NULL, pos TEXT, is_active INTEGER NOT NULL DEFAULT 0)"
     )
     conn.execute(
-        "CREATE TABLE vocab_attempts (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER NOT NULL, started_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, finished_at TEXT, status TEXT NOT NULL DEFAULT 'started', total_questions INTEGER DEFAULT 0, correct_answers INTEGER DEFAULT 0, completion_reason TEXT, UNIQUE(user_id, started_at))"
+        "CREATE TABLE vocab_attempts (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER NOT NULL, started_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, finished_at TEXT, status TEXT NOT NULL DEFAULT 'started', total_questions INTEGER DEFAULT 0, correct_answers INTEGER DEFAULT 0, completion_reason TEXT, estimated_vocab_band TEXT, estimated_vocab_size INTEGER, confidence REAL, UNIQUE(user_id, started_at))"
     )
     conn.execute(
         "CREATE TABLE vocab_attempt_events (id INTEGER PRIMARY KEY AUTOINCREMENT, attempt_id INTEGER NOT NULL, user_id INTEGER NOT NULL, item_id INTEGER NOT NULL, event_type TEXT NOT NULL, answer_text TEXT, is_correct INTEGER, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(attempt_id) REFERENCES vocab_attempts(id))"
@@ -62,6 +62,8 @@ def test_service_happy_path() -> None:
         assert r1["correct_answers"] == 1
         assert r1["wrong_answers"] == 0
         assert r1["accuracy_pct"] == 100.0
+        assert r1["estimated_vocab_size"] == 9000
+        assert r1["estimated_vocab_band"] == "8k+"
 
         q2 = get_next_question(conn, user_id=42)
         assert q2 is not None
@@ -79,6 +81,8 @@ def test_service_happy_path() -> None:
         assert r2["correct_answers"] == 1
         assert r2["wrong_answers"] == 1
         assert r2["accuracy_pct"] == 50.0
+        assert r2["estimated_vocab_size"] == 2200
+        assert r2["estimated_vocab_band"] == "1.5k-2.5k"
 
         finished = finish_active_attempt(conn, user_id=42)
         assert finished is not None
@@ -87,15 +91,20 @@ def test_service_happy_path() -> None:
         assert finished["correct_answers"] == 1
         assert finished["wrong_answers"] == 1
         assert finished["accuracy_pct"] == 50.0
-        assert finished["summary_text"] == "Vocab finished. Score: 1/2 (50%)"
+        assert finished["estimated_vocab_size"] == 2200
+        assert finished["estimated_vocab_band"] == "1.5k-2.5k"
+        assert finished["confidence"] == 0.25
+        assert "Estimated vocabulary: ~2200 words" in finished["summary_text"]
+        assert "Band: 1.5k-2.5k" in finished["summary_text"]
         assert finished["completion_reason"] == "items_exhausted"
 
         row = conn.execute(
-            "SELECT step_index FROM vocab_result_snapshots WHERE attempt_id = ?",
+            "SELECT step_index, estimated_vocab_size FROM vocab_result_snapshots WHERE attempt_id = ?",
             (int(q1["attempt_id"]),),
         ).fetchone()
         assert row is not None
         assert int(row["step_index"]) == 2
+        assert int(row["estimated_vocab_size"]) == 2200
     finally:
         conn.close()
 
@@ -131,6 +140,7 @@ def test_submit_choice_happy_path() -> None:
         assert result["correct_answers"] == 1
         assert result["wrong_answers"] == 0
         assert result["accuracy_pct"] == 100.0
+        assert result["estimated_vocab_band"] == "8k+"
     finally:
         conn.close()
 

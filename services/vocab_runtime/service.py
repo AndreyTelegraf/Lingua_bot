@@ -84,6 +84,9 @@ def submit_answer(
         "correct_answers": stats["correct_answers"],
         "wrong_answers": stats["wrong_answers"],
         "accuracy_pct": stats["accuracy_pct"],
+        "estimated_vocab_size": stats.get("estimated_vocab_size"),
+        "estimated_vocab_band": stats.get("estimated_vocab_band"),
+        "confidence": stats.get("confidence"),
     }
 
 
@@ -140,4 +143,7 @@ def submit_choice(
         "correct_answers": stats["correct_answers"],
         "wrong_answers": stats["wrong_answers"],
         "accuracy_pct": stats["accuracy_pct"],
+        "estimated_vocab_size": stats.get("estimated_vocab_size"),
+        "estimated_vocab_band": stats.get("estimated_vocab_band"),
+        "confidence": stats.get("confidence"),
     }

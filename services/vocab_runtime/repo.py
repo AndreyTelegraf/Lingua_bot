@@ -32,9 +32,83 @@ def _format_accuracy_pct(correct: int, total: int) -> float:
     return round((correct / total) * 100.0, 1)
 
 
-def _summary_text(*, correct: int, total: int, accuracy_pct: float) -> str:
+def _estimate_vocab_metrics(*, correct: int, total: int) -> dict[str, object]:
+    if total <= 0:
+        return {
+            "estimated_vocab_size": None,
+            "estimated_vocab_band": "insufficient_data",
+            "confidence": 0.0,
+        }
+
+    accuracy = correct / total
+
+    if total <= 3:
+        confidence = 0.25
+    elif total <= 6:
+        confidence = 0.4
+    elif total <= 12:
+        confidence = 0.55
+    elif total <= 18:
+        confidence = 0.7
+    else:
+        confidence = 0.8
+
+    if accuracy >= 0.92:
+        estimated_vocab_size = 9000
+    elif accuracy >= 0.84:
+        estimated_vocab_size = 7000
+    elif accuracy >= 0.75:
+        estimated_vocab_size = 5000
+    elif accuracy >= 0.65:
+        estimated_vocab_size = 3500
+    elif accuracy >= 0.50:
+        estimated_vocab_size = 2200
+    elif accuracy >= 0.35:
+        estimated_vocab_size = 1200
+    else:
+        estimated_vocab_size = 600
+
+    if estimated_vocab_size >= 8000:
+        band = "8k+"
+    elif estimated_vocab_size >= 6000:
+        band = "6k-8k"
+    elif estimated_vocab_size >= 4000:
+        band = "4k-6k"
+    elif estimated_vocab_size >= 2500:
+        band = "2.5k-4k"
+    elif estimated_vocab_size >= 1500:
+        band = "1.5k-2.5k"
+    else:
+        band = "<1.5k"
+
+    return {
+        "estimated_vocab_size": estimated_vocab_size,
+        "estimated_vocab_band": band,
+        "confidence": round(confidence, 2),
+    }
+
+
+def _summary_text(
+    *,
+    correct: int,
+    total: int,
+    accuracy_pct: float,
+    estimated_vocab_size: int | None,
+    estimated_vocab_band: str | None,
+    confidence: float | None,
+) -> str:
     accuracy_text = str(int(accuracy_pct)) if float(accuracy_pct).is_integer() else str(accuracy_pct)
-    return f"Vocab finished. Score: {correct}/{total} ({accuracy_text}%)"
+    parts = [f"Vocab finished. Score: {correct}/{total} ({accuracy_text}%)"]
+
+    if estimated_vocab_size is not None:
+        parts.append(f"Estimated vocabulary: ~{estimated_vocab_size} words")
+    if estimated_vocab_band:
+        parts.append(f"Band: {estimated_vocab_band}")
+    if confidence is not None:
+        conf_pct = round(float(confidence) * 100)
+        parts.append(f"Confidence: {conf_pct}%")
+
+    return "\n".join(parts)
 
 
 def _attempt_total_from_row(row: sqlite3.Row) -> int:
@@ -237,6 +311,23 @@ def get_attempt_stats(conn: sqlite3.Connection, *, attempt_id: int) -> dict[str,
     wrong_answers = max(total_questions - correct_answers, 0)
     accuracy_pct = _format_accuracy_pct(correct_answers, total_questions)
 
+    estimate = _estimate_vocab_metrics(correct=correct_answers, total=total_questions)
+    estimated_vocab_size = (
+        row["estimated_vocab_size"]
+        if "estimated_vocab_size" in row.keys() and row["estimated_vocab_size"] is not None
+        else estimate["estimated_vocab_size"]
+    )
+    estimated_vocab_band = (
+        row["estimated_vocab_band"]
+        if "estimated_vocab_band" in row.keys() and row["estimated_vocab_band"] is not None
+        else estimate["estimated_vocab_band"]
+    )
+    confidence = (
+        row["confidence"]
+        if "confidence" in row.keys() and row["confidence"] is not None
+        else estimate["confidence"]
+    )
+
     out: dict[str, Any] = {
         "attempt_id": int(row["id"]),
         "user_id": int(row["user_id"]),
@@ -245,9 +336,11 @@ def get_attempt_stats(conn: sqlite3.Connection, *, attempt_id: int) -> dict[str,
         "correct_answers": correct_answers,
         "wrong_answers": wrong_answers,
         "accuracy_pct": accuracy_pct,
+        "estimated_vocab_size": estimated_vocab_size,
+        "estimated_vocab_band": estimated_vocab_band,
+        "confidence": confidence,
         "started_at": row["started_at"] if "started_at" in row.keys() else None,
         "finished_at": row["finished_at"] if "finished_at" in row.keys() else None,
-        "summary_text": _summary_text(correct=correct_answers, total=total_questions, accuracy_pct=accuracy_pct),
     }
 
     if "completion_reason" in row.keys():
@@ -256,18 +349,41 @@ def get_attempt_stats(conn: sqlite3.Connection, *, attempt_id: int) -> dict[str,
         out["question_limit"] = int(row["question_limit"] or 0)
     if "mode_run_id" in row.keys():
         out["mode_run_id"] = int(row["mode_run_id"]) if row["mode_run_id"] is not None else None
-    if "estimated_vocab_band" in row.keys():
-        out["estimated_vocab_band"] = row["estimated_vocab_band"]
-    if "estimated_vocab_size" in row.keys():
-        out["estimated_vocab_size"] = row["estimated_vocab_size"]
-    if "confidence" in row.keys():
-        out["confidence"] = row["confidence"]
 
+    out["summary_text"] = _summary_text(
+        correct=correct_answers,
+        total=total_questions,
+        accuracy_pct=accuracy_pct,
+        estimated_vocab_size=estimated_vocab_size,
+        estimated_vocab_band=estimated_vocab_band,
+        confidence=confidence if confidence is not None else None,
+    )
     return out
 
 
 def persist_finished_result(conn: sqlite3.Connection, *, attempt_id: int) -> dict[str, Any]:
     stats = get_attempt_stats(conn, attempt_id=attempt_id)
+
+    update_parts: list[str] = []
+    update_params: list[object] = []
+
+    if _has_column(conn, table="vocab_attempts", column="estimated_vocab_size"):
+        update_parts.append("estimated_vocab_size = ?")
+        update_params.append(stats.get("estimated_vocab_size"))
+    if _has_column(conn, table="vocab_attempts", column="estimated_vocab_band"):
+        update_parts.append("estimated_vocab_band = ?")
+        update_params.append(stats.get("estimated_vocab_band"))
+    if _has_column(conn, table="vocab_attempts", column="confidence"):
+        update_parts.append("confidence = ?")
+        update_params.append(stats.get("confidence"))
+
+    if update_parts:
+        conn.execute(
+            f"UPDATE vocab_attempts SET {', '.join(update_parts)} WHERE id = ?",
+            (*update_params, attempt_id),
+        )
+        conn.commit()
+        stats = get_attempt_stats(conn, attempt_id=attempt_id)
 
     if _table_exists(conn, table="vocab_result_snapshots"):
         existing = conn.execute(
@@ -329,10 +445,10 @@ def persist_finished_result(conn: sqlite3.Connection, *, attempt_id: int) -> dic
             "vocab",
             mode_run_id,
             stats["user_id"],
-            "runtime_v1",
+            "runtime_v2_estimator",
             stats["accuracy_pct"],
-            f"{stats['correct_answers']}/{stats['total_questions']}",
-            stats.get("estimated_vocab_band"),
+            str(stats.get("estimated_vocab_band") or f"{stats['correct_answers']}/{stats['total_questions']}"),
+            None,
             stats.get("confidence"),
             payload_json,
         )
@@ -367,10 +483,10 @@ def persist_finished_result(conn: sqlite3.Connection, *, attempt_id: int) -> dic
                 WHERE id = ?
                 """,
                 (
-                    "runtime_v1",
+                    "runtime_v2_estimator",
                     stats["accuracy_pct"],
-                    f"{stats['correct_answers']}/{stats['total_questions']}",
-                    stats.get("estimated_vocab_band"),
+                    str(stats.get("estimated_vocab_band") or f"{stats['correct_answers']}/{stats['total_questions']}"),
+                    None,
                     stats.get("confidence"),
                     payload_json,
                     int(existing[0]),
