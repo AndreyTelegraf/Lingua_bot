@@ -41,3 +41,86 @@ bot/router.py.bak_*
 modes/vocab/*.bak_*
 modes/vocab/*.broken_*
 tests/unit/*.bak_*
+
+# ===== LinguaBot v2 production-grade cleanup =====
+
+# env
+.env
+.env.*
+!.env.example
+
+# python
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+
+# OS / IDE
+.DS_Store
+.idea/
+.vscode/
+
+# logs / temp / runtime
+logs/
+log/
+tmp/
+temp/
+cache/
+runtime/
+*.log
+*.pid
+
+# local databases
+*.db
+*.sqlite
+*.sqlite3
+
+# project data artifacts
+data/*.db
+data/*.sqlite
+data/*.sqlite3
+data/*.bak
+data/*.dump
+data/*.gz
+data/*.zip
+data/*.tar
+data/*.tar.gz
+
+# generated banks / exports / snapshots / backups
+banks/
+exports/
+backups/
+snapshots/
+reference_export/
+level_only_export/
+generated/
+artifacts/
+
+# large tabular / model / corpus artifacts
+*.jsonl
+*.csv
+*.tsv
+*.parquet
+*.feather
+*.arrow
+*.pickle
+*.pkl
+*.joblib
+*.onnx
+*.bin
+
+# archives
+*.7z
+*.rar
+*.tar
+*.tgz
+*.gz
+*.bz2
+*.xz
+*.zip
