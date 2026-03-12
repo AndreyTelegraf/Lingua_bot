@@ -47,16 +47,29 @@ def _build_selector_sql(conn: sqlite3.Connection, *, apply_cooldown: bool) -> tu
         and _has_column(conn, table="vocab_item_exposure", column="item_id")
         and _has_column(conn, table="vocab_item_exposure", column="shown_count")
     )
-
-    has_last_shown_at = has_exposure and _has_column(
-        conn,
-        table="vocab_item_exposure",
-        column="last_shown_at",
-    )
+    has_last_shown_at = has_exposure and _has_column(conn, table="vocab_item_exposure", column="last_shown_at")
+    has_bin_name = _has_column(conn, table="vocab_items", column="bin_name")
 
     if has_exposure:
         select_cols += ", COALESCE(vie.shown_count, 0) AS global_shown_count"
         join_sql = "LEFT JOIN vocab_item_exposure vie ON vie.item_id = vi.id"
+
+    if has_exposure and has_bin_name:
+        select_cols += (
+            ", COALESCE(( "
+            "SELECT AVG(COALESCE(vie2.shown_count, 0)) "
+            "FROM vocab_items vi2 "
+            "LEFT JOIN vocab_item_exposure vie2 ON vie2.item_id = vi2.id "
+            "WHERE vi2.is_active = 1 "
+            "AND ( "
+            "(vi.bin_name IS NULL AND vi2.bin_name IS NULL) "
+            "OR vi2.bin_name = vi.bin_name "
+            ") "
+            "), 0) AS bin_exposure_avg"
+        )
+        order_parts.append("bin_exposure_avg ASC")
+
+    if has_exposure:
         order_parts.append("COALESCE(vie.shown_count, 0) ASC")
 
     cooldown_sec = _cooldown_sec()
@@ -78,7 +91,7 @@ def _build_selector_sql(conn: sqlite3.Connection, *, apply_cooldown: bool) -> tu
     order_sql = "ORDER BY " + ", ".join(order_parts)
     where_sql = " AND ".join(where_parts)
 
-    sql = f'''
+    sql = f"""
         SELECT {select_cols}
         FROM vocab_items vi
         {join_sql}
@@ -86,7 +99,7 @@ def _build_selector_sql(conn: sqlite3.Connection, *, apply_cooldown: bool) -> tu
         {{shown_filter_sql}}
         {order_sql}
         LIMIT 1
-    '''
+    """
     return sql, tuple(params)
 
 
@@ -94,14 +107,14 @@ def get_next_item(conn: sqlite3.Connection, *, attempt_id: int) -> sqlite3.Row |
     conn.row_factory = sqlite3.Row
 
     placeholders = ", ".join("?" for _ in _SHOWN_EVENT_TYPES)
-    shown_filter_sql = f'''
+    shown_filter_sql = f"""
       AND vi.id NOT IN (
         SELECT item_id
         FROM vocab_attempt_events
         WHERE attempt_id = ?
           AND event_type IN ({placeholders})
       )
-    '''
+    """
 
     shown_params = (attempt_id, *_SHOWN_EVENT_TYPES)
 

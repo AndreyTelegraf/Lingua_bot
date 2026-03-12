@@ -131,6 +131,31 @@ def _conn_with_cooldown_fallback_only() -> sqlite3.Connection:
     return conn
 
 
+def _conn_with_bin_exposure() -> sqlite3.Connection:
+    conn = sqlite3.connect(":memory:")
+    _base_schema(conn)
+    conn.execute("CREATE TABLE vocab_items (id INTEGER PRIMARY KEY AUTOINCREMENT, lemma TEXT NOT NULL, question_text TEXT NOT NULL, correct_answer TEXT NOT NULL, pos TEXT, freq_rank INTEGER, bin_name TEXT, is_active INTEGER NOT NULL DEFAULT 0)")
+    conn.execute("CREATE TABLE vocab_item_exposure (item_id INTEGER PRIMARY KEY, shown_count INTEGER NOT NULL DEFAULT 0, last_shown_at TEXT)")
+    conn.executemany(
+        "INSERT INTO vocab_items (id, lemma, question_text, correct_answer, pos, freq_rank, bin_name, is_active) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+        [
+            (1, "bin1_item_a", "q1", "a1", "noun", 100, "1K", 1),
+            (2, "bin1_item_b", "q2", "a2", "noun", 110, "1K", 1),
+            (3, "bin2_item_a", "q3", "a3", "noun", 900, "2K", 1),
+        ],
+    )
+    conn.executemany(
+        "INSERT INTO vocab_item_exposure (item_id, shown_count, last_shown_at) VALUES (?, ?, CURRENT_TIMESTAMP)",
+        [
+            (1, 30),
+            (2, 20),
+            (3, 0),
+        ],
+    )
+    conn.commit()
+    return conn
+
+
 def test_get_next_item_skips_already_shown_items() -> None:
     conn = _conn()
     try:
@@ -241,6 +266,17 @@ def test_get_next_item_prefers_lower_global_exposure_before_freq_rank() -> None:
         third = get_next_item(conn, attempt_id=attempt_id)
         assert third is not None
         assert str(third["lemma"]) == "burned"
+    finally:
+        conn.close()
+
+
+def test_get_next_item_prefers_less_burned_bin_before_item_freq_rank() -> None:
+    conn = _conn_with_bin_exposure()
+    try:
+        attempt_id = start_attempt(conn, user_id=42)
+        first = get_next_item(conn, attempt_id=attempt_id)
+        assert first is not None
+        assert str(first["lemma"]) == "bin2_item_a"
     finally:
         conn.close()
 
