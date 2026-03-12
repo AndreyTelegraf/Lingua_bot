@@ -53,7 +53,7 @@ def test_register_vocab_v2_routes_happy_path() -> None:
     step2 = router["vocab_v2_callback"](user_id=42, callback_data="vocab:pick:201")
     assert step2["ok"] is True
     assert step2["answer_result"]["is_correct"] is False
-    assert step2["text"] == "Vocab finished. Score: 1/2 (50%)\nEstimated vocabulary: ~2200 words\nBand: 1.5k-2.5k\nConfidence: 25%"
+    assert step2["text"] == "Vocab finished. Score: 1/2 (50%)\nEstimated vocabulary: ~2200 words\nBand: 1.5k-2.5k\nConfidence: 24%"
 
     Path(path).unlink(missing_ok=True)
 

@@ -87,6 +87,11 @@ def submit_answer(
         "estimated_vocab_size": stats.get("estimated_vocab_size"),
         "estimated_vocab_band": stats.get("estimated_vocab_band"),
         "confidence": stats.get("confidence"),
+        "coverage_score": stats.get("coverage_score"),
+        "difficulty_score": stats.get("difficulty_score"),
+        "spread_score": stats.get("spread_score"),
+        "sample_score": stats.get("sample_score"),
+        "scoring_model": stats.get("scoring_model"),
     }
 
 
@@ -146,4 +151,9 @@ def submit_choice(
         "estimated_vocab_size": stats.get("estimated_vocab_size"),
         "estimated_vocab_band": stats.get("estimated_vocab_band"),
         "confidence": stats.get("confidence"),
+        "coverage_score": stats.get("coverage_score"),
+        "difficulty_score": stats.get("difficulty_score"),
+        "spread_score": stats.get("spread_score"),
+        "sample_score": stats.get("sample_score"),
+        "scoring_model": stats.get("scoring_model"),
     }
