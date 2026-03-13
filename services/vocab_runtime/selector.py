@@ -46,9 +46,7 @@ def _shift_bin(bin_name: str | None, delta: int) -> str | None:
     return f"{max(1, n + delta)}K"
 
 
-def _load_recent_answer_signals(
-    conn: sqlite3.Connection, *, attempt_id: int, limit: int = 2
-) -> list[dict[str, object]]:
+def _load_recent_answer_signals(conn: sqlite3.Connection, *, attempt_id: int, limit: int = 2) -> list[dict[str, object]]:
     conn.row_factory = sqlite3.Row
     has_is_correct = _has_column(conn, table="vocab_attempt_events", column="is_correct")
     has_bin_name = _has_column(conn, table="vocab_items", column="bin_name")
@@ -110,6 +108,7 @@ def _build_selector_sql(
     *,
     apply_cooldown: bool,
     target_bin: str | None = None,
+    soft_start_bins: tuple[str, ...] | None = None,
 ) -> tuple[str, tuple[object, ...], tuple[object, ...]]:
     select_cols = "vi.id, vi.lemma, vi.question_text, vi.correct_answer, vi.pos"
     join_sql = ""
@@ -117,36 +116,21 @@ def _build_selector_sql(
         "vi.is_active = 1",
     ]
     order_parts: list[str] = []
-    where_params: list[object] = []
-    order_params: list[object] = []
+    params_before_shown: list[object] = []
+    params_after_shown: list[object] = []
 
     has_exposure = (
         _table_exists(conn, table="vocab_item_exposure")
         and _has_column(conn, table="vocab_item_exposure", column="item_id")
         and _has_column(conn, table="vocab_item_exposure", column="shown_count")
     )
-    has_last_shown_at = has_exposure and _has_column(
-        conn, table="vocab_item_exposure", column="last_shown_at"
-    )
+    has_last_shown_at = has_exposure and _has_column(conn, table="vocab_item_exposure", column="last_shown_at")
     has_bin_name = _has_column(conn, table="vocab_items", column="bin_name")
 
-    target_bin_order_sql = None
-    if has_bin_name and target_bin:
-        target_bin_order_sql = "CASE WHEN vi.bin_name = ? THEN 0 ELSE 1 END ASC"
-        order_params.append(target_bin)
-    elif has_bin_name and not has_exposure:
-        target_bin_order_sql = (
-            "CASE vi.bin_name "
-            "WHEN ? THEN 0 "
-            "WHEN ? THEN 1 "
-            "WHEN ? THEN 2 "
-            "WHEN ? THEN 3 "
-            "WHEN ? THEN 4 "
-            "ELSE 99 END ASC"
-        )
-        order_params.extend(["1K", "2K", "5K", "10K", "20K"])
-    elif has_bin_name:
-        order_parts.append("CASE WHEN vi.bin_name IS NULL THEN 1 ELSE 0 END ASC")
+    if has_bin_name and soft_start_bins:
+        placeholders = ", ".join("?" for _ in soft_start_bins)
+        where_parts.append(f"vi.bin_name IN ({placeholders})")
+        params_before_shown.extend(list(soft_start_bins))
 
     if has_exposure:
         select_cols += ", COALESCE(vie.shown_count, 0) AS global_shown_count"
@@ -175,10 +159,23 @@ def _build_selector_sql(
         where_parts.append(
             "(vie.last_shown_at IS NULL OR vie.last_shown_at <= datetime('now', '-' || ? || ' seconds'))"
         )
-        where_params.append(cooldown_sec)
+        params_before_shown.append(cooldown_sec)
 
-    if target_bin_order_sql is not None:
-        order_parts.insert(0, target_bin_order_sql)
+    if has_bin_name and target_bin:
+        order_parts.insert(0, "CASE WHEN vi.bin_name = ? THEN 0 ELSE 1 END ASC")
+        params_after_shown.append(target_bin)
+    elif has_bin_name and not has_exposure:
+        order_parts.append(
+            "CASE vi.bin_name "
+            "WHEN '1K' THEN 1 "
+            "WHEN '2K' THEN 2 "
+            "WHEN '5K' THEN 3 "
+            "WHEN '10K' THEN 4 "
+            "WHEN '20K' THEN 5 "
+            "ELSE 99 END ASC"
+        )
+    elif has_bin_name:
+        order_parts.append("CASE WHEN vi.bin_name IS NULL THEN 1 ELSE 0 END ASC")
 
     if _has_column(conn, table="vocab_items", column="freq_rank"):
         order_parts.extend(
@@ -201,23 +198,9 @@ def _build_selector_sql(
         {order_sql}
         LIMIT 1
     """
-    return sql, tuple(where_params), tuple(order_params)
+    return sql, tuple(params_before_shown), tuple(params_after_shown)
 
 
-
-
-    # ---- SOFT START ----
-    # First questions should be easier to avoid harsh entry.
-    step_row = conn.execute(
-        "SELECT COUNT(*) AS n FROM vocab_attempt_events WHERE attempt_id=? AND event_type IN ('shown','question_shown')",
-        (attempt_id,)
-    ).fetchone()
-
-    step = int(step_row["n"]) if step_row else 0
-
-    soft_bins = None
-    if step < 6:
-        soft_bins = ('1K','2K')
 def get_next_item(conn: sqlite3.Connection, *, attempt_id: int) -> sqlite3.Row | None:
     conn.row_factory = sqlite3.Row
 
@@ -230,40 +213,42 @@ def get_next_item(conn: sqlite3.Connection, *, attempt_id: int) -> sqlite3.Row |
           AND event_type IN ({placeholders})
       )
     """
-
     shown_params = (attempt_id, *_SHOWN_EVENT_TYPES)
+
+    step_row = conn.execute(
+        f"""
+        SELECT COUNT(*) AS n
+        FROM vocab_attempt_events
+        WHERE attempt_id = ?
+          AND event_type IN ({placeholders})
+        """,
+        shown_params,
+    ).fetchone()
+    step = int(step_row["n"] or 0) if step_row is not None else 0
+
+    soft_start_bins: tuple[str, ...] | None = ("1K", "2K") if step < 6 else None
     target_bin = _derive_target_bin(_load_recent_answer_signals(conn, attempt_id=attempt_id))
 
-    sql_cooldown, where_params_cooldown, order_params_cooldown = _build_selector_sql(
+    sql_cooldown, before_cooldown, after_cooldown = _build_selector_sql(
         conn,
         apply_cooldown=True,
         target_bin=target_bin,
+        soft_start_bins=soft_start_bins,
     )
-    exec_params_cooldown = (
-        *where_params_cooldown,
-        *shown_params,
-        *order_params_cooldown,
-    )
-
     row = conn.execute(
         sql_cooldown.replace("{shown_filter_sql}", shown_filter_sql),
-        exec_params_cooldown,
+        (*before_cooldown, *shown_params, *after_cooldown),
     ).fetchone()
     if row is not None:
         return row
 
-    sql_fallback, where_params_fallback, order_params_fallback = _build_selector_sql(
+    sql_fallback, before_fallback, after_fallback = _build_selector_sql(
         conn,
         apply_cooldown=False,
         target_bin=target_bin,
+        soft_start_bins=soft_start_bins,
     )
-    exec_params_fallback = (
-        *where_params_fallback,
-        *shown_params,
-        *order_params_fallback,
-    )
-
     return conn.execute(
         sql_fallback.replace("{shown_filter_sql}", shown_filter_sql),
-        exec_params_fallback,
+        (*before_fallback, *shown_params, *after_fallback),
     ).fetchone()
