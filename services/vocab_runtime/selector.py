@@ -49,8 +49,14 @@ def _build_selector_sql(conn: sqlite3.Connection, *, apply_cooldown: bool) -> tu
     )
     has_last_shown_at = has_exposure and _has_column(conn, table="vocab_item_exposure", column="last_shown_at")
     has_bin_name = _has_column(conn, table="vocab_items", column="bin_name")
+    # adaptive_target_bin
+    target_bin = os.getenv("VOCAB_TARGET_BIN")
+
     # adaptive_bin_preference
-    if has_bin_name:
+    if has_bin_name and target_bin:
+        order_parts.append("CASE WHEN vi.bin_name = ? THEN 0 ELSE 1 END ASC")  # adaptive_bin_preference
+        params.append(target_bin)
+    elif has_bin_name:
         order_parts.append("CASE WHEN vi.bin_name IS NULL THEN 1 ELSE 0 END ASC")  # adaptive_bin_preference
 
 
