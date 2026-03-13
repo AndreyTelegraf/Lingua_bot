@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 from dataclasses import dataclass
 from typing import Any
 
@@ -30,8 +31,6 @@ def _band_midpoint(bin_name: str | None) -> int | None:
 
 
 def _estimate_size_from_signal(*, weighted_accuracy: float, avg_freq: float, max_freq: int | None, total: int) -> tuple[int, str]:
-    # Base ladder from answer quality only.
-    # Keep it conservative; harder bins may lift it later.
     if weighted_accuracy >= 0.95:
         size = 3800
     elif weighted_accuracy >= 0.85:
@@ -47,8 +46,6 @@ def _estimate_size_from_signal(*, weighted_accuracy: float, avg_freq: float, max
     else:
         size = 700
 
-    # Difficulty lift: tiny perfect samples on genuinely harder words
-    # should move up, but not instantly jump to 9k without evidence.
     if total >= 2:
         if weighted_accuracy >= 0.95 and avg_freq >= 900:
             size = max(size, 5500)
@@ -128,7 +125,6 @@ def score_attempt_v1(inp: ScoringInput) -> dict[str, Any]:
 
     sample_score = min(1.0, total / 24.0)
 
-    # Conservative confidence: tiny sample stays low even when score is strong.
     confidence = (
         0.45 * sample_score
         + 0.15 * coverage_score
@@ -203,25 +199,30 @@ def extract_scoring_rows_from_event_rows(rows: list[dict[str, Any]]) -> list[dic
     for row in rows:
         event_type = str(row.get("event_type") or "")
         payload_raw = row.get("payload_json")
+        reason_code = str(row.get("reason_code") or "").strip().lower()
 
-        if not payload_raw:
-            continue
-
-        try:
-            payload = json.loads(payload_raw)
-        except Exception:
-            continue
-
-        if not isinstance(payload, dict):
-            continue
+        payload: dict[str, Any] = {}
+        if payload_raw:
+            try:
+                payload_candidate = json.loads(payload_raw)
+                if isinstance(payload_candidate, dict):
+                    payload = payload_candidate
+            except Exception:
+                payload = {}
 
         candidate: dict[str, Any] = {}
 
+        # Top-level direct fields from joined SQL rows
+        for key in ("bin_name", "freq_rank", "is_correct"):
+            if key in row and row.get(key) is not None:
+                candidate[key] = row.get(key)
+
+        # Legacy/current payload forms
         if "is_correct" in payload:
             candidate["is_correct"] = payload.get("is_correct")
 
         for key in ("bin_name", "freq_rank"):
-            if key in payload:
+            if key in payload and payload.get(key) is not None:
                 candidate[key] = payload.get(key)
 
         item_obj = payload.get("item")
@@ -236,10 +237,18 @@ def extract_scoring_rows_from_event_rows(rows: list[dict[str, Any]]) -> list[dic
 
         selected_choice = payload.get("selected_choice")
         if isinstance(selected_choice, dict):
-            candidate.setdefault("is_correct", selected_choice.get("is_correct"))
+            if selected_choice.get("is_correct") is not None:
+                candidate["is_correct"] = selected_choice.get("is_correct")
+
+        # New production format: correctness moved into reason_code
+        if candidate.get("is_correct") is None and event_type == "answer_submitted":
+            if reason_code == "correct":
+                candidate["is_correct"] = 1
+            elif reason_code in {"wrong", "incorrect"}:
+                candidate["is_correct"] = 0
 
         if candidate.get("is_correct") is None and event_type in {"answer_submitted", "answer", "dont_know"}:
-            if payload.get("answer_kind") == "dont_know":
+            if payload.get("answer_kind") == "dont_know" or reason_code == "dont_know":
                 candidate["is_correct"] = 0
 
         if candidate.get("is_correct") is None:
@@ -248,3 +257,13 @@ def extract_scoring_rows_from_event_rows(rows: list[dict[str, Any]]) -> list[dic
         out.append(candidate)
 
     return out
+
+
+def score_attempt_default(inp: ScoringInput) -> dict[str, Any]:
+    model = str(os.getenv("LINGUA_VOCAB_SCORING_MODEL", "runtime_scoring_v2") or "runtime_scoring_v2").strip().lower()
+
+    if model in {"runtime_scoring_v2", "v2", "logistic_coverage_v2"}:
+        from services.vocab_runtime.scoring_v2 import score_attempt_logistic_coverage_v2
+        return score_attempt_logistic_coverage_v2(inp)
+
+    return score_attempt_v1(inp)

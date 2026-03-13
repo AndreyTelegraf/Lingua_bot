@@ -51,11 +51,11 @@ def test_repo_happy_path() -> None:
         assert stats["correct_answers"] == 1
         assert stats["wrong_answers"] == 0
         assert stats["accuracy_pct"] == 100.0
-        assert stats["estimated_vocab_size"] == 3800
-        assert stats["estimated_vocab_band"] == "2.5k-4k"
-        assert stats["confidence"] == 0.22
-        assert stats["scoring_model"] == "runtime_scoring_v1"
-        assert "Estimated vocabulary: ~3800 words" in stats["summary_text"]
+        assert stats["estimated_vocab_size"] == 4500
+        assert stats["estimated_vocab_band"] == "4k-6k"
+        assert stats["confidence"] == 0.28
+        assert stats["scoring_model"] == "runtime_scoring_v2"
+        assert "Estimated vocabulary: ~4500 words" in stats["summary_text"]
 
         finish_attempt(conn, attempt_id=attempt_id, completion_reason="items_exhausted")
         stats2 = get_attempt_stats(conn, attempt_id=attempt_id)
@@ -83,9 +83,9 @@ def test_persist_finished_result_writes_snapshot_and_mode_result() -> None:
         assert stats["wrong_answers"] == 1
         assert stats["accuracy_pct"] == 50.0
         assert stats["completion_reason"] == "items_exhausted"
-        assert stats["estimated_vocab_size"] == 2200
-        assert stats["estimated_vocab_band"] == "1.5k-2.5k"
-        assert stats["confidence"] == 0.33
+        assert stats["estimated_vocab_size"] == 2537
+        assert stats["estimated_vocab_band"] == "2.5k-4k"
+        assert stats["confidence"] == 0.37
 
         row = conn.execute(
             "SELECT step_index, estimated_vocab_band, estimated_vocab_size, confidence, snapshot_payload_json FROM vocab_result_snapshots WHERE attempt_id = ?",
@@ -93,10 +93,10 @@ def test_persist_finished_result_writes_snapshot_and_mode_result() -> None:
         ).fetchone()
         assert row is not None
         assert int(row["step_index"]) == 2
-        assert row["estimated_vocab_band"] == "1.5k-2.5k"
-        assert int(row["estimated_vocab_size"]) == 2200
+        assert row["estimated_vocab_band"] == "2.5k-4k"
+        assert int(row["estimated_vocab_size"]) == 2537
         payload = json.loads(row["snapshot_payload_json"])
-        assert payload["estimated_vocab_size"] == 2200
+        assert payload["estimated_vocab_size"] == 2537
 
         row = conn.execute(
             "SELECT mode, run_id, score_numeric, band_text, confidence, result_version, result_payload_json FROM mode_results WHERE run_id = ?",
@@ -105,10 +105,10 @@ def test_persist_finished_result_writes_snapshot_and_mode_result() -> None:
         assert row is not None
         assert row["mode"] == "vocab"
         assert float(row["score_numeric"]) == 50.0
-        assert row["band_text"] == "1.5k-2.5k"
+        assert row["band_text"] == "2.5k-4k"
         assert row["result_version"] == "runtime_scoring_v1"
         payload = json.loads(row["result_payload_json"])
         assert payload["attempt_id"] == attempt_id
-        assert payload["estimated_vocab_band"] == "1.5k-2.5k"
+        assert payload["estimated_vocab_band"] == "2.5k-4k"
     finally:
         conn.close()

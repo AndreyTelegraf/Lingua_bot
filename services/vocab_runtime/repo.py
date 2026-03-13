@@ -7,7 +7,7 @@ from typing import Any
 from services.vocab_runtime.scoring import (
     build_scoring_input_from_events,
     extract_scoring_rows_from_event_rows,
-    score_attempt_v1,
+    score_attempt_default,
 )
 
 
@@ -324,7 +324,7 @@ def get_attempt_stats(conn: sqlite3.Connection, *, attempt_id: int) -> dict[str,
         total_questions=total_questions,
         correct_answers=correct_answers,
     )
-    estimate = score_attempt_v1(scoring_input)
+    estimate = score_attempt_default(scoring_input)
 
     estimated_vocab_size = (
         row["estimated_vocab_size"]

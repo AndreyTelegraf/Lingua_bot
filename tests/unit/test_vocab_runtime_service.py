@@ -62,10 +62,10 @@ def test_service_happy_path() -> None:
         assert r1["correct_answers"] == 1
         assert r1["wrong_answers"] == 0
         assert r1["accuracy_pct"] == 100.0
-        assert r1["estimated_vocab_size"] == 3800
-        assert r1["estimated_vocab_band"] == "2.5k-4k"
-        assert r1["confidence"] == 0.22
-        assert r1["scoring_model"] == "runtime_scoring_v1"
+        assert r1["estimated_vocab_size"] == 4500
+        assert r1["estimated_vocab_band"] == "4k-6k"
+        assert r1["confidence"] == 0.28
+        assert r1["scoring_model"] == "runtime_scoring_v2"
 
         q2 = get_next_question(conn, user_id=42)
         assert q2 is not None
@@ -83,9 +83,9 @@ def test_service_happy_path() -> None:
         assert r2["correct_answers"] == 1
         assert r2["wrong_answers"] == 1
         assert r2["accuracy_pct"] == 50.0
-        assert r2["estimated_vocab_size"] == 2200
-        assert r2["estimated_vocab_band"] == "1.5k-2.5k"
-        assert r2["confidence"] == 0.20
+        assert r2["estimated_vocab_size"] == 2667
+        assert r2["estimated_vocab_band"] == "2.5k-4k"
+        assert r2["confidence"] == 0.24
         assert r2["sample_score"] == 0.083
 
         finished = finish_active_attempt(conn, user_id=42)
@@ -95,11 +95,11 @@ def test_service_happy_path() -> None:
         assert finished["correct_answers"] == 1
         assert finished["wrong_answers"] == 1
         assert finished["accuracy_pct"] == 50.0
-        assert finished["estimated_vocab_size"] == 2200
-        assert finished["estimated_vocab_band"] == "1.5k-2.5k"
-        assert finished["confidence"] == 0.20
-        assert "Estimated vocabulary: ~2200 words" in finished["summary_text"]
-        assert "Band: 1.5k-2.5k" in finished["summary_text"]
+        assert finished["estimated_vocab_size"] == 2667
+        assert finished["estimated_vocab_band"] == "2.5k-4k"
+        assert finished["confidence"] == 0.24
+        assert "Estimated vocabulary: ~2667 words" in finished["summary_text"]
+        assert "Band: 2.5k-4k" in finished["summary_text"]
         assert finished["completion_reason"] == "items_exhausted"
 
         row = conn.execute(
@@ -108,6 +108,6 @@ def test_service_happy_path() -> None:
         ).fetchone()
         assert row is not None
         assert int(row["step_index"]) == 2
-        assert int(row["estimated_vocab_size"]) == 2200
+        assert int(row["estimated_vocab_size"]) == 2667
     finally:
         conn.close()

@@ -17,7 +17,7 @@ from modes.vocab.dto import (
 from modes.vocab.renderer import VocabRenderer
 from modes.vocab.repo import VocabRepository
 from modes.vocab.selector import VocabSelector
-from services.vocab_runtime.scoring import build_scoring_input_from_events, score_attempt_v1
+from services.vocab_runtime.scoring import build_scoring_input_from_events, score_attempt_default
 
 
 class VocabEngine:
@@ -712,7 +712,7 @@ class VocabEngine:
             total_questions=total_answers,
             correct_answers=correct_answers,
         )
-        scoring = score_attempt_v1(scoring_input)
+        scoring = score_attempt_default(scoring_input)
 
         estimated_vocab_band = str(scoring["estimated_vocab_band"])
         estimated_vocab_size = int(scoring["estimated_vocab_size"] or 0)

@@ -86,7 +86,7 @@ def test_flow_happy_path() -> None:
         assert finished["correct_answers"] == 1
         assert finished["wrong_answers"] == 1
         assert finished["accuracy_pct"] == 50.0
-        assert finished["summary_text"] == "Vocab finished. Score: 1/2 (50%)\nEstimated vocabulary: ~700 words\nBand: <1.5k\nConfidence: 20%"
+        assert finished["summary_text"] == "Vocab finished. Score: 1/2 (50%)\nEstimated vocabulary: ~1200 words\nBand: <1.5k\nConfidence: 15%"
         assert state.status == "finished"
     finally:
         conn.close()
@@ -105,7 +105,7 @@ def test_flow_finished_state_returns_full_summary() -> None:
         state2, finished_again = next_step(conn, state=state)
         assert finished_again is not None
         assert finished_again["status"] == "finished"
-        assert finished_again["summary_text"] == "Vocab finished. Score: 1/2 (50%)\nEstimated vocabulary: ~700 words\nBand: <1.5k\nConfidence: 20%"
+        assert finished_again["summary_text"] == "Vocab finished. Score: 1/2 (50%)\nEstimated vocabulary: ~1200 words\nBand: <1.5k\nConfidence: 15%"
         assert state2.status == "finished"
     finally:
         conn.close()
