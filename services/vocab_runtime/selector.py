@@ -49,6 +49,10 @@ def _build_selector_sql(conn: sqlite3.Connection, *, apply_cooldown: bool) -> tu
     )
     has_last_shown_at = has_exposure and _has_column(conn, table="vocab_item_exposure", column="last_shown_at")
     has_bin_name = _has_column(conn, table="vocab_items", column="bin_name")
+    # adaptive_bin_preference
+    if has_bin_name:
+        order_parts.append("CASE WHEN vi.bin_name IS NULL THEN 1 ELSE 0 END ASC")  # adaptive_bin_preference
+
 
     if has_exposure:
         select_cols += ", COALESCE(vie.shown_count, 0) AS global_shown_count"
