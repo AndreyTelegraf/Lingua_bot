@@ -9,7 +9,7 @@ def _start_keyboard() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(
         inline_keyboard=[
             [InlineKeyboardButton(text="🧠 Словарный запас", callback_data="vocab:intro")],
-            [InlineKeyboardButton(text="🎓 Уровневый тест", callback_data="level:start")],
+            [InlineKeyboardButton(text="💪 Уровневый тест", callback_data="level:start")],
             [InlineKeyboardButton(text="🇵🇹 Экзамен A2 (CIPLE)", callback_data="ciple:start")],
         ]
     )

@@ -6,7 +6,7 @@ def finished_keyboard(*, attempt_id: int | None = None) -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(
         inline_keyboard=[
             [InlineKeyboardButton(text="📊 Разбор ответов", callback_data=review_cb)],
-            [InlineKeyboardButton(text="🎓 Уровневый тест", callback_data="level:start")],
+            [InlineKeyboardButton(text="💪 Уровневый тест", callback_data="level:start")],
             [InlineKeyboardButton(text="🏠 В меню", callback_data="menu:root")],
             [InlineKeyboardButton(text="↺ Пройти ещё раз", callback_data="vocab:start")],
         ]

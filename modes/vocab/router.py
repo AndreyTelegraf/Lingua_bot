@@ -37,7 +37,7 @@ def _intro_text() -> str:
 def _intro_keyboard() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text="➝ Начать тест", callback_data="vocab:start")],
+            [InlineKeyboardButton(text="→ Начать", callback_data="vocab:start")],
             [InlineKeyboardButton(text="← Назад", callback_data="menu:root")],
         ]
     )
@@ -95,7 +95,7 @@ def _result_keyboard(*, attempt_id: int) -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(
         inline_keyboard=[
             [InlineKeyboardButton(text="📊 Разбор ответов", callback_data=f"vocab_review:{int(attempt_id)}")],
-            [InlineKeyboardButton(text="🎓 Уровневый тест", callback_data="level:start")],
+            [InlineKeyboardButton(text="💪 Уровневый тест", callback_data="level:start")],
             [InlineKeyboardButton(text="🏠 В меню", callback_data="menu:root")],
             [InlineKeyboardButton(text="↺ Пройти ещё раз", callback_data="vocab:start")],
         ]

@@ -37,7 +37,7 @@ class VocabRenderer:
         return {
             "item_id": int(item["id"]),
             "lemma": str(item["lemma"]),
-            "question_text": str(item["question_text"]),
+            "question_text": str(item["lemma"]),
             "correct_answer": str(item["correct_answer"]),
             "choices": [
                 {
