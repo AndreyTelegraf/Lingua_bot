@@ -204,6 +204,20 @@ def _build_selector_sql(
     return sql, tuple(where_params), tuple(order_params)
 
 
+
+
+    # ---- SOFT START ----
+    # First questions should be easier to avoid harsh entry.
+    step_row = conn.execute(
+        "SELECT COUNT(*) AS n FROM vocab_attempt_events WHERE attempt_id=? AND event_type IN ('shown','question_shown')",
+        (attempt_id,)
+    ).fetchone()
+
+    step = int(step_row["n"]) if step_row else 0
+
+    soft_bins = None
+    if step < 6:
+        soft_bins = ('1K','2K')
 def get_next_item(conn: sqlite3.Connection, *, attempt_id: int) -> sqlite3.Row | None:
     conn.row_factory = sqlite3.Row
 
