@@ -46,7 +46,9 @@ def _shift_bin(bin_name: str | None, delta: int) -> str | None:
     return f"{max(1, n + delta)}K"
 
 
-def _load_recent_answer_signals(conn: sqlite3.Connection, *, attempt_id: int, limit: int = 2) -> list[dict[str, object]]:
+def _load_recent_answer_signals(
+    conn: sqlite3.Connection, *, attempt_id: int, limit: int = 2
+) -> list[dict[str, object]]:
     conn.row_factory = sqlite3.Row
     has_is_correct = _has_column(conn, table="vocab_attempt_events", column="is_correct")
     has_bin_name = _has_column(conn, table="vocab_items", column="bin_name")
@@ -103,31 +105,48 @@ def _derive_target_bin(last_answers: list[dict[str, object]]) -> str | None:
     return str(latest_bin)
 
 
-def _build_selector_sql(conn: sqlite3.Connection, *, apply_cooldown: bool, target_bin: str | None = None) -> tuple[str, tuple[object, ...]]:
+def _build_selector_sql(
+    conn: sqlite3.Connection,
+    *,
+    apply_cooldown: bool,
+    target_bin: str | None = None,
+) -> tuple[str, tuple[object, ...], tuple[object, ...]]:
     select_cols = "vi.id, vi.lemma, vi.question_text, vi.correct_answer, vi.pos"
     join_sql = ""
     where_parts = [
         "vi.is_active = 1",
     ]
     order_parts: list[str] = []
-    params: list[object] = []
+    where_params: list[object] = []
+    order_params: list[object] = []
 
     has_exposure = (
         _table_exists(conn, table="vocab_item_exposure")
         and _has_column(conn, table="vocab_item_exposure", column="item_id")
         and _has_column(conn, table="vocab_item_exposure", column="shown_count")
     )
-    has_last_shown_at = has_exposure and _has_column(conn, table="vocab_item_exposure", column="last_shown_at")
+    has_last_shown_at = has_exposure and _has_column(
+        conn, table="vocab_item_exposure", column="last_shown_at"
+    )
     has_bin_name = _has_column(conn, table="vocab_items", column="bin_name")
 
     target_bin_order_sql = None
-    target_bin_order_param = None
     if has_bin_name and target_bin:
         target_bin_order_sql = "CASE WHEN vi.bin_name = ? THEN 0 ELSE 1 END ASC"
-        target_bin_order_param = target_bin
+        order_params.append(target_bin)
+    elif has_bin_name and not has_exposure:
+        target_bin_order_sql = (
+            "CASE vi.bin_name "
+            "WHEN ? THEN 0 "
+            "WHEN ? THEN 1 "
+            "WHEN ? THEN 2 "
+            "WHEN ? THEN 3 "
+            "WHEN ? THEN 4 "
+            "ELSE 99 END ASC"
+        )
+        order_params.extend(["1K", "2K", "5K", "10K", "20K"])
     elif has_bin_name:
         order_parts.append("CASE WHEN vi.bin_name IS NULL THEN 1 ELSE 0 END ASC")
-
 
     if has_exposure:
         select_cols += ", COALESCE(vie.shown_count, 0) AS global_shown_count"
@@ -156,7 +175,7 @@ def _build_selector_sql(conn: sqlite3.Connection, *, apply_cooldown: bool, targe
         where_parts.append(
             "(vie.last_shown_at IS NULL OR vie.last_shown_at <= datetime('now', '-' || ? || ' seconds'))"
         )
-        params.append(cooldown_sec)
+        where_params.append(cooldown_sec)
 
     if target_bin_order_sql is not None:
         order_parts.insert(0, target_bin_order_sql)
@@ -168,9 +187,6 @@ def _build_selector_sql(conn: sqlite3.Connection, *, apply_cooldown: bool, targe
                 "vi.freq_rank ASC",
             ]
         )
-
-    if target_bin_order_param is not None:
-        params.append(target_bin_order_param)
 
     order_parts.append("vi.id ASC")
     order_sql = "ORDER BY " + ", ".join(order_parts)
@@ -185,7 +201,7 @@ def _build_selector_sql(conn: sqlite3.Connection, *, apply_cooldown: bool, targe
         {order_sql}
         LIMIT 1
     """
-    return sql, tuple(params)
+    return sql, tuple(where_params), tuple(order_params)
 
 
 def get_next_item(conn: sqlite3.Connection, *, attempt_id: int) -> sqlite3.Row | None:
@@ -202,21 +218,18 @@ def get_next_item(conn: sqlite3.Connection, *, attempt_id: int) -> sqlite3.Row |
     """
 
     shown_params = (attempt_id, *_SHOWN_EVENT_TYPES)
-
     target_bin = _derive_target_bin(_load_recent_answer_signals(conn, attempt_id=attempt_id))
 
-    sql_cooldown, base_params_cooldown = _build_selector_sql(conn, apply_cooldown=True, target_bin=target_bin)
-    base_params_cooldown = tuple(base_params_cooldown)
-    exec_params_cooldown = base_params_cooldown
-
-    if target_bin is not None and len(base_params_cooldown) >= 1:
-        exec_params_cooldown = (
-            *base_params_cooldown[:-1],
-            *shown_params,
-            base_params_cooldown[-1],
-        )
-    else:
-        exec_params_cooldown = (*base_params_cooldown, *shown_params)
+    sql_cooldown, where_params_cooldown, order_params_cooldown = _build_selector_sql(
+        conn,
+        apply_cooldown=True,
+        target_bin=target_bin,
+    )
+    exec_params_cooldown = (
+        *where_params_cooldown,
+        *shown_params,
+        *order_params_cooldown,
+    )
 
     row = conn.execute(
         sql_cooldown.replace("{shown_filter_sql}", shown_filter_sql),
@@ -225,18 +238,16 @@ def get_next_item(conn: sqlite3.Connection, *, attempt_id: int) -> sqlite3.Row |
     if row is not None:
         return row
 
-    sql_fallback, base_params_fallback = _build_selector_sql(conn, apply_cooldown=False, target_bin=target_bin)
-    base_params_fallback = tuple(base_params_fallback)
-    exec_params_fallback = base_params_fallback
-
-    if target_bin is not None and len(base_params_fallback) >= 1:
-        exec_params_fallback = (
-            *base_params_fallback[:-1],
-            *shown_params,
-            base_params_fallback[-1],
-        )
-    else:
-        exec_params_fallback = (*base_params_fallback, *shown_params)
+    sql_fallback, where_params_fallback, order_params_fallback = _build_selector_sql(
+        conn,
+        apply_cooldown=False,
+        target_bin=target_bin,
+    )
+    exec_params_fallback = (
+        *where_params_fallback,
+        *shown_params,
+        *order_params_fallback,
+    )
 
     return conn.execute(
         sql_fallback.replace("{shown_filter_sql}", shown_filter_sql),
