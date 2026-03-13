@@ -8,6 +8,20 @@ from modes.vocab.engine import VocabEngine
 from modes.vocab.repo import VocabRepository
 
 
+def _band_to_range_text(band: str, size: int) -> str:
+    mapping = {
+        "<1.5k": "до 1 500 слов",
+        "1.5k-2.5k": "от 1 500 до 2 500 слов",
+        "2.5k-4k": "от 2 500 до 4 000 слов",
+        "4k-6k": "от 4 000 до 6 000 слов",
+        "6k-8k": "от 6 000 до 8 000 слов",
+        "8k+": "8 000+ слов",
+        "insufficient_data": "недостаточно данных",
+        "unknown": "недостаточно данных",
+    }
+    return mapping.get(str(band), f"около {int(size)} слов")
+
+
 def _progress_bar(current: int, total: int, *, width: int = 14) -> str:
     if total <= 0:
         total = 1
@@ -27,10 +41,12 @@ def _progress_bar(current: int, total: int, *, width: int = 14) -> str:
 def _intro_text() -> str:
     return (
         "Этот тест оценивает ваш пассивный словарный запас португальского языка.\n\n"
-        "Вам будет показаны португальские слова.\n"
-        "Нужно будет выбрать правильный перевод.\n\n"
         "24 задания с вариантами ответов.\n"
-        "Тест займёт примерно 3 минуты."
+        "Тест займёт примерно 3 минуты.\n\n"
+        "Вам будут показаны португальские слова.\n"
+        "Ваша задача – выбрать их правильный перевод на русский.\n\n"
+        "Старайтесь не угадывать, это тест на честность.\n"
+        'Если не уверены, жмите "❗️Не знаю".'
     )
 
 
@@ -85,8 +101,9 @@ def _result_text(
     estimated_vocab_size: int,
     confidence: float,
 ) -> str:
+    range_text = _band_to_range_text(estimated_vocab_band, estimated_vocab_size)
     return (
-        f"Ваш пассивный словарный запас составляет около {estimated_vocab_size} слов.\n\n"
+        f"Ваш пассивный словарный запас находится в диапазоне {range_text}.\n\n"
         "Это приблизительная оценка, она основана на частотности слов и ваших ответах."
     )
 
