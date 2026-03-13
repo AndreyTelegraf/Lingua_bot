@@ -120,9 +120,11 @@ def _build_selector_sql(conn: sqlite3.Connection, *, apply_cooldown: bool, targe
     has_last_shown_at = has_exposure and _has_column(conn, table="vocab_item_exposure", column="last_shown_at")
     has_bin_name = _has_column(conn, table="vocab_items", column="bin_name")
 
+    target_bin_order_sql = None
+    target_bin_order_param = None
     if has_bin_name and target_bin:
-        order_parts.append("CASE WHEN vi.bin_name = ? THEN 0 ELSE 1 END ASC")
-        params.append(target_bin)
+        target_bin_order_sql = "CASE WHEN vi.bin_name = ? THEN 0 ELSE 1 END ASC"
+        target_bin_order_param = target_bin
     elif has_bin_name:
         order_parts.append("CASE WHEN vi.bin_name IS NULL THEN 1 ELSE 0 END ASC")
 
@@ -156,6 +158,9 @@ def _build_selector_sql(conn: sqlite3.Connection, *, apply_cooldown: bool, targe
         )
         params.append(cooldown_sec)
 
+    if target_bin_order_sql is not None:
+        order_parts.insert(0, target_bin_order_sql)
+
     if _has_column(conn, table="vocab_items", column="freq_rank"):
         order_parts.extend(
             [
@@ -163,6 +168,9 @@ def _build_selector_sql(conn: sqlite3.Connection, *, apply_cooldown: bool, targe
                 "vi.freq_rank ASC",
             ]
         )
+
+    if target_bin_order_param is not None:
+        params.append(target_bin_order_param)
 
     order_parts.append("vi.id ASC")
     order_sql = "ORDER BY " + ", ".join(order_parts)
