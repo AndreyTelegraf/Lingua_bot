@@ -33,6 +33,10 @@ def present_finished(payload: dict[str, object]) -> str:
     band = str(payload.get("estimated_vocab_band") or "")
     range_text = _band_to_range_text(band, size)
 
+    correct = int(payload.get("correct_answers", 0))
+    total = int(payload.get("total_questions", 0))
+    wrong = max(total - correct, 0)
+
     lines = [
         f"Ваш пассивный словарный запас находится в диапазоне {range_text}.",
         "",
