@@ -206,15 +206,39 @@ def get_next_item(conn: sqlite3.Connection, *, attempt_id: int) -> sqlite3.Row |
     target_bin = _derive_target_bin(_load_recent_answer_signals(conn, attempt_id=attempt_id))
 
     sql_cooldown, base_params_cooldown = _build_selector_sql(conn, apply_cooldown=True, target_bin=target_bin)
+    base_params_cooldown = tuple(base_params_cooldown)
+    exec_params_cooldown = base_params_cooldown
+
+    if target_bin is not None and len(base_params_cooldown) >= 1:
+        exec_params_cooldown = (
+            *base_params_cooldown[:-1],
+            *shown_params,
+            base_params_cooldown[-1],
+        )
+    else:
+        exec_params_cooldown = (*base_params_cooldown, *shown_params)
+
     row = conn.execute(
         sql_cooldown.replace("{shown_filter_sql}", shown_filter_sql),
-        (*base_params_cooldown, *shown_params),
+        exec_params_cooldown,
     ).fetchone()
     if row is not None:
         return row
 
     sql_fallback, base_params_fallback = _build_selector_sql(conn, apply_cooldown=False, target_bin=target_bin)
+    base_params_fallback = tuple(base_params_fallback)
+    exec_params_fallback = base_params_fallback
+
+    if target_bin is not None and len(base_params_fallback) >= 1:
+        exec_params_fallback = (
+            *base_params_fallback[:-1],
+            *shown_params,
+            base_params_fallback[-1],
+        )
+    else:
+        exec_params_fallback = (*base_params_fallback, *shown_params)
+
     return conn.execute(
         sql_fallback.replace("{shown_filter_sql}", shown_filter_sql),
-        (*base_params_fallback, *shown_params),
+        exec_params_fallback,
     ).fetchone()
