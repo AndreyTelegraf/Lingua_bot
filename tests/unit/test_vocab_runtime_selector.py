@@ -330,3 +330,45 @@ def test_get_next_item_can_disable_cooldown_via_env_zero() -> None:
             os.environ.pop("VOCAB_RUNTIME_ITEM_COOLDOWN_SEC", None)
         else:
             os.environ["VOCAB_RUNTIME_ITEM_COOLDOWN_SEC"] = old
+
+
+def test_get_next_item_moves_up_after_two_correct_answers_in_same_bin() -> None:
+    conn = _conn_with_bin_exposure()
+    try:
+        attempt_id = start_attempt(conn, user_id=42)
+
+        log_event(conn, attempt_id=attempt_id, user_id=42, item_id=1, event_type="answer", is_correct=1)
+        log_event(conn, attempt_id=attempt_id, user_id=42, item_id=2, event_type="answer", is_correct=1)
+
+        row = get_next_item(conn, attempt_id=attempt_id)
+        assert row is not None
+        assert str(row["lemma"]) == "bin2_item_a"
+    finally:
+        conn.close()
+
+
+def test_get_next_item_moves_down_after_two_wrong_answers_in_same_bin() -> None:
+    conn = sqlite3.connect(":memory:")
+    _base_schema(conn)
+    conn.execute("CREATE TABLE vocab_items (id INTEGER PRIMARY KEY AUTOINCREMENT, lemma TEXT NOT NULL, question_text TEXT NOT NULL, correct_answer TEXT NOT NULL, pos TEXT, freq_rank INTEGER, bin_name TEXT, is_active INTEGER NOT NULL DEFAULT 0)")
+    conn.executemany(
+        "INSERT INTO vocab_items (id, lemma, question_text, correct_answer, pos, freq_rank, bin_name, is_active) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+        [
+            (1, "bin1_easy", "q1", "a1", "noun", 100, "1K", 1),
+            (2, "bin2_hard_a", "q2", "a2", "noun", 500, "2K", 1),
+            (3, "bin2_hard_b", "q3", "a3", "noun", 600, "2K", 1),
+        ],
+    )
+    conn.commit()
+
+    try:
+        attempt_id = start_attempt(conn, user_id=42)
+
+        log_event(conn, attempt_id=attempt_id, user_id=42, item_id=2, event_type="answer", is_correct=0)
+        log_event(conn, attempt_id=attempt_id, user_id=42, item_id=3, event_type="answer", is_correct=0)
+
+        row = get_next_item(conn, attempt_id=attempt_id)
+        assert row is not None
+        assert str(row["lemma"]) == "bin1_easy"
+    finally:
+        conn.close()

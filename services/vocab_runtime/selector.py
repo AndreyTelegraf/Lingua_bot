@@ -33,7 +33,77 @@ def _cooldown_sec() -> int:
     return max(0, value)
 
 
-def _build_selector_sql(conn: sqlite3.Connection, *, apply_cooldown: bool) -> tuple[str, tuple[object, ...]]:
+def _shift_bin(bin_name: str | None, delta: int) -> str | None:
+    if not bin_name:
+        return None
+    raw = str(bin_name).strip().upper()
+    if not raw.endswith("K"):
+        return None
+    try:
+        n = int(raw[:-1])
+    except ValueError:
+        return None
+    return f"{max(1, n + delta)}K"
+
+
+def _load_recent_answer_signals(conn: sqlite3.Connection, *, attempt_id: int, limit: int = 2) -> list[dict[str, object]]:
+    conn.row_factory = sqlite3.Row
+    has_is_correct = _has_column(conn, table="vocab_attempt_events", column="is_correct")
+    has_bin_name = _has_column(conn, table="vocab_items", column="bin_name")
+
+    if not has_is_correct or not has_bin_name:
+        return []
+
+    rows = conn.execute(
+        """
+        SELECT
+            vae.is_correct AS is_correct,
+            vi.bin_name AS bin_name
+        FROM vocab_attempt_events vae
+        LEFT JOIN vocab_items vi ON vi.id = vae.item_id
+        WHERE vae.attempt_id = ?
+          AND vae.event_type = 'answer'
+        ORDER BY vae.id DESC
+        LIMIT ?
+        """,
+        (attempt_id, limit),
+    ).fetchall()
+
+    out: list[dict[str, object]] = []
+    for row in rows:
+        if row["is_correct"] is None:
+            continue
+        out.append(
+            {
+                "is_correct": 1 if int(row["is_correct"] or 0) == 1 else 0,
+                "bin_name": row["bin_name"],
+            }
+        )
+    return out
+
+
+def _derive_target_bin(last_answers: list[dict[str, object]]) -> str | None:
+    env_target_bin = os.getenv("VOCAB_TARGET_BIN")
+    if env_target_bin:
+        return env_target_bin
+
+    if len(last_answers) < 2:
+        return None
+
+    latest_bin = last_answers[0].get("bin_name")
+    if latest_bin is None:
+        return None
+
+    correct = sum(1 for row in last_answers[:2] if int(row.get("is_correct", 0) or 0) == 1)
+
+    if correct == 2:
+        return _shift_bin(str(latest_bin), 1)
+    if correct == 0:
+        return _shift_bin(str(latest_bin), -1)
+    return str(latest_bin)
+
+
+def _build_selector_sql(conn: sqlite3.Connection, *, apply_cooldown: bool, target_bin: str | None = None) -> tuple[str, tuple[object, ...]]:
     select_cols = "vi.id, vi.lemma, vi.question_text, vi.correct_answer, vi.pos"
     join_sql = ""
     where_parts = [
@@ -49,15 +119,12 @@ def _build_selector_sql(conn: sqlite3.Connection, *, apply_cooldown: bool) -> tu
     )
     has_last_shown_at = has_exposure and _has_column(conn, table="vocab_item_exposure", column="last_shown_at")
     has_bin_name = _has_column(conn, table="vocab_items", column="bin_name")
-    # adaptive_target_bin
-    target_bin = os.getenv("VOCAB_TARGET_BIN")
 
-    # adaptive_bin_preference
     if has_bin_name and target_bin:
-        order_parts.append("CASE WHEN vi.bin_name = ? THEN 0 ELSE 1 END ASC")  # adaptive_bin_preference
+        order_parts.append("CASE WHEN vi.bin_name = ? THEN 0 ELSE 1 END ASC")
         params.append(target_bin)
     elif has_bin_name:
-        order_parts.append("CASE WHEN vi.bin_name IS NULL THEN 1 ELSE 0 END ASC")  # adaptive_bin_preference
+        order_parts.append("CASE WHEN vi.bin_name IS NULL THEN 1 ELSE 0 END ASC")
 
 
     if has_exposure:
@@ -128,7 +195,9 @@ def get_next_item(conn: sqlite3.Connection, *, attempt_id: int) -> sqlite3.Row |
 
     shown_params = (attempt_id, *_SHOWN_EVENT_TYPES)
 
-    sql_cooldown, base_params_cooldown = _build_selector_sql(conn, apply_cooldown=True)
+    target_bin = _derive_target_bin(_load_recent_answer_signals(conn, attempt_id=attempt_id))
+
+    sql_cooldown, base_params_cooldown = _build_selector_sql(conn, apply_cooldown=True, target_bin=target_bin)
     row = conn.execute(
         sql_cooldown.replace("{shown_filter_sql}", shown_filter_sql),
         (*base_params_cooldown, *shown_params),
@@ -136,7 +205,7 @@ def get_next_item(conn: sqlite3.Connection, *, attempt_id: int) -> sqlite3.Row |
     if row is not None:
         return row
 
-    sql_fallback, base_params_fallback = _build_selector_sql(conn, apply_cooldown=False)
+    sql_fallback, base_params_fallback = _build_selector_sql(conn, apply_cooldown=False, target_bin=target_bin)
     return conn.execute(
         sql_fallback.replace("{shown_filter_sql}", shown_filter_sql),
         (*base_params_fallback, *shown_params),
