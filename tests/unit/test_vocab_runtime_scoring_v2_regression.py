@@ -11,7 +11,7 @@ def test_scoring_v2_regression_weak_24_wrong_stays_low() -> None:
     )
     out = score_attempt_logistic_coverage_v2(inp)
     assert out["estimated_vocab_size"] <= 1500
-    assert out["estimated_vocab_band"] in {"<1.5k", "1.5k-2.5k"}
+    assert out["estimated_vocab_band"] == "<500"
 
 
 def test_scoring_v2_regression_half_correct_24_is_not_fake_high() -> None:

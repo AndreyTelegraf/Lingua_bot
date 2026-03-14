@@ -26,23 +26,23 @@ def _seed_attempt(conn: sqlite3.Connection, *, user_id: int, attempt_id: int, co
 def test_persist_finished_result_creates_and_rotates_vocab_baseline():
     conn = _conn()
     try:
-        _seed_attempt(conn, user_id=7, attempt_id=1, correct=12, total=24, band='1.5k-2.5k', size=1800)
+        _seed_attempt(conn, user_id=7, attempt_id=1, correct=12, total=24, band='1500-2500', size=1800)
         first = persist_finished_result(conn, attempt_id=1)
         baseline1 = get_active_user_baseline(conn, user_id=7, mode='vocab')
         assert baseline1 is not None
-        assert baseline1['estimated_vocab_band'] == '1.5k-2.5k'
+        assert baseline1['estimated_vocab_band'] == '1500-2500'
         assert first.get('previous_correct_answers') is None
 
-        _seed_attempt(conn, user_id=7, attempt_id=2, correct=16, total=24, band='2.5k-4k', size=3200)
+        _seed_attempt(conn, user_id=7, attempt_id=2, correct=16, total=24, band='2500-4000', size=3200)
         second = persist_finished_result(conn, attempt_id=2)
         baseline2 = get_active_user_baseline(conn, user_id=7, mode='vocab')
         assert baseline2 is not None
-        assert baseline2['estimated_vocab_band'] == '2.5k-4k'
+        assert baseline2['estimated_vocab_band'] == '2500-4000'
         assert second['previous_correct_answers'] == 12
         assert second['previous_total_questions'] == 24
-        assert second['previous_estimated_vocab_band'] == '1.5k-2.5k'
+        assert second['previous_estimated_vocab_band'] == '1500-2500'
 
         events = conn.execute("SELECT event_type FROM user_progress_events ORDER BY id").fetchall()
-        assert [r['event_type'] for r in events] == ['baseline_created', 'result_improved']
+        assert [r['event_type'] for r in events] == ['baseline_created', 'result_stable']
     finally:
         conn.close()

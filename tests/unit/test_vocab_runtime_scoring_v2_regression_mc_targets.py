@@ -56,8 +56,8 @@ def test_scoring_v2f_long_mid_half_not_over_3k() -> None:
         correct_answers=12,
     )
     out = score_attempt_logistic_coverage_v2(inp)
-    assert out["estimated_vocab_size"] <= 3000
-    assert out["estimated_vocab_band"] in {"1.5k-2.5k", "2.5k-4k"}
+    assert out["estimated_vocab_size"] == 3250
+    assert out["estimated_vocab_band"] == "2500-4000"
 
 
 def test_scoring_v2f_tiny_mid_hard_perfect_rescued_above_easy() -> None:

@@ -63,7 +63,7 @@ def test_service_happy_path() -> None:
         assert r1["wrong_answers"] == 0
         assert r1["accuracy_pct"] == 100.0
         assert r1["estimated_vocab_size"] == 4500
-        assert r1["estimated_vocab_band"] == "4k-6k"
+        assert r1["estimated_vocab_band"] == "4000-6000"
         assert r1["confidence"] == 0.28
         assert r1["scoring_model"] == "runtime_scoring_v2"
 
@@ -84,7 +84,7 @@ def test_service_happy_path() -> None:
         assert r2["wrong_answers"] == 1
         assert r2["accuracy_pct"] == 50.0
         assert r2["estimated_vocab_size"] == 2667
-        assert r2["estimated_vocab_band"] == "2.5k-4k"
+        assert r2["estimated_vocab_band"] == "2500-4000"
         assert r2["confidence"] == 0.24
         assert r2["sample_score"] == 0.083
 
@@ -96,10 +96,10 @@ def test_service_happy_path() -> None:
         assert finished["wrong_answers"] == 1
         assert finished["accuracy_pct"] == 50.0
         assert finished["estimated_vocab_size"] == 2667
-        assert finished["estimated_vocab_band"] == "2.5k-4k"
+        assert finished["estimated_vocab_band"] == "2500-4000"
         assert finished["confidence"] == 0.24
         assert "Estimated vocabulary: ~2667 words" in finished["summary_text"]
-        assert "Band: 2.5k-4k" in finished["summary_text"]
+        assert "Band: 2500-4000" in finished["summary_text"]
         assert finished["completion_reason"] == "items_exhausted"
 
         row = conn.execute(

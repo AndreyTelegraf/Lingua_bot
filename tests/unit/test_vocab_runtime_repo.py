@@ -52,7 +52,7 @@ def test_repo_happy_path() -> None:
         assert stats["wrong_answers"] == 0
         assert stats["accuracy_pct"] == 100.0
         assert stats["estimated_vocab_size"] == 4500
-        assert stats["estimated_vocab_band"] == "4k-6k"
+        assert stats["estimated_vocab_band"] == "4000-6000"
         assert stats["confidence"] == 0.28
         assert stats["scoring_model"] == "runtime_scoring_v2"
         assert "Estimated vocabulary: ~4500 words" in stats["summary_text"]
@@ -84,7 +84,7 @@ def test_persist_finished_result_writes_snapshot_and_mode_result() -> None:
         assert stats["accuracy_pct"] == 50.0
         assert stats["completion_reason"] == "items_exhausted"
         assert stats["estimated_vocab_size"] == 2537
-        assert stats["estimated_vocab_band"] == "2.5k-4k"
+        assert stats["estimated_vocab_band"] == "2500-4000"
         assert stats["confidence"] == 0.37
 
         row = conn.execute(
@@ -93,7 +93,7 @@ def test_persist_finished_result_writes_snapshot_and_mode_result() -> None:
         ).fetchone()
         assert row is not None
         assert int(row["step_index"]) == 2
-        assert row["estimated_vocab_band"] == "2.5k-4k"
+        assert row["estimated_vocab_band"] == "2500-4000"
         assert int(row["estimated_vocab_size"]) == 2537
         payload = json.loads(row["snapshot_payload_json"])
         assert payload["estimated_vocab_size"] == 2537
@@ -105,10 +105,10 @@ def test_persist_finished_result_writes_snapshot_and_mode_result() -> None:
         assert row is not None
         assert row["mode"] == "vocab"
         assert float(row["score_numeric"]) == 50.0
-        assert row["band_text"] == "2.5k-4k"
+        assert row["band_text"] == "2500-4000"
         assert row["result_version"] == "runtime_scoring_v1"
         payload = json.loads(row["result_payload_json"])
         assert payload["attempt_id"] == attempt_id
-        assert payload["estimated_vocab_band"] == "2.5k-4k"
+        assert payload["estimated_vocab_band"] == "2500-4000"
     finally:
         conn.close()

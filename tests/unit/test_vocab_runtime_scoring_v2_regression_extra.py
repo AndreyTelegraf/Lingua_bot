@@ -39,7 +39,7 @@ def test_scoring_v2_regression_half_correct_long_sample_not_fake_high() -> None:
     )
     out = score_attempt_logistic_coverage_v2(inp)
     assert out["estimated_vocab_size"] <= 3400
-    assert out["estimated_vocab_band"] in {"1.5k-2.5k", "2.5k-4k"}
+    assert out["estimated_vocab_band"] in {"1500-2500", "2500-4000"}
 
 
 def test_scoring_v2_regression_strong_long_sample_stays_high() -> None:

@@ -131,3 +131,68 @@ def test_extract_scoring_rows_from_event_rows_still_supports_legacy_payload() ->
     ]
     out = extract_scoring_rows_from_event_rows(rows)
     assert out == [{"is_correct": 1, "bin_name": "5K", "freq_rank": 2400}]
+
+
+def test_scoring_v1_realistic_scale_for_24q_low_score() -> None:
+    inp = build_scoring_input_from_events(
+        [{"is_correct": 1, "bin_name": "1K", "freq_rank": 500}] * 5
+        + [{"is_correct": 0, "bin_name": "1K", "freq_rank": 500}] * 19,
+        attempt_id=24,
+        total_questions=24,
+        correct_answers=5,
+    )
+    out = score_attempt_v1(inp)
+    assert out["estimated_vocab_size"] == 750
+    assert out["estimated_vocab_band"] == "500-1000"
+
+
+def test_scoring_v1_realistic_scale_for_24q_mid_score() -> None:
+    inp = build_scoring_input_from_events(
+        [{"is_correct": 1, "bin_name": "2K", "freq_rank": 1500}] * 12
+        + [{"is_correct": 0, "bin_name": "2K", "freq_rank": 1500}] * 12,
+        attempt_id=25,
+        total_questions=24,
+        correct_answers=12,
+    )
+    out = score_attempt_v1(inp)
+    assert out["estimated_vocab_size"] == 3250
+    assert out["estimated_vocab_band"] == "2500-4000"
+
+
+def test_scoring_v1_realistic_scale_for_24q_a0():
+    inp = build_scoring_input_from_events(
+        [{"is_correct": 1, "bin_name": "1K", "freq_rank": 500}] * 2
+        + [{"is_correct": 0, "bin_name": "1K", "freq_rank": 500}] * 22,
+        attempt_id=26,
+        total_questions=24,
+        correct_answers=2,
+    )
+    out = score_attempt_v1(inp)
+    assert out["estimated_vocab_size"] == 300
+    assert out["estimated_vocab_band"] == "<500"
+
+
+def test_scoring_v1_realistic_scale_for_24q_a1plus():
+    inp = build_scoring_input_from_events(
+        [{"is_correct": 1, "bin_name": "1K", "freq_rank": 500}] * 7
+        + [{"is_correct": 0, "bin_name": "1K", "freq_rank": 500}] * 17,
+        attempt_id=27,
+        total_questions=24,
+        correct_answers=7,
+    )
+    out = score_attempt_v1(inp)
+    assert out["estimated_vocab_size"] == 1250
+    assert out["estimated_vocab_band"] == "1000-1500"
+
+
+def test_scoring_v1_realistic_scale_for_24q_c1plus():
+    inp = build_scoring_input_from_events(
+        [{"is_correct": 1, "bin_name": "10K", "freq_rank": 6000}] * 23
+        + [{"is_correct": 0, "bin_name": "10K", "freq_rank": 6000}],
+        attempt_id=28,
+        total_questions=24,
+        correct_answers=23,
+    )
+    out = score_attempt_v1(inp)
+    assert out["estimated_vocab_size"] == 9000
+    assert out["estimated_vocab_band"] == "8k+"
