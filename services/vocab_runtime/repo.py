@@ -33,6 +33,270 @@ def _json_dumps(payload: dict[str, object]) -> str:
     return json.dumps(payload, ensure_ascii=False, sort_keys=True)
 
 
+def _compact_band_text(band: str | None, size: int | None) -> str | None:
+    band = str(band or "").strip()
+    size = int(size or 0)
+    mapping = {
+        "<1.5k": "до 1 500",
+        "1.5k-2.5k": "1 500–2 500",
+        "2.5k-4k": "2 500–4 000",
+        "4k-6k": "4 000–6 000",
+        "6k-8k": "6 000–8 000",
+        "8k+": "от 8 000",
+    }
+    if band in mapping:
+        return mapping[band]
+    if size <= 0:
+        return None
+    if size < 1500:
+        return "до 1 500"
+    if size < 2500:
+        return "1 500–2 500"
+    if size < 4000:
+        return "2 500–4 000"
+    if size < 6000:
+        return "4 000–6 000"
+    if size < 8000:
+        return "6 000–8 000"
+    return "от 8 000"
+
+
+def _current_vocab_baseline_payload(stats: dict[str, Any]) -> dict[str, Any]:
+    vocab_size = stats.get("estimated_vocab_size")
+    vocab_band = stats.get("estimated_vocab_band")
+    confidence = stats.get("confidence")
+
+    cefr_guess = None
+    size = int(vocab_size or 0)
+    if size > 0:
+        if size < 1000:
+            cefr_guess = "A1"
+        elif size < 2500:
+            cefr_guess = "A2"
+        elif size < 4000:
+            cefr_guess = "B1"
+        elif size < 7000:
+            cefr_guess = "B2"
+        else:
+            cefr_guess = "C1"
+
+    readiness = "below_a2"
+    if cefr_guess in {"A2", "B1", "B2", "C1"}:
+        readiness = "around_a2_or_above"
+
+    return {
+        "mode": "vocab",
+        "estimated_vocab_size": vocab_size,
+        "estimated_vocab_band": vocab_band,
+        "estimated_cefr_level": cefr_guess,
+        "confidence": confidence,
+        "question_count": stats.get("total_questions"),
+        "correct_answers": stats.get("correct_answers"),
+        "scoring_model": stats.get("scoring_model"),
+        "calibration_hint": {
+            "level_entry_cefr_floor": cefr_guess,
+            "level_entry_cefr_guess": cefr_guess,
+            "ciple_entry_readiness": readiness,
+        },
+    }
+
+
+def get_active_user_baseline(conn: sqlite3.Connection, *, user_id: int, mode: str) -> dict[str, Any] | None:
+    if not _table_exists(conn, table="user_mode_baselines"):
+        return None
+
+    conn.row_factory = sqlite3.Row
+    row = conn.execute(
+        '''
+        SELECT *
+        FROM user_mode_baselines
+        WHERE user_id = ?
+          AND mode = ?
+          AND is_active = 1
+        ORDER BY id DESC
+        LIMIT 1
+        ''',
+        (user_id, mode),
+    ).fetchone()
+    if row is None:
+        return None
+    out = dict(row)
+    payload = out.get("calibration_payload_json")
+    if payload:
+        try:
+            out["calibration_payload_json"] = json.loads(str(payload))
+        except Exception:
+            pass
+    return out
+
+
+def _derive_progress_event_type(previous_payload: dict[str, Any] | None, current_payload: dict[str, Any]) -> tuple[str, dict[str, Any]]:
+    if previous_payload is None:
+        return "baseline_created", {
+            "previous_vocab_size": None,
+            "current_vocab_size": current_payload.get("estimated_vocab_size"),
+        }
+
+    prev_band = str(previous_payload.get("estimated_vocab_band") or "")
+    curr_band = str(current_payload.get("estimated_vocab_band") or "")
+    prev_size = int(previous_payload.get("estimated_vocab_size") or 0)
+    curr_size = int(current_payload.get("estimated_vocab_size") or 0)
+
+    delta_size = curr_size - prev_size
+    meaningful = abs(delta_size) >= 400
+
+    if prev_band != curr_band:
+        order = {
+            "<1.5k": 1,
+            "1.5k-2.5k": 2,
+            "2.5k-4k": 3,
+            "4k-6k": 4,
+            "6k-8k": 5,
+            "8k+": 6,
+        }
+        if order.get(curr_band, 0) > order.get(prev_band, 0):
+            event = "result_improved"
+        elif order.get(curr_band, 0) < order.get(prev_band, 0):
+            event = "result_declined"
+        else:
+            event = "result_stable"
+    else:
+        if delta_size >= 400 and meaningful:
+            event = "result_improved"
+        elif delta_size <= -400 and meaningful:
+            event = "result_declined"
+        else:
+            event = "result_stable"
+
+    return event, {
+        "previous_vocab_size": prev_size,
+        "current_vocab_size": curr_size,
+        "delta_vocab_size": delta_size,
+        "previous_vocab_band": prev_band,
+        "current_vocab_band": curr_band,
+    }
+
+
+def _attach_previous_result_summary(stats: dict[str, Any], previous_payload: dict[str, Any] | None) -> dict[str, Any]:
+    if not previous_payload:
+        return stats
+
+    prev_total = previous_payload.get("question_count")
+    prev_correct = previous_payload.get("correct_answers")
+    prev_band = previous_payload.get("estimated_vocab_band")
+    prev_size = previous_payload.get("estimated_vocab_size")
+
+    stats["previous_correct_answers"] = prev_correct
+    stats["previous_total_questions"] = prev_total
+    stats["previous_estimated_vocab_band"] = prev_band
+    stats["previous_estimated_vocab_size"] = prev_size
+    stats["previous_vocab_range_compact"] = _compact_band_text(prev_band, prev_size)
+
+    return stats
+
+
+def _upsert_user_mode_baseline(conn: sqlite3.Connection, *, stats: dict[str, Any], mode: str = "vocab") -> dict[str, Any]:
+    if not _table_exists(conn, table="user_mode_baselines"):
+        return stats
+
+    user_id = int(stats["user_id"])
+    previous = get_active_user_baseline(conn, user_id=user_id, mode=mode)
+
+    previous_payload = None
+    if previous is not None:
+        payload = previous.get("calibration_payload_json")
+        if isinstance(payload, dict):
+            previous_payload = payload
+        else:
+            previous_payload = {
+                "estimated_vocab_size": previous.get("estimated_vocab_size"),
+                "estimated_vocab_band": previous.get("estimated_vocab_band"),
+                "estimated_cefr_level": previous.get("estimated_cefr_level"),
+                "confidence": previous.get("confidence"),
+            }
+
+    stats = _attach_previous_result_summary(stats, previous_payload)
+    current_payload = _current_vocab_baseline_payload(stats)
+    event_type, delta_payload = _derive_progress_event_type(previous_payload, current_payload)
+
+    if previous is not None:
+        conn.execute(
+            '''
+            UPDATE user_mode_baselines
+            SET is_active = 0,
+                valid_until = CURRENT_TIMESTAMP,
+                updated_at = CURRENT_TIMESTAMP
+            WHERE id = ?
+            ''',
+            (int(previous["id"]),),
+        )
+
+    conn.execute(
+        '''
+        INSERT INTO user_mode_baselines (
+            user_id,
+            mode,
+            baseline_version,
+            source_mode,
+            source_run_id,
+            source_attempt_id,
+            estimated_vocab_size,
+            estimated_vocab_band,
+            estimated_cefr_level,
+            confidence,
+            calibration_payload_json,
+            valid_from,
+            is_active,
+            created_at,
+            updated_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+        ''',
+        (
+            user_id,
+            mode,
+            "vocab_baseline_v1",
+            "vocab",
+            stats.get("mode_run_id"),
+            stats.get("attempt_id"),
+            current_payload.get("estimated_vocab_size"),
+            current_payload.get("estimated_vocab_band"),
+            current_payload.get("estimated_cefr_level"),
+            current_payload.get("confidence"),
+            _json_dumps(current_payload),
+        ),
+    )
+
+    if _table_exists(conn, table="user_progress_events"):
+        conn.execute(
+            '''
+            INSERT INTO user_progress_events (
+                user_id,
+                mode,
+                source_run_id,
+                source_attempt_id,
+                event_type,
+                previous_payload_json,
+                current_payload_json,
+                delta_payload_json,
+                created_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+            ''',
+            (
+                user_id,
+                mode,
+                stats.get("mode_run_id"),
+                stats.get("attempt_id"),
+                event_type,
+                _json_dumps(previous_payload) if previous_payload is not None else None,
+                _json_dumps(current_payload),
+                _json_dumps(delta_payload),
+            ),
+        )
+
+    conn.commit()
+    return stats
+
+
 def _format_accuracy_pct(correct: int, total: int) -> float:
     if total <= 0:
         return 0.0
@@ -514,4 +778,5 @@ def persist_finished_result(conn: sqlite3.Connection, *, attempt_id: int) -> dic
             )
 
     conn.commit()
+    stats = _upsert_user_mode_baseline(conn, stats=stats, mode="vocab")
     return stats

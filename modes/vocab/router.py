@@ -100,6 +100,10 @@ def _result_text(
     correct_answers: int | None = None,
     total_answers: int | None = None,
     peer_comparison_text: str | None = None,
+    previous_correct_answers: int | None = None,
+    previous_total_questions: int | None = None,
+    previous_estimated_vocab_band: str | None = None,
+    previous_estimated_vocab_size: int | None = None,
 ) -> str:
     payload: dict[str, object] = {
         "estimated_vocab_band": estimated_vocab_band,
@@ -113,6 +117,14 @@ def _result_text(
         payload["total_questions"] = int(total_answers)
     if peer_comparison_text:
         payload["peer_comparison_text"] = peer_comparison_text
+    if previous_correct_answers is not None:
+        payload["previous_correct_answers"] = int(previous_correct_answers)
+    if previous_total_questions is not None:
+        payload["previous_total_questions"] = int(previous_total_questions)
+    if previous_estimated_vocab_band is not None:
+        payload["previous_estimated_vocab_band"] = str(previous_estimated_vocab_band)
+    if previous_estimated_vocab_size is not None:
+        payload["previous_estimated_vocab_size"] = int(previous_estimated_vocab_size)
 
     return render_vocab_result(payload)
 
@@ -237,10 +249,32 @@ async def _render_finish(callback: CallbackQuery, engine: VocabEngine, reason: s
     if callback.message is None:
         return
 
+    previous_baseline = None
+    if callback.from_user is not None and container.db is not None:
+        repo = VocabRepository(container.db)
+        user_id = await repo.upsert_user_from_telegram(callback.from_user)
+        previous_baseline = await repo.get_active_user_mode_baseline(
+            user_id=user_id,
+            mode="vocab",
+        )
+
     finished = await engine.finish_attempt(
         tg_user=callback.from_user,
         completion_reason=reason,
     )
+
+    previous_payload = None
+    if previous_baseline is not None:
+        raw = previous_baseline.get("calibration_payload_json")
+        if isinstance(raw, dict):
+            previous_payload = raw
+        else:
+            previous_payload = {
+                "correct_answers": previous_baseline.get("correct_answers"),
+                "question_count": previous_baseline.get("question_count"),
+                "estimated_vocab_band": previous_baseline.get("estimated_vocab_band"),
+                "estimated_vocab_size": previous_baseline.get("estimated_vocab_size"),
+            }
 
     await callback.message.edit_text(
         _result_text(
@@ -249,6 +283,10 @@ async def _render_finish(callback: CallbackQuery, engine: VocabEngine, reason: s
             confidence=finished.confidence,
             correct_answers=getattr(finished, "correct_answers", None),
             total_answers=getattr(finished, "total_answers", None),
+            previous_correct_answers=(previous_payload or {}).get("correct_answers"),
+            previous_total_questions=(previous_payload or {}).get("question_count"),
+            previous_estimated_vocab_band=(previous_payload or {}).get("estimated_vocab_band"),
+            previous_estimated_vocab_size=(previous_payload or {}).get("estimated_vocab_size"),
         ),
         reply_markup=_result_keyboard(
             attempt_id=int(finished.vocab_attempt_id),

@@ -11,6 +11,14 @@ from modes.vocab.state import SelectorRuntimeState
 
 
 class VocabRepository:
+    async def _table_exists(self, table: str) -> bool:
+        cur = await self.conn.execute(
+            "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ? LIMIT 1",
+            (table,),
+        )
+        row = await cur.fetchone()
+        return row is not None
+
     def __init__(self, conn: aiosqlite.Connection) -> None:
         self.conn = conn
 
@@ -855,4 +863,225 @@ class VocabRepository:
                 json.dumps(payload, ensure_ascii=False),
             ),
         )
+        await self.conn.commit()
+
+
+    async def get_active_user_mode_baseline(
+        self,
+        *,
+        user_id: int,
+        mode: str,
+    ) -> dict | None:
+        if not await self._table_exists("user_mode_baselines"):
+            return None
+
+        cur = await self.conn.execute(
+            """
+            SELECT *
+            FROM user_mode_baselines
+            WHERE user_id = ?
+              AND mode = ?
+              AND is_active = 1
+            ORDER BY id DESC
+            LIMIT 1
+            """,
+            (user_id, mode),
+        )
+        row = await cur.fetchone()
+        if row is None:
+            return None
+
+        out = dict(row)
+        payload = out.get("calibration_payload_json")
+        if payload:
+            try:
+                out["calibration_payload_json"] = json.loads(payload)
+            except Exception:
+                pass
+        return out
+
+    async def upsert_user_vocab_baseline(
+        self,
+        *,
+        user_id: int,
+        mode_run_id: int,
+        attempt_id: int,
+        estimated_vocab_band: str,
+        estimated_vocab_size: int,
+        confidence: float,
+        correct_answers: int,
+        total_answers: int,
+    ) -> None:
+        if not await self._table_exists("user_mode_baselines"):
+            return
+
+        has_progress_events = await self._table_exists("user_progress_events")
+
+        previous = await self.get_active_user_mode_baseline(
+            user_id=user_id,
+            mode="vocab",
+        )
+
+        previous_payload = None
+        if previous is not None:
+            raw = previous.get("calibration_payload_json")
+            if isinstance(raw, dict):
+                previous_payload = raw
+            else:
+                previous_payload = {
+                    "estimated_vocab_band": previous.get("estimated_vocab_band"),
+                    "estimated_vocab_size": previous.get("estimated_vocab_size"),
+                    "confidence": previous.get("confidence"),
+                }
+
+        size = int(estimated_vocab_size or 0)
+        if size < 1000:
+            estimated_cefr_level = "A1"
+        elif size < 2500:
+            estimated_cefr_level = "A2"
+        elif size < 4000:
+            estimated_cefr_level = "B1"
+        elif size < 7000:
+            estimated_cefr_level = "B2"
+        else:
+            estimated_cefr_level = "C1"
+
+        current_payload = {
+            "mode": "vocab",
+            "estimated_vocab_size": int(estimated_vocab_size or 0),
+            "estimated_vocab_band": str(estimated_vocab_band or ""),
+            "estimated_cefr_level": estimated_cefr_level,
+            "confidence": float(confidence or 0),
+            "question_count": int(total_answers or 0),
+            "correct_answers": int(correct_answers or 0),
+            "calibration_hint": {
+                "level_entry_cefr_guess": estimated_cefr_level,
+                "recommended_level_start_band": str(estimated_vocab_band or ""),
+            },
+        }
+
+        event_type = "baseline_created"
+        delta_payload = {
+            "previous_vocab_size": None,
+            "current_vocab_size": int(estimated_vocab_size or 0),
+            "delta_vocab_size": None,
+            "previous_vocab_band": None,
+            "current_vocab_band": str(estimated_vocab_band or ""),
+        }
+
+        if previous_payload is not None:
+            prev_band = str(previous_payload.get("estimated_vocab_band") or "")
+            prev_size = int(previous_payload.get("estimated_vocab_size") or 0)
+            curr_band = str(estimated_vocab_band or "")
+            curr_size = int(estimated_vocab_size or 0)
+
+            order = {
+                "<1.5k": 1,
+                "1.5k-2.5k": 2,
+                "2.5k-4k": 3,
+                "4k-6k": 4,
+                "6k-8k": 5,
+                "8k+": 6,
+            }
+            delta_size = curr_size - prev_size
+
+            if curr_band != prev_band:
+                if order.get(curr_band, 0) > order.get(prev_band, 0):
+                    event_type = "result_improved"
+                elif order.get(curr_band, 0) < order.get(prev_band, 0):
+                    event_type = "result_declined"
+                else:
+                    event_type = "result_stable"
+            else:
+                if delta_size >= 400:
+                    event_type = "result_improved"
+                elif delta_size <= -400:
+                    event_type = "result_declined"
+                else:
+                    event_type = "result_stable"
+
+            delta_payload = {
+                "previous_vocab_size": prev_size,
+                "current_vocab_size": curr_size,
+                "delta_vocab_size": delta_size,
+                "previous_vocab_band": prev_band,
+                "current_vocab_band": curr_band,
+            }
+
+        if previous is not None:
+            await self.conn.execute(
+                """
+                UPDATE user_mode_baselines
+                SET is_active = 0,
+                    valid_until = CURRENT_TIMESTAMP,
+                    updated_at = CURRENT_TIMESTAMP
+                WHERE id = ?
+                """,
+                (int(previous["id"]),),
+            )
+
+        await self.conn.execute(
+            """
+            INSERT INTO user_mode_baselines (
+                user_id,
+                mode,
+                baseline_version,
+                source_mode,
+                source_run_id,
+                source_attempt_id,
+                estimated_vocab_size,
+                estimated_vocab_band,
+                estimated_cefr_level,
+                confidence,
+                calibration_payload_json,
+                valid_from,
+                is_active,
+                created_at,
+                updated_at
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+            """,
+            (
+                user_id,
+                "vocab",
+                "vocab_baseline_v1",
+                "vocab",
+                mode_run_id,
+                attempt_id,
+                int(estimated_vocab_size or 0),
+                str(estimated_vocab_band or ""),
+                estimated_cefr_level,
+                float(confidence or 0),
+                json.dumps(current_payload, ensure_ascii=False),
+            ),
+        )
+
+        if has_progress_events:
+            await self.conn.execute(
+                """
+                INSERT INTO user_progress_events (
+                    user_id,
+                    mode,
+                    source_run_id,
+                    source_attempt_id,
+                    event_type,
+                    previous_payload_json,
+                    current_payload_json,
+                    delta_payload_json,
+                    created_at
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+                """,
+                (
+                    user_id,
+                    "vocab",
+                    mode_run_id,
+                    attempt_id,
+                    event_type,
+                    json.dumps(previous_payload, ensure_ascii=False) if previous_payload is not None else None,
+                    json.dumps(current_payload, ensure_ascii=False),
+                    json.dumps(delta_payload, ensure_ascii=False),
+                ),
+            )
+
         await self.conn.commit()

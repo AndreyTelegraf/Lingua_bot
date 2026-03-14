@@ -744,6 +744,17 @@ class VocabEngine:
             recommended_level_start_band=estimated_vocab_band,
         )
 
+        await repo.upsert_user_vocab_baseline(
+            user_id=user_id,
+            mode_run_id=int(active["mode_run_id"]),
+            attempt_id=int(active["id"]),
+            estimated_vocab_band=estimated_vocab_band,
+            estimated_vocab_size=estimated_vocab_size,
+            confidence=confidence,
+            correct_answers=correct_answers,
+            total_answers=total_answers,
+        )
+
         await repo.insert_result_snapshot(
             attempt_id=int(active["id"]),
             step_index=finishing_state.current_step,

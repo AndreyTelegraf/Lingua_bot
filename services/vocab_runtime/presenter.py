@@ -160,6 +160,52 @@ def _peer_comparison_fallback(payload: dict[str, object], level: str | None) -> 
     return "Это типичный результат для этого диапазона."
 
 
+def _previous_result_block(payload: dict[str, object]) -> list[str]:
+    prev_correct = payload.get("previous_correct_answers")
+    prev_total = payload.get("previous_total_questions")
+    prev_band = payload.get("previous_estimated_vocab_band")
+    prev_size = payload.get("previous_estimated_vocab_size")
+
+    if prev_correct is None or prev_total is None or (prev_band is None and prev_size is None):
+        return []
+
+    compact = None
+    if prev_band is not None:
+        band = str(prev_band)
+        mapping = {
+            "<1.5k": "до 1 500",
+            "1.5k-2.5k": "1 500–2 500",
+            "2.5k-4k": "2 500–4 000",
+            "4k-6k": "4 000–6 000",
+            "6k-8k": "6 000–8 000",
+            "8k+": "от 8 000",
+        }
+        compact = mapping.get(band)
+
+    if compact is None and prev_size is not None:
+        size = int(prev_size or 0)
+        if size < 1500:
+            compact = "до 1 500"
+        elif size < 2500:
+            compact = "1 500–2 500"
+        elif size < 4000:
+            compact = "2 500–4 000"
+        elif size < 6000:
+            compact = "4 000–6 000"
+        elif size < 8000:
+            compact = "6 000–8 000"
+        else:
+            compact = "от 8 000"
+
+    if compact is None:
+        return []
+
+    return [
+        "Ваш прошлый результат:",
+        f"{int(prev_correct)}/{int(prev_total)} правильных ответов и оценка запаса в {compact} слов.",
+    ]
+
+
 def present_finished(payload: dict[str, object]) -> str:
     text = _ORIGINAL_PRESENT_FINISHED(payload)
 
@@ -179,6 +225,7 @@ def present_finished(payload: dict[str, object]) -> str:
     if peer_text:
         insert_block.extend(["", peer_text])
 
+    previous_block = _previous_result_block(payload)
     lines = text.splitlines()
 
     insert_after = None
@@ -190,7 +237,24 @@ def present_finished(payload: dict[str, object]) -> str:
             break
 
     if insert_after is None:
-        return text.rstrip() + "\n\n" + "\n".join(insert_block)
+        rendered = text.rstrip() + "\n\n" + "\n".join(insert_block)
+        if previous_block:
+            approx = "Оценка результата приблизительная, она основана на частотности слов и ваших ответах."
+            if approx in rendered:
+                rendered = rendered.replace(approx, "\n".join(previous_block) + "\n\n" + approx, 1)
+            else:
+                rendered = rendered.rstrip() + "\n\n" + "\n".join(previous_block)
+        return rendered
 
     new_lines = lines[:insert_after] + insert_block + [""] + lines[insert_after:]
+
+    if previous_block:
+        approx_idx = None
+        for idx, line in enumerate(new_lines):
+            if line == "Оценка результата приблизительная, она основана на частотности слов и ваших ответах.":
+                approx_idx = idx
+                break
+        if approx_idx is not None:
+            new_lines = new_lines[:approx_idx] + [""] + previous_block + [""] + new_lines[approx_idx:]
+
     return "\n".join(new_lines)
