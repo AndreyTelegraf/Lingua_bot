@@ -121,13 +121,75 @@ def _result_text(
     return render_vocab_result(payload)
 
 
-def _result_keyboard(*, attempt_id: int) -> InlineKeyboardMarkup:
+def _share_range_code(estimated_vocab_band: str, estimated_vocab_size: int) -> str:
+    band = str(estimated_vocab_band or "").strip()
+    if band == "<1.5k":
+        return "1500"
+    if band == "1.5k-2.5k":
+        return "2500"
+    if band == "2.5k-4k":
+        return "4000"
+    if band == "4k-6k":
+        return "6000"
+    if band == "6k-8k":
+        return "8000"
+    if band == "8k+":
+        return "8000"
+    size = int(estimated_vocab_size or 0)
+    if size < 1500:
+        return "1500"
+    if size < 2500:
+        return "2500"
+    if size < 4000:
+        return "4000"
+    if size < 6000:
+        return "6000"
+    return "8000"
+
+
+def _share_vocab_range_text(estimated_vocab_band: str, estimated_vocab_size: int) -> str:
+    from services.vocab_runtime.presenter import _band_to_range_bounds  # local import to avoid widening surface
+
+    low, high = _band_to_range_bounds(str(estimated_vocab_band or ""), int(estimated_vocab_size or 0))
+    if low in (None, 0) and high is not None:
+        return f"до {int(high)}"
+    if low is not None and high is None:
+        return f"от {int(low)}"
+    if low is not None and high is not None:
+        return f"{int(low)}–{int(high)}"
+    return str(int(estimated_vocab_size or 0))
+
+
+def _build_share_query(*, estimated_vocab_band: str, estimated_vocab_size: int) -> str:
+    range_code = _share_range_code(estimated_vocab_band, estimated_vocab_size)
+    return f"sv_{range_code}"
+
+
+def _build_share_text(*, estimated_vocab_band: str, estimated_vocab_size: int) -> str:
+    vocab_range = _share_vocab_range_text(estimated_vocab_band, estimated_vocab_size)
+    range_code = _share_range_code(estimated_vocab_band, estimated_vocab_size)
+    return (
+        f"🇵🇹 ЯзыкоБот оценил мой словарный запас португальского в *{vocab_range} слов*.\n\n"
+        "А сколько знаете вы?\n\n"
+        f"Проверьте себя через [ЯзыкоБот](https://t.me/lin_gua_bot?start=sv_{range_code})"
+    )
+
+
+def _result_keyboard(
+    *,
+    attempt_id: int,
+    estimated_vocab_band: str,
+    estimated_vocab_size: int,
+) -> InlineKeyboardMarkup:
+    share_query = _build_share_query(
+        estimated_vocab_band=estimated_vocab_band,
+        estimated_vocab_size=estimated_vocab_size,
+    )
     return InlineKeyboardMarkup(
         inline_keyboard=[
             [InlineKeyboardButton(text="📊 Разбор ответов", callback_data=f"vocab_review:{int(attempt_id)}")],
-            [InlineKeyboardButton(text="🧠 Уровневый тест", callback_data="level:start")],
+            [InlineKeyboardButton(text="📤 Поделиться результатом", switch_inline_query=share_query)],
             [InlineKeyboardButton(text="🏠 В меню", callback_data="menu:root")],
-            [InlineKeyboardButton(text="↺ Пройти ещё раз", callback_data="vocab:start")],
         ]
     )
 
@@ -192,7 +254,11 @@ async def _render_finish(callback: CallbackQuery, engine: VocabEngine, reason: s
             correct_answers=getattr(finished, "correct_answers", None),
             total_answers=getattr(finished, "total_answers", None),
         ),
-        reply_markup=_result_keyboard(attempt_id=int(finished.vocab_attempt_id)),
+        reply_markup=_result_keyboard(
+            attempt_id=int(finished.vocab_attempt_id),
+            estimated_vocab_band=finished.estimated_vocab_band,
+            estimated_vocab_size=finished.estimated_vocab_size,
+        ),
     )
 
 
