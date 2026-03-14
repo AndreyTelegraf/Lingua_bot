@@ -8,8 +8,8 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message, C
 def _start_keyboard() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text="🧠 Словарный запас", callback_data="vocab:intro")],
-            [InlineKeyboardButton(text="💪 Уровневый тест", callback_data="level:start")],
+            [InlineKeyboardButton(text="🎯 Словарный запас", callback_data="vocab:intro")],
+            [InlineKeyboardButton(text="🧠 Уровневый тест", callback_data="level:start")],
             [InlineKeyboardButton(text="🇵🇹 Экзамен A2 (CIPLE)", callback_data="ciple:start")],
         ]
     )
@@ -47,7 +47,7 @@ def build_start_router() -> Router:
 
     @router.callback_query(F.data == "level:start")
     async def level_placeholder_handler(callback: CallbackQuery) -> None:
-        await callback.answer("Уровневый тест скоро будет доступен", show_alert=True)
+        await callback.answer("🧠 Уровневый тест скоро будет доступен", show_alert=True)
 
     @router.callback_query(F.data == "ciple:start")
     async def ciple_placeholder_handler(callback: CallbackQuery) -> None:

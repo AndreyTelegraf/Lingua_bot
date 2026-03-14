@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from aiogram import F, Router
 from aiogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup, Message
+from services.vocab_runtime.presenter import present_finished as render_vocab_result
 
 from app.container import container
 from modes.vocab.engine import VocabEngine
@@ -100,19 +101,31 @@ def _result_text(
     estimated_vocab_band: str,
     estimated_vocab_size: int,
     confidence: float,
+    correct_answers: int | None = None,
+    total_answers: int | None = None,
+    peer_comparison_text: str | None = None,
 ) -> str:
-    range_text = _band_to_range_text(estimated_vocab_band, estimated_vocab_size)
-    return (
-        f"Ваш пассивный словарный запас находится в диапазоне {range_text}.\n\n"
-        "Это приблизительная оценка, она основана на частотности слов и ваших ответах."
-    )
+    payload: dict[str, object] = {
+        "estimated_vocab_band": estimated_vocab_band,
+        "estimated_vocab_size": estimated_vocab_size,
+        "confidence": confidence,
+    }
+
+    if correct_answers is not None:
+        payload["correct_answers"] = int(correct_answers)
+    if total_answers is not None:
+        payload["total_questions"] = int(total_answers)
+    if peer_comparison_text:
+        payload["peer_comparison_text"] = peer_comparison_text
+
+    return render_vocab_result(payload)
 
 
 def _result_keyboard(*, attempt_id: int) -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(
         inline_keyboard=[
             [InlineKeyboardButton(text="📊 Разбор ответов", callback_data=f"vocab_review:{int(attempt_id)}")],
-            [InlineKeyboardButton(text="💪 Уровневый тест", callback_data="level:start")],
+            [InlineKeyboardButton(text="🧠 Уровневый тест", callback_data="level:start")],
             [InlineKeyboardButton(text="🏠 В меню", callback_data="menu:root")],
             [InlineKeyboardButton(text="↺ Пройти ещё раз", callback_data="vocab:start")],
         ]
@@ -176,6 +189,8 @@ async def _render_finish(callback: CallbackQuery, engine: VocabEngine, reason: s
             estimated_vocab_band=finished.estimated_vocab_band,
             estimated_vocab_size=finished.estimated_vocab_size,
             confidence=finished.confidence,
+            correct_answers=getattr(finished, "correct_answers", None),
+            total_answers=getattr(finished, "total_answers", None),
         ),
         reply_markup=_result_keyboard(attempt_id=int(finished.vocab_attempt_id)),
     )

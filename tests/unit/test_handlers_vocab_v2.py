@@ -38,7 +38,12 @@ def test_vocab_v2_handler_happy_path() -> None:
         step2 = vocab_v2_callback(conn=conn, store=store, user_id=42, callback_data="vocab:pick:201")
         assert step2["ok"] is True
         assert step2["answer_result"]["is_correct"] is False
-        assert step2["text"] == "Ваш пассивный словарный запас находится в диапазоне до 1 500 слов.\n\nЭто приблизительная оценка, она основана на частотности слов и ваших ответах."
+        assert "Вы правильно ответили на 1 вопросов из 2." in step2["text"]
+        assert "Ваш пассивный словарный запас находится в диапазоне до 1 500 слов." in step2["text"]
+        assert "Ориентировочно это соответствует уровню A2." in step2["text"]
+        assert "A1 — 🟩 A2 — B1 — B2 — C1" in step2["text"]
+        assert "Это типичный результат для этого диапазона." in step2["text"]
+        assert "Оценка результата приблизительная, она основана на частотности слов и ваших ответах." in step2["text"]
         assert step2["keyboard"] != []
         assert step2["finished"] is True
         assert store.get(user_id=42) is None
