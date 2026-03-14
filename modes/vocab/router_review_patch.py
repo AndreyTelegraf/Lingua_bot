@@ -5,6 +5,7 @@ from aiogram.types import CallbackQuery
 
 from app.container import container
 from services.vocab_runtime.review import render_review
+from bot.common_handlers.start import set_last_review_message_id
 
 
 async def _load_attempt_answers_by_attempt_id(*, telegram_user_id: int, attempt_id: int) -> list[dict]:
@@ -112,7 +113,9 @@ def build_vocab_review_router() -> Router:
         answers = await _load_latest_attempt_answers(int(cb.from_user.id))
         text = "Разбор ответов пока недоступен." if not answers else render_review(answers)
         if cb.message is not None:
-            await cb.message.answer(text)
+            sent = await cb.message.answer(text)
+        if cb.from_user:
+            set_last_review_message_id(cb.from_user.id, sent.message_id)
         await cb.answer()
 
     @router.callback_query(F.data.startswith("vocab_review:"))
@@ -132,7 +135,9 @@ def build_vocab_review_router() -> Router:
 
         text = "Разбор ответов пока недоступен." if not answers else render_review(answers)
         if cb.message is not None:
-            await cb.message.answer(text)
+            sent = await cb.message.answer(text)
+        if cb.from_user:
+            set_last_review_message_id(cb.from_user.id, sent.message_id)
         await cb.answer()
 
     return router

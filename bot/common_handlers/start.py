@@ -4,6 +4,9 @@ from aiogram import F, Router
 from aiogram.filters import CommandStart, CommandObject
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message, CallbackQuery, InlineQuery, InlineQueryResultArticle, InputTextMessageContent
 
+_LAST_REVIEW_MESSAGE: dict[int, int] = {}
+
+
 
 def _start_keyboard() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(
@@ -57,7 +60,20 @@ def _parse_share_start_arg(command: CommandObject | None) -> tuple[str | None, s
     return None, None
 
 
+
+def set_last_review_message_id(user_id: int, message_id: int | None):
+    if message_id is None:
+        _LAST_REVIEW_MESSAGE.pop(user_id, None)
+    else:
+        _LAST_REVIEW_MESSAGE[user_id] = message_id
+
+
+def pop_last_review_message_id(user_id: int) -> int | None:
+    return _LAST_REVIEW_MESSAGE.pop(user_id, None)
+
+
 def build_start_router() -> Router:
+
     router = Router(name="start_common_router")
 
     @router.message(CommandStart())
@@ -71,6 +87,17 @@ def build_start_router() -> Router:
 
     @router.callback_query(F.data == "menu:root")
     async def menu_root_handler(callback: CallbackQuery) -> None:
+        if callback.from_user is not None:
+            review_id = pop_last_review_message_id(callback.from_user.id)
+            if review_id is not None:
+                try:
+                    await callback.bot.delete_message(
+                        chat_id=callback.message.chat.id,
+                        message_id=review_id,
+                    )
+                except Exception:
+                    pass
+
         if callback.message is not None:
             await callback.message.edit_text(
                 _start_text(),
