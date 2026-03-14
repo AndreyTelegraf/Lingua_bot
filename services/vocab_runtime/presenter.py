@@ -122,7 +122,7 @@ def present_finished(payload: dict[str, object]) -> str:
         if marks:
             lines.extend(["", "".join(marks)])
 
-    return "\n".join(lines)
+    return _add_previous_test_separator("\n".join(lines))
 
 
 def present_question(view: dict[str, object]) -> str:
@@ -249,6 +249,18 @@ def _peer_comparison_fallback(payload: dict[str, object], level: str | None) -> 
     return "Это типичный результат для этого диапазона."
 
 
+
+
+def _add_previous_test_separator(text: str) -> str:
+    if "Ваш прошлый тест:" not in text or "────────" in text:
+        return text
+    return re.sub(
+        r"\n{2,}Ваш прошлый тест:",
+        "\n\n────────\n\nВаш прошлый тест:",
+        text,
+        count=1,
+    )
+
 def _previous_result_block(payload: dict[str, object]) -> list[str]:
     prev_correct = payload.get("previous_correct_answers")
     prev_total = payload.get("previous_total_questions")
@@ -313,11 +325,11 @@ def present_finished(payload: dict[str, object]) -> str:
     text = _ORIGINAL_PRESENT_FINISHED(payload)
 
     if "Ориентировочно это соответствует уровню" in text:
-        return text
+        return _add_previous_test_separator(text)
 
     level = _estimate_cefr_level_from_payload(payload)
     if not level:
-        return text
+        return _add_previous_test_separator(text)
 
     peer_text = _peer_comparison_fallback(payload, level)
     insert_block = [
@@ -344,9 +356,9 @@ def present_finished(payload: dict[str, object]) -> str:
         if previous_block:
             approx = "Выводы этого теста приблизительны, они основаны на частотности слов и точности ваших ответов."
             if approx in rendered:
-                rendered = rendered.replace(approx, "\n".join(previous_block) + "\n\n" + approx, 1)
+                rendered = rendered.replace(approx, "────────\n\n" + "\n".join(previous_block) + "\n\n" + approx, 1)
             else:
-                rendered = rendered.rstrip() + "\n\n" + "\n".join(previous_block)
+                rendered = rendered.rstrip() + "\n────────\n\n" + "\n".join(previous_block)
         return rendered
 
     new_lines = lines[:insert_after] + insert_block + [""] + lines[insert_after:]
@@ -358,6 +370,6 @@ def present_finished(payload: dict[str, object]) -> str:
                 approx_idx = idx
                 break
         if approx_idx is not None:
-            new_lines = new_lines[:approx_idx] + [""] + previous_block + [""] + new_lines[approx_idx:]
+            new_lines = new_lines[:approx_idx] + ["────────", ""] + previous_block + [""] + new_lines[approx_idx:]
 
     return "\n".join(new_lines)
