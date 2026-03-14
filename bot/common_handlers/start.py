@@ -129,10 +129,10 @@ def build_start_router() -> Router:
 
     @router.callback_query(F.data == "level:start")
     async def level_placeholder_handler(callback: CallbackQuery) -> None:
-        await callback.answer("🧠 Уровневый тест скоро будет доступен", show_alert=True)
+        await callback.answer("🧠 Уровневый тест пока в разработке", show_alert=True)
 
     @router.callback_query(F.data == "ciple:start")
     async def ciple_placeholder_handler(callback: CallbackQuery) -> None:
-        await callback.answer("Экзамен A2 (CIPLE) скоро будет доступен", show_alert=True)
+        await callback.answer("🇵🇹 Экзамен A2 (CIPLE) тоже", show_alert=True)
 
     return router
