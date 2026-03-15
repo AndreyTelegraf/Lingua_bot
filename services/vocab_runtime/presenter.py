@@ -319,7 +319,7 @@ def _previous_result_block(payload: dict[str, object]) -> list[str]:
 
     return [
         "Ваш прошлый тест:",
-        f"В прошлой попытке вы правильно ответили на {prev_correct_i} {question_word} из {prev_total_i}, {vocab_part}.",
+        f"В предыдущей попытке вы правильно ответили на {prev_correct_i} {question_word} из {prev_total_i}, {vocab_part}.",
     ]
 
 

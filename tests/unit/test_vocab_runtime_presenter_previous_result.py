@@ -15,4 +15,4 @@ def test_present_finished_shows_previous_result_block_when_available():
     })
 
     assert "Ваш прошлый тест:" in text
-    assert "В прошлой попытке вы правильно ответили на 12 вопросов из 24, запас был от 1 500 до 2 500 слов." in text
+    assert "В предыдущей попытке вы правильно ответили на 12 вопросов из 24, запас был от 1 500 до 2 500 слов." in text
