@@ -934,17 +934,38 @@ class VocabRepository:
                     "confidence": previous.get("confidence"),
                 }
 
-        size = int(estimated_vocab_size or 0)
-        if size < 1000:
-            estimated_cefr_level = "A1"
-        elif size < 2500:
-            estimated_cefr_level = "A2"
-        elif size < 4000:
-            estimated_cefr_level = "B1"
-        elif size < 7000:
-            estimated_cefr_level = "B2"
+        total_answers_int = int(total_answers or 0)
+        correct_answers_int = int(correct_answers or 0)
+
+        if total_answers_int >= 24:
+            if correct_answers_int <= 2:
+                estimated_cefr_level = "A0"
+            elif correct_answers_int <= 5:
+                estimated_cefr_level = "A1"
+            elif correct_answers_int <= 8:
+                estimated_cefr_level = "A1+"
+            elif correct_answers_int <= 11:
+                estimated_cefr_level = "A2"
+            elif correct_answers_int <= 15:
+                estimated_cefr_level = "B1"
+            elif correct_answers_int <= 18:
+                estimated_cefr_level = "B2"
+            elif correct_answers_int <= 21:
+                estimated_cefr_level = "C1"
+            else:
+                estimated_cefr_level = "C1+"
         else:
-            estimated_cefr_level = "C1"
+            size = int(estimated_vocab_size or 0)
+            if size < 1000:
+                estimated_cefr_level = "A1"
+            elif size < 2000:
+                estimated_cefr_level = "A2"
+            elif size < 4000:
+                estimated_cefr_level = "B1"
+            elif size < 6000:
+                estimated_cefr_level = "B2"
+            else:
+                estimated_cefr_level = "C1"
 
         current_payload = {
             "mode": "vocab",

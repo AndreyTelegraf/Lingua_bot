@@ -43,12 +43,7 @@ def _fmt_num(n: int) -> str:
 
 
 def _ru_plural_question(n: int) -> str:
-    n = abs(int(n))
-    if n % 10 == 1 and n % 100 != 11:
-        return "вопрос"
-    if 2 <= n % 10 <= 4 and not (12 <= n % 100 <= 14):
-        return "вопроса"
-    return "вопросов"
+    return _ru_plural_form(n, "вопрос", "вопроса", "вопросов")
 
 
 def _normalize_range_text(text: str) -> str:
@@ -235,11 +230,11 @@ def _render_cefr_scale(level: str | None) -> str:
     parts: list[str] = []
     for item in levels:
         if item == active:
-            parts.append(f"🟩 {item}")
+            parts.append(f"[{item}]")
         else:
             parts.append(item)
 
-    return " — ".join(parts)
+    return " ".join(parts)
 
 
 def _peer_comparison_fallback(payload: dict[str, object], level: str | None) -> str:
@@ -261,6 +256,7 @@ def _add_previous_test_separator(text: str) -> str:
         count=1,
     )
 
+
 def _previous_result_block(payload: dict[str, object]) -> list[str]:
     prev_correct = payload.get("previous_correct_answers")
     prev_total = payload.get("previous_total_questions")
@@ -274,38 +270,38 @@ def _previous_result_block(payload: dict[str, object]) -> list[str]:
     if prev_band is not None:
         band = str(prev_band)
         mapping = {
-            "<500": "<500",
-            "500-1000": "500–1 000",
-            "1000-1500": "1 000–1 500",
-            "1500-2500": "1 500–2 500",
-            "2500-4000": "2 500–4 000",
-            "4000-6000": "4 000–6 000",
-            "6000-8000": "6 000–8 000",
+            "<500": "меньше 500",
+            "500-1000": "от 500 до 1 000",
+            "1000-1500": "от 1 000 до 1 500",
+            "1500-2500": "от 1 500 до 2 500",
+            "2500-4000": "от 2 500 до 4 000",
+            "4000-6000": "от 4 000 до 6 000",
+            "6000-8000": "от 6 000 до 8 000",
             "8k+": "8000+",
-            "<1.5k": "<1500",
-            "1.5k-2.5k": "1 500–2 500",
-            "2.5k-4k": "2 500–4 000",
-            "4k-6k": "4 000–6 000",
-            "6k-8k": "6 000–8 000",
+            "<1.5k": "до 1 500",
+            "1.5k-2.5k": "от 1 500 до 2 500",
+            "2.5k-4k": "от 2 500 до 4 000",
+            "4k-6k": "от 4 000 до 6 000",
+            "6k-8k": "от 6 000 до 8 000",
         }
         compact = mapping.get(band)
 
     if compact is None and prev_size is not None:
         size = int(prev_size or 0)
         if size < 500:
-            compact = "<500"
+            compact = "меньше 500"
         elif size < 1000:
-            compact = "500–1 000"
+            compact = "от 500 до 1 000"
         elif size < 1500:
-            compact = "1 000–1 500"
+            compact = "от 1 000 до 1 500"
         elif size < 2500:
-            compact = "1 500–2 500"
+            compact = "от 1 500 до 2 500"
         elif size < 4000:
-            compact = "2 500–4 000"
+            compact = "от 2 500 до 4 000"
         elif size < 6000:
-            compact = "4 000–6 000"
+            compact = "от 4 000 до 6 000"
         elif size < 8000:
-            compact = "6 000–8 000"
+            compact = "от 6 000 до 8 000"
         else:
             compact = "8000+"
 
@@ -314,10 +310,16 @@ def _previous_result_block(payload: dict[str, object]) -> list[str]:
 
     prev_correct_i = int(prev_correct)
     prev_total_i = int(prev_total)
+    question_word = _ru_plural_question(prev_correct_i)
+
+    if compact == "8000+":
+        vocab_part = "запас был 8000+ слов"
+    else:
+        vocab_part = f"запас был {compact} слов"
 
     return [
         "Ваш прошлый тест:",
-        f"{prev_correct_i}/{prev_total_i} {_ru_plural_answer(prev_correct_i)} правильно и запас {compact} слов.",
+        f"В прошлой попытке вы правильно ответили на {prev_correct_i} {question_word} из {prev_total_i}, {vocab_part}.",
     ]
 
 

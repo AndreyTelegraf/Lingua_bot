@@ -32,15 +32,38 @@ def _band_from_size(size: int | None) -> str:
     if size >= 8000:
         return "8k+"
     if size >= 6000:
-        return "6k-8k"
+        return "6000-8000"
     if size >= 4000:
-        return "4k-6k"
+        return "4000-6000"
     if size >= 2500:
-        return "2.5k-4k"
+        return "2500-4000"
     if size >= 1500:
-        return "1.5k-2.5k"
-    return "<1.5k"
+        return "1500-2500"
+    if size >= 1000:
+        return "1000-1500"
+    if size >= 500:
+        return "500-1000"
+    return "<500"
 
+
+def _estimate_vocab_from_correct_answers_24(*, correct_answers: int) -> tuple[int, str]:
+    c = int(correct_answers)
+
+    if c <= 2:
+        return 300, "<500"
+    if c <= 5:
+        return 750, "500-1000"
+    if c <= 8:
+        return 1250, "1000-1500"
+    if c <= 11:
+        return 2000, "1500-2500"
+    if c <= 15:
+        return 3250, "2500-4000"
+    if c <= 18:
+        return 5000, "4000-6000"
+    if c <= 21:
+        return 7000, "6000-8000"
+    return 9000, "8k+"
 
 def _estimate_vocab_size_v2(
     *,
@@ -175,17 +198,22 @@ def score_attempt_logistic_coverage_v2(inp: ScoringInput) -> dict[str, Any]:
     coverage_score = _clamp(unique_positive_bins / 4.0, 0.0, 1.0)
     sample_score = _clamp(total / 24.0, 0.0, 1.0)
 
-    estimated_vocab_size = _estimate_vocab_size_v2(
-        total=total,
-        correct=correct,
-        weighted_accuracy=weighted_accuracy,
-        avg_freq=avg_freq,
-        max_freq=max_freq,
-        coverage_score=coverage_score,
-        sample_score=sample_score,
-        spread_score=spread_score,
-    )
-    estimated_vocab_band = _band_from_size(estimated_vocab_size)
+    if total >= 24:
+        estimated_vocab_size, estimated_vocab_band = _estimate_vocab_from_correct_answers_24(
+            correct_answers=correct,
+        )
+    else:
+        estimated_vocab_size = _estimate_vocab_size_v2(
+            total=total,
+            correct=correct,
+            weighted_accuracy=weighted_accuracy,
+            avg_freq=avg_freq,
+            max_freq=max_freq,
+            coverage_score=coverage_score,
+            sample_score=sample_score,
+            spread_score=spread_score,
+        )
+        estimated_vocab_band = _band_from_size(estimated_vocab_size)
 
     confidence = (
         0.42 * sample_score

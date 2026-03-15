@@ -11,11 +11,13 @@ from modes.vocab.repo import VocabRepository
 
 def _band_to_range_text(band: str, size: int) -> str:
     mapping = {
-        "<1.5k": "до 1 500 слов",
-        "1.5k-2.5k": "от 1 500 до 2 500 слов",
-        "2.5k-4k": "от 2 500 до 4 000 слов",
-        "4k-6k": "от 4 000 до 6 000 слов",
-        "6k-8k": "от 6 000 до 8 000 слов",
+        "<500": "до 500 слов",
+        "500-1000": "от 500 до 1 000 слов",
+        "1000-1500": "от 1 000 до 1 500 слов",
+        "1500-2500": "от 1 500 до 2 500 слов",
+        "2500-4000": "от 2 500 до 4 000 слов",
+        "4000-6000": "от 4 000 до 6 000 слов",
+        "6000-8000": "от 6 000 до 8 000 слов",
         "8k+": "8 000+ слов",
         "insufficient_data": "недостаточно данных",
         "unknown": "недостаточно данных",
@@ -131,6 +133,23 @@ def _result_text(
 
 def _share_range_code(estimated_vocab_band: str, estimated_vocab_size: int) -> str:
     band = str(estimated_vocab_band or "").strip()
+    if band == "<500":
+        return "500"
+    if band == "500-1000":
+        return "1000"
+    if band == "1000-1500":
+        return "1500"
+    if band == "1500-2500":
+        return "2500"
+    if band == "2500-4000":
+        return "4000"
+    if band == "4000-6000":
+        return "6000"
+    if band == "6000-8000":
+        return "8000"
+    if band == "8k+":
+        return "8000"
+
     if band == "<1.5k":
         return "1500"
     if band == "1.5k-2.5k":
@@ -140,8 +159,6 @@ def _share_range_code(estimated_vocab_band: str, estimated_vocab_size: int) -> s
     if band == "4k-6k":
         return "6000"
     if band == "6k-8k":
-        return "8000"
-    if band == "8k+":
         return "8000"
     size = int(estimated_vocab_size or 0)
     if size < 1500:

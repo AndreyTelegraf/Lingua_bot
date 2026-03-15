@@ -30,7 +30,7 @@ def _band_midpoint(bin_name: str | None) -> int | None:
     return (low + high) // 2
 
 
-def _estimate_size_from_signal(*, weighted_accuracy: float, avg_freq: float, max_freq: int | None, total: int) -> tuple[int, str]:
+def _estimate_size_from_signal_legacy(*, weighted_accuracy: float, avg_freq: float, max_freq: int | None, total: int) -> tuple[int, str]:
     if weighted_accuracy >= 0.95:
         size = 3800
     elif weighted_accuracy >= 0.85:
@@ -72,6 +72,26 @@ def _estimate_size_from_signal(*, weighted_accuracy: float, avg_freq: float, max
     return size, band
 
 
+def _estimate_size_from_correct_answers_24(*, correct_answers: int) -> tuple[int, str]:
+    c = int(correct_answers)
+
+    if c <= 2:
+        return 300, "<500"
+    if c <= 5:
+        return 750, "500-1000"
+    if c <= 8:
+        return 1250, "1000-1500"
+    if c <= 11:
+        return 2000, "1500-2500"
+    if c <= 15:
+        return 3250, "2500-4000"
+    if c <= 18:
+        return 5000, "4000-6000"
+    if c <= 21:
+        return 7000, "6000-8000"
+    return 9000, "8k+"
+
+
 def score_attempt_v1(inp: ScoringInput) -> dict[str, Any]:
     total = int(inp.total_questions)
     correct = int(inp.correct_answers)
@@ -106,12 +126,17 @@ def score_attempt_v1(inp: ScoringInput) -> dict[str, Any]:
         max_freq = None
         min_freq = None
 
-    estimated_vocab_size, estimated_vocab_band = _estimate_size_from_signal(
-        weighted_accuracy=weighted_accuracy,
-        avg_freq=avg_freq,
-        max_freq=max_freq,
-        total=total,
-    )
+    if total >= 24:
+        estimated_vocab_size, estimated_vocab_band = _estimate_size_from_correct_answers_24(
+            correct_answers=correct,
+        )
+    else:
+        estimated_vocab_size, estimated_vocab_band = _estimate_size_from_signal_legacy(
+            weighted_accuracy=weighted_accuracy,
+            avg_freq=avg_freq,
+            max_freq=max_freq,
+            total=total,
+        )
 
     unique_bins = len([k for k, v in weighted_hits.items() if v > 0])
     coverage_score = min(1.0, unique_bins / 4.0)
