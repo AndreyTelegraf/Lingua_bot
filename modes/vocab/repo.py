@@ -349,6 +349,48 @@ class VocabRepository:
         return [int(row["item_id"]) for row in rows if row["item_id"] is not None]
 
 
+
+    async def get_recent_user_shown_item_ids(
+        self,
+        *,
+        attempt_id: int,
+        days: int,
+    ) -> list[int]:
+        if days <= 0:
+            return []
+
+        cursor = await self.conn.execute(
+            """
+            SELECT user_id
+            FROM vocab_attempts
+            WHERE id = ?
+            LIMIT 1
+            """,
+            (attempt_id,),
+        )
+        attempt_row = await cursor.fetchone()
+        if attempt_row is None:
+            return []
+
+        user_id = int(attempt_row["user_id"])
+
+        cursor = await self.conn.execute(
+            """
+            SELECT DISTINCT vae.item_id
+            FROM vocab_attempt_events vae
+            JOIN vocab_attempts va ON va.id = vae.attempt_id
+            WHERE va.user_id = ?
+              AND va.id <> ?
+              AND vae.item_id IS NOT NULL
+              AND vae.event_type IN ('shown', 'question_shown')
+              AND vae.created_at >= datetime('now', '-' || ? || ' days')
+            ORDER BY vae.item_id
+            """,
+            (user_id, attempt_id, days),
+        )
+        rows = await cursor.fetchall()
+        return [int(row["item_id"]) for row in rows if row["item_id"] is not None]
+
     async def get_selector_state(self, *, attempt_id: int) -> SelectorRuntimeState:
         cursor = await self.conn.execute(
             """

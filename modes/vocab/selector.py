@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 import os
 
 import aiosqlite
@@ -23,6 +24,8 @@ CEFR_CAPS: dict[str, int] = {
 }
 
 BIN_ORDER: list[str] = ["1K", "2K", "5K", "10K", "20K", "rare"]
+
+logger = logging.getLogger(__name__)
 
 
 def _env_int(name: str, default: int) -> int:
@@ -235,45 +238,76 @@ class VocabSelector:
 
     async def pick_next_item(self, *, attempt_id: int) -> aiosqlite.Row | None:
         state = await self.repo.get_selector_state(attempt_id=attempt_id)
-        recent_attempt_ids = await self.repo.get_recent_attempt_item_ids(
-            attempt_id=attempt_id,
-            previous_attempts_limit=1,
+
+        previous_attempts_exclude = max(0, _env_int("VOCAB_SELECTOR_PREVIOUS_ATTEMPTS_EXCLUDE", 3))
+        user_item_cooldown_days = max(0, _env_int("VOCAB_SELECTOR_USER_ITEM_COOLDOWN_DAYS", 30))
+        min_recent_attempts_fallback = max(0, _env_int("VOCAB_SELECTOR_MIN_RECENT_ATTEMPTS_FALLBACK", 1))
+
+        recent_attempt_ids = (
+            await self.repo.get_recent_attempt_item_ids(
+                attempt_id=attempt_id,
+                previous_attempts_limit=previous_attempts_exclude,
+            )
+            if previous_attempts_exclude > 0
+            else []
+        )
+
+        recent_cooldown_ids = (
+            await self.repo.get_recent_user_shown_item_ids(
+                attempt_id=attempt_id,
+                days=user_item_cooldown_days,
+            )
+            if user_item_cooldown_days > 0
+            else []
+        )
+
+        fallback_recent_attempt_ids = (
+            await self.repo.get_recent_attempt_item_ids(
+                attempt_id=attempt_id,
+                previous_attempts_limit=min_recent_attempts_fallback,
+            )
+            if min_recent_attempts_fallback > 0
+            else []
         )
 
         shown_only_excluded = state.shown_item_ids[:]
-        strict_excluded = list(dict.fromkeys(shown_only_excluded + recent_attempt_ids))
+        strict_excluded = list(dict.fromkeys(shown_only_excluded + recent_attempt_ids + recent_cooldown_ids))
+        attempts_relaxed_excluded = list(dict.fromkeys(shown_only_excluded + recent_cooldown_ids))
+        cooldown_relaxed_excluded = list(dict.fromkeys(shown_only_excluded + fallback_recent_attempt_ids))
+        last_resort_excluded = shown_only_excluded
 
-        strict_rows = await self._fetch_candidates(
-            excluded_ids=strict_excluded,
-            apply_cooldown=True,
+        stages = [
+            ("strict", strict_excluded),
+            ("attempts_relaxed", attempts_relaxed_excluded),
+            ("cooldown_relaxed", cooldown_relaxed_excluded),
+            ("last_resort", last_resort_excluded),
+        ]
+
+        logger.info(
+            "vocab_selector_antirepeat attempt_id=%s shown_only=%s recent_attempt_ids=%s recent_cooldown_ids=%s",
+            attempt_id,
+            len(shown_only_excluded),
+            len(recent_attempt_ids),
+            len(recent_cooldown_ids),
         )
-        picked = await self._pick_from_rows(rows=strict_rows, state=state)
-        if picked is not None:
-            return picked
 
-        relaxed_rows = await self._fetch_candidates(
-            excluded_ids=strict_excluded,
-            apply_cooldown=False,
-        )
-        picked = await self._pick_from_rows(rows=relaxed_rows, state=state)
-        if picked is not None:
-            return picked
+        for apply_cooldown in (True, False):
+            for stage_name, excluded_ids in stages:
+                rows = await self._fetch_candidates(
+                    excluded_ids=excluded_ids,
+                    apply_cooldown=apply_cooldown,
+                )
+                picked = await self._pick_from_rows(rows=rows, state=state)
+                if picked is not None:
+                    logger.info(
+                        "vocab_selector_pick attempt_id=%s stage=%s apply_cooldown=%s excluded=%s picked_id=%s",
+                        attempt_id,
+                        stage_name,
+                        apply_cooldown,
+                        len(excluded_ids),
+                        int(picked["id"]),
+                    )
+                    return picked
 
-        if recent_attempt_ids:
-            fallback_strict_rows = await self._fetch_candidates(
-                excluded_ids=shown_only_excluded,
-                apply_cooldown=True,
-            )
-            picked = await self._pick_from_rows(rows=fallback_strict_rows, state=state)
-            if picked is not None:
-                return picked
-
-            fallback_relaxed_rows = await self._fetch_candidates(
-                excluded_ids=shown_only_excluded,
-                apply_cooldown=False,
-            )
-            picked = await self._pick_from_rows(rows=fallback_relaxed_rows, state=state)
-            if picked is not None:
-                return picked
-
+        logger.info("vocab_selector_pick attempt_id=%s stage=none", attempt_id)
         return None
