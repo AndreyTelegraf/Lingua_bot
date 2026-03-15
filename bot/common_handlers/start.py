@@ -36,7 +36,7 @@ def _share_vocab_range_from_code(range_code: str) -> str:
         "2500": "1500–2500",
         "4000": "2500–4000",
         "6000": "4000–6000",
-        "8000": "6000–8000",
+        "8000": "8000+",
     }
     return mapping.get(code, code)
 
