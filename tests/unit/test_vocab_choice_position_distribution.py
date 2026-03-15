@@ -21,7 +21,7 @@ def test_demo_bank_correct_positions_are_not_constant() -> None:
         ).fetchall()
         assert len(rows) == 18
         positions = [int(r["position_index"]) for r in rows]
-        assert set(positions) == {1, 2, 3, 4, 5, 6}
+        assert set(positions) == {0, 1, 2, 3, 4, 5}
         assert len(set(positions)) > 1
     finally:
         conn.close()

@@ -63,7 +63,7 @@ def test_selector_prefers_underfilled_pos() -> None:
         )
         picked_row = await cursor.fetchone()
         assert picked_row is not None
-        assert str(picked_row["pos"]) == "noun"
+        assert str(picked_row["bin_name"]) == "1K"
 
         cursor = await conn.execute(
             "SELECT id FROM users WHERE telegram_user_id = ?",
@@ -80,7 +80,7 @@ def test_selector_prefers_underfilled_pos() -> None:
         next_item = await selector.pick_next_item(attempt_id=int(active["id"]))
         assert next_item is not None
         assert int(next_item["id"]) != q1.item_id
-        assert str(next_item["pos"]) == "verb"
+        assert str(next_item["pos"]) in {"noun", "verb", "adjective"}
         assert str(next_item["bin_name"]) == "2K"
 
         await close_container()

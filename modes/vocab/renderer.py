@@ -43,7 +43,7 @@ class VocabRenderer:
                 {
                     "choice_id": int(row["id"]),
                     "choice_text": str(row["choice_text"]),
-                    "position_index": int(row["position_index"]),
+                    "position_index": int(row["position_index"]) + 1,
                 }
                 for row in choices
             ],

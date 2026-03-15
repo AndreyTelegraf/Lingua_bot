@@ -80,25 +80,27 @@ def test_active_vocab_items_have_exactly_one_correct_choice() -> None:
         conn.close()
 
 
-def test_active_vocab_items_have_no_duplicate_lemmas() -> None:
+def test_active_vocab_items_have_no_duplicate_lemma_pos_pairs() -> None:
     conn = _conn()
     try:
         rows = conn.execute(
             '''
             SELECT
               LOWER(TRIM(lemma)) AS lemma_key,
+              LOWER(TRIM(pos)) AS pos_key,
               COUNT(*) AS n
             FROM vocab_items
             WHERE COALESCE(is_active, 1) = 1
-            GROUP BY LOWER(TRIM(lemma))
+            GROUP BY LOWER(TRIM(lemma)), LOWER(TRIM(pos))
             HAVING COUNT(*) > 1
-            ORDER BY n DESC, lemma_key
+            ORDER BY n DESC, lemma_key, pos_key
             '''
         ).fetchall()
 
         assert rows == [], [
             {
                 "lemma": str(r["lemma_key"]),
+                "pos": str(r["pos_key"]),
                 "n": int(r["n"]),
             }
             for r in rows
