@@ -54,12 +54,8 @@ def test_register_vocab_v2_routes_happy_path() -> None:
     assert step2["ok"] is True
     assert step2["answer_result"]["is_correct"] is False
     assert "Вы правильно ответили на 1 вопрос из 2." in step2["text"]
-    assert "Ваш пассивный словарный запас находится в диапазоне от 1 000 до 1 500 слов." in step2["text"]
-    assert "Ориентировочно это соответствует уровню A2." in step2["text"]
-    assert "A0 A1 A1+ [A2] B1 B2 C1 C1+" in step2["text"]
-    assert "Это типичный результат для этого диапазона." in step2["text"]
-    assert "Выводы этого теста приблизительны, они основаны на частотности слов и точности ваших ответов." in step2["text"]
-
+    assert "Ваш пассивный словарный запас составляет 1 000–1 500 слов." in step2["text"].replace("\u2060", "")
+    
     Path(path).unlink(missing_ok=True)
 
 

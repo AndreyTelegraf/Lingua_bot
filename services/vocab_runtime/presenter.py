@@ -125,253 +125,112 @@ def present_question(view: dict[str, object]) -> str:
 
 # === VOCAB RESULT CEFR EXTENSION ===
 
-import re as _re_vocab_cefr
-
 
 _ORIGINAL_PRESENT_FINISHED = present_finished
 
 
-def _estimate_cefr_from_correct_answers(*, correct_answers: int | None, total_questions: int | None) -> str | None:
-    if correct_answers is None or total_questions is None:
+def _as_int(value: object | None) -> int | None:
+    try:
+        if value is None:
+            return None
+        return int(value)
+    except (TypeError, ValueError):
         return None
 
-    total = int(total_questions or 0)
-    if total < 24:
-        return None
 
-    c = int(correct_answers or 0)
-    if c <= 2:
+def _display_band(value: object | None) -> str:
+    raw = str(value or "").strip()
+    wj = "\u2060"
+    mapping = {
+        "<500": "<500",
+        "500-1000": f"500{wj}–{wj}1 000",
+        "1000-1500": f"1 000{wj}–{wj}1 500",
+        "1500-2500": f"1 500{wj}–{wj}2 500",
+        "2500-4000": f"2 500{wj}–{wj}4 000",
+        "4000-6000": f"4 000{wj}–{wj}6 000",
+        "6000-8000": f"6 000{wj}–{wj}8 000",
+        "8000+": f"8 000{wj}+",
+        "8k+": f"8 000{wj}+",
+        "<1.5k": f"1 000{wj}–{wj}1 500",
+        "1.5k-2.5k": f"1 500{wj}–{wj}2 500",
+        "2.5k-4k": f"2 500{wj}–{wj}4 000",
+        "4k-6k": f"4 000{wj}–{wj}6 000",
+        "6k-8k": f"6 000{wj}–{wj}8 000",
+    }
+    return mapping.get(raw, raw)
+
+
+def _cefr_label_from_correct_answers(correct_answers: int) -> str:
+    if correct_answers <= 2:
         return "A0"
-    if c <= 5:
+    if correct_answers <= 5:
         return "A1"
-    if c <= 8:
+    if correct_answers <= 8:
         return "A1+"
-    if c <= 11:
+    if correct_answers <= 11:
         return "A2"
-    if c <= 15:
+    if correct_answers <= 14:
         return "B1"
-    if c <= 18:
+    if correct_answers <= 18:
         return "B2"
-    if c <= 21:
+    if correct_answers <= 21:
         return "C1"
     return "C1+"
 
 
-def _normalize_cefr_for_scale(level: str | None) -> str | None:
-    raw = (level or "").upper()
-    return raw or None
+def _level_description_from_label(label: str) -> str:
+    descriptions = {
+        "A0": "Это нулевой уровень понимания португальского языка. Знакомые слова иногда узнаются на слух, но связную речь пока понять почти невозможно.",
+        "A1": "Это начальный уровень понимания португальского языка. Понятны отдельные слова и очень простые фразы, особенно в знакомых бытовых ситуациях.",
+        "A1+": "Это базовый уровень понимания португальского языка. Простая повседневная речь начинает складываться в смысл, если говорят медленно и на знакомые темы.",
+        "A2": "Это элементарный уровень понимания португальского языка. Основной смысл коротких фраз и диалогов уже улавливается, особенно в обычных бытовых разговорах.",
+        "B1": "Это средний уровень понимания португальского языка. В целом понятна основная мысль разговоров и простых текстов на повседневные темы.",
+        "B2": "Это уровень выше среднего для понимания португальского языка. Большинство разговоров и обсуждений уже воспринимаются без особых усилий.",
+        "C1": "Это продвинутый уровень понимания португальского языка. Сложная речь и абстрактные темы обычно понятны, даже если разговор идёт быстро.",
+        "C1+": "Это очень высокий уровень понимания португальского языка. Почти любые разговоры, фильмы и тексты воспринимаются естественно и без напряжения.",
+    }
+    return descriptions.get(label, descriptions["C1+"])
 
 
-def _extract_vocab_size_for_cefr(payload: dict[str, object]) -> int | None:
-    raw_size = payload.get("estimated_vocab_size")
-    if raw_size is not None:
-        try:
-            return int(raw_size)
-        except (TypeError, ValueError):
-            pass
-
-    band = str(payload.get("estimated_vocab_band") or "").strip().lower()
-    if not band:
-        return None
-
-    band = band.replace(" ", "")
-    nums = _re_vocab_cefr.findall(r"\d+(?:\.\d+)?", band)
-    if not nums:
-        return None
-
-    values: list[int] = []
-    for n in nums:
-        try:
-            values.append(int(float(n) * 1000) if "k" in band else int(float(n)))
-        except ValueError:
-            continue
-
-    if not values:
-        return None
-
-    if "+" in band:
-        return values[0]
-    if len(values) >= 2:
-        return (values[0] + values[1]) // 2
-    return values[0]
-
-
-def _estimate_cefr_level_from_payload(payload: dict[str, object]) -> str | None:
-    explicit = str(payload.get("estimated_cefr_level") or "").strip().upper()
-    if explicit in {"A0", "A1", "A1+", "A2", "B1", "B2", "C1", "C1+"}:
-        return explicit
-
-    by_correct = _estimate_cefr_from_correct_answers(
-        correct_answers=payload.get("correct_answers"),
-        total_questions=payload.get("total_questions"),
-    )
-    if by_correct is not None:
-        return by_correct
-
-    size = _extract_vocab_size_for_cefr(payload)
-    if size is None:
-        return None
-
-    if size < 1000:
-        return "A1"
-    if size < 2000:
-        return "A2"
-    if size < 4000:
-        return "B1"
-    if size < 6000:
-        return "B2"
-    return "C1"
-
-
-def _render_cefr_scale(level: str | None) -> str:
-    levels = ["A0", "A1", "A1+", "A2", "B1", "B2", "C1", "C1+"]
-    active = (level or "").upper()
-
-    parts: list[str] = []
-    for item in levels:
-        if item == active:
-            parts.append(f"[{item}]")
-        else:
-            parts.append(item)
-
-    return " ".join(parts)
-
-
-def _peer_comparison_fallback(payload: dict[str, object], level: str | None) -> str:
-    explicit = str(payload.get("peer_comparison_text") or "").strip()
-    if explicit:
-        return explicit
-    return "Это типичный результат для этого диапазона."
-
-
-
-
-def _add_previous_test_separator(text: str) -> str:
-    if "Ваш прошлый тест:" not in text or "────────" in text:
-        return text
-    return re.sub(
-        r"\n{2,}Ваш прошлый тест:",
-        "\n\n────────\n\nВаш прошлый тест:",
-        text,
-        count=1,
-    )
 
 
 def _previous_result_block(payload: dict[str, object]) -> list[str]:
-    prev_correct = payload.get("previous_correct_answers")
-    prev_total = payload.get("previous_total_questions")
-    prev_band = payload.get("previous_estimated_vocab_band")
-    prev_size = payload.get("previous_estimated_vocab_size")
+    previous_band = _display_band(payload.get("previous_estimated_vocab_band"))
+    previous_correct = _as_int(payload.get("previous_correct_answers"))
+    previous_total = _as_int(payload.get("previous_total_questions"))
 
-    if prev_correct is None or prev_total is None or (prev_band is None and prev_size is None):
+    if not previous_band or previous_correct is None or previous_total is None:
         return []
-
-    compact = None
-    if prev_band is not None:
-        band = str(prev_band)
-        mapping = {
-            "<500": "меньше 500",
-            "500-1000": "от 500 до 1 000",
-            "1000-1500": "от 1 000 до 1 500",
-            "1500-2500": "от 1 500 до 2 500",
-            "2500-4000": "от 2 500 до 4 000",
-            "4000-6000": "от 4 000 до 6 000",
-            "6000-8000": "от 6 000 до 8 000",
-            "8k+": "8000+",
-            "<1.5k": "до 1 500",
-            "1.5k-2.5k": "от 1 500 до 2 500",
-            "2.5k-4k": "от 2 500 до 4 000",
-            "4k-6k": "от 4 000 до 6 000",
-            "6k-8k": "от 6 000 до 8 000",
-        }
-        compact = mapping.get(band)
-
-    if compact is None and prev_size is not None:
-        size = int(prev_size or 0)
-        if size < 500:
-            compact = "меньше 500"
-        elif size < 1000:
-            compact = "от 500 до 1 000"
-        elif size < 1500:
-            compact = "от 1 000 до 1 500"
-        elif size < 2500:
-            compact = "от 1 500 до 2 500"
-        elif size < 4000:
-            compact = "от 2 500 до 4 000"
-        elif size < 6000:
-            compact = "от 4 000 до 6 000"
-        elif size < 8000:
-            compact = "от 6 000 до 8 000"
-        else:
-            compact = "8000+"
-
-    if compact is None:
-        return []
-
-    prev_correct_i = int(prev_correct)
-    prev_total_i = int(prev_total)
-    question_word = _ru_plural_question(prev_correct_i)
-
-    if compact == "8000+":
-        vocab_part = "запас был 8000+ слов"
-    else:
-        vocab_part = f"запас был {compact} слов"
 
     return [
-        "Ваш прошлый тест:",
-        f"В предыдущей попытке вы правильно ответили на {prev_correct_i} {question_word} из {prev_total_i}, {vocab_part}.",
+        "Ваш предыдущий результат",
+        f"{previous_band} слов ({previous_correct}/{previous_total})",
     ]
 
 
 def present_finished(payload: dict[str, object]) -> str:
-    text = _ORIGINAL_PRESENT_FINISHED(payload)
+    correct = _as_int(payload.get("correct_answers")) or 0
+    total = _as_int(payload.get("total_answers"))
+    if total is None:
+        total = _as_int(payload.get("total_questions")) or 24
+    if total <= 0:
+        total = 24
 
-    if "Ориентировочно это соответствует уровню" in text:
-        return _add_previous_test_separator(text)
-
-    level = _estimate_cefr_level_from_payload(payload)
-    if not level:
-        return _add_previous_test_separator(text)
-
-    peer_text = _peer_comparison_fallback(payload, level)
-    insert_block = [
-        f"Ориентировочно это соответствует уровню {level}.",
-        "",
-        _render_cefr_scale(level),
-    ]
-    if peer_text:
-        insert_block.extend(["", peer_text])
-
+    band = _display_band(payload.get("estimated_vocab_band"))
+    level = _cefr_label_from_correct_answers(correct)
+    description = _level_description_from_label(level)
     previous_block = _previous_result_block(payload)
-    lines = text.splitlines()
 
-    insert_after = None
-    for idx, line in enumerate(lines):
-        if "Ваш пассивный словарный запас находится" in line:
-            insert_after = idx + 1
-            while insert_after < len(lines) and lines[insert_after] == "":
-                insert_after += 1
-            break
-
-    if insert_after is None:
-        rendered = text.rstrip() + "\n\n" + "\n".join(insert_block)
-        if previous_block:
-            approx = "Выводы этого теста приблизительны, они основаны на частотности слов и точности ваших ответов."
-            if approx in rendered:
-                rendered = rendered.replace(approx, "────────\n\n" + "\n".join(previous_block) + "\n\n" + approx, 1)
-            else:
-                rendered = rendered.rstrip() + "\n────────\n\n" + "\n".join(previous_block)
-        return rendered
-
-    new_lines = lines[:insert_after] + insert_block + [""] + lines[insert_after:]
+    parts = [
+        f"Вы правильно ответили на {correct} {_ru_plural_question(correct)} из {total}.",
+        f"Ваш пассивный словарный запас составляет {band} слов.",
+        description,
+    ]
 
     if previous_block:
-        approx_idx = None
-        for idx, line in enumerate(new_lines):
-            if line == "Выводы этого теста приблизительны, они основаны на частотности слов и точности ваших ответов.":
-                approx_idx = idx
-                break
-        if approx_idx is not None:
-            new_lines = new_lines[:approx_idx] + ["────────", ""] + previous_block + [""] + new_lines[approx_idx:]
+        parts.append("────────────")
+        parts.append(previous_block[0] + "\n" + previous_block[1])
 
-    return "\n".join(new_lines)
+    parts.append("Оценка приблизительная и основана\nна частотности слов.")
+
+    return "\n\n".join(parts)

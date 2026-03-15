@@ -11,7 +11,6 @@ def test_router_result_text_delegates_to_presenter():
     )
 
     assert "Вы правильно ответили на 17 вопросов из 24." in text
-    assert "Ваш пассивный словарный запас находится в диапазоне от 1 500 до 2 500 слов." in text
-    assert "Ориентировочно это соответствует уровню B2." in text
-    assert "A0 A1 A1+ A2 B1 [B2] C1 C1+" in text
-    assert "Это типичный результат для этого диапазона." in text
+    assert "Ваш пассивный словарный запас составляет 1 500–2 500 слов." in text.replace("\u2060", "")
+    assert "Это уровень выше среднего для понимания португальского языка." in text
+    assert "A0  A1  A1+  A2  B1  B2  C1  C1+" not in text
