@@ -1148,3 +1148,90 @@ class VocabRepository:
             )
 
         await self.conn.commit()
+
+
+    async def persist_vocab_handoff_snapshot(
+        self,
+        *,
+        attempt_id: int,
+        estimated_vocab_size: int,
+        correct_answers: int,
+        total_answers: int,
+    ) -> None:
+        from services.vocab_runtime.result_snapshot import build_vocab_result_snapshot
+
+        cursor = await self.conn.execute("PRAGMA table_info(vocab_attempts)")
+        cols = {row[1] for row in await cursor.fetchall()}
+
+        has_product_band = "product_band" in cols
+        has_result_snapshot_json = "result_snapshot_json" in cols
+
+        if not has_product_band and not has_result_snapshot_json:
+            return
+
+        size = int(estimated_vocab_size or 0)
+        if size < 500:
+            range_min, range_max = 0, 500
+        elif size <= 1000:
+            range_min, range_max = 500, 1000
+        elif size <= 1500:
+            range_min, range_max = 1000, 1500
+        elif size <= 2500:
+            range_min, range_max = 1500, 2500
+        elif size <= 4000:
+            range_min, range_max = 2500, 4000
+        elif size <= 6500:
+            range_min, range_max = 4000, 6500
+        elif size <= 8000:
+            range_min, range_max = 6500, 8000
+        else:
+            range_min, range_max = 8000, 12000
+
+        cursor = await self.conn.execute(
+            """
+            SELECT finished_at, dont_know_count
+            FROM vocab_attempts
+            WHERE id = ?
+            """,
+            (attempt_id,),
+        )
+        row = await cursor.fetchone()
+        if row is None:
+            return
+
+        finished_at = row["finished_at"]
+        dont_know_count = int(row["dont_know_count"] or 0)
+        dont_know_rate = None
+        if int(total_answers or 0) > 0:
+            dont_know_rate = dont_know_count / float(total_answers)
+
+        snapshot = build_vocab_result_snapshot(
+            range_min=range_min,
+            range_max=range_max,
+            correct_count=int(correct_answers or 0),
+            total_questions=int(total_answers or 0),
+            confidence="medium",
+            dont_know_rate=dont_know_rate,
+            fast_answer_rate=None,
+            slow_answer_rate=None,
+            generated_at=str(finished_at or ""),
+        )
+
+        update_parts = []
+        params = []
+
+        if has_product_band:
+            update_parts.append("product_band = ?")
+            params.append(snapshot.product_band)
+        if has_result_snapshot_json:
+            update_parts.append("result_snapshot_json = ?")
+            params.append(snapshot.to_json_text())
+
+        update_parts.append("updated_at = CURRENT_TIMESTAMP")
+        params.append(attempt_id)
+
+        await self.conn.execute(
+            f"UPDATE vocab_attempts SET {', '.join(update_parts)} WHERE id = ?",
+            tuple(params),
+        )
+        await self.conn.commit()

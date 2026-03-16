@@ -727,6 +727,13 @@ class VocabEngine:
             completion_reason=completion_reason,
         )
 
+        await repo.persist_vocab_handoff_snapshot(
+            attempt_id=int(active["id"]),
+            estimated_vocab_size=estimated_vocab_size,
+            correct_answers=correct_answers,
+            total_answers=total_answers,
+        )
+
         await repo.persist_mode_result_final(
             mode_run_id=int(active["mode_run_id"]),
             user_id=user_id,

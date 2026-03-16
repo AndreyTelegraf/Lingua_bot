@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from services.vocab_runtime.result_snapshot import build_vocab_result_snapshot
+
 import json
 import sqlite3
 from typing import Any
@@ -570,25 +572,38 @@ def get_attempt_stats(conn: sqlite3.Connection, *, attempt_id: int) -> dict[str,
     select_bits.append("vi.bin_name AS bin_name" if has_bin_name else "NULL AS bin_name")
     select_bits.append("vi.freq_rank AS freq_rank" if has_freq_rank else "NULL AS freq_rank")
 
-    event_rows = conn.execute(
-        f"""
-        SELECT {', '.join(select_bits)}
-        FROM vocab_attempt_events vae
-        LEFT JOIN vocab_items vi ON vi.id = vae.item_id
-        WHERE vae.attempt_id = ?
-          AND vae.event_type = 'answer'
-        ORDER BY vae.id ASC
-        """,
-        (attempt_id,),
-    ).fetchall()
+    try:
+        event_rows = conn.execute(
+            f"""
+            SELECT {', '.join(select_bits)}
+            FROM vocab_attempt_events vae
+            LEFT JOIN vocab_items vi ON vi.id = vae.item_id
+            WHERE vae.attempt_id = ?
+              AND vae.event_type = 'answer'
+            ORDER BY vae.id ASC
+            """,
+            (attempt_id,),
+        ).fetchall()
 
-    scoring_input = build_scoring_input_from_events(
-        [dict(r) for r in event_rows],
-        attempt_id=attempt_id,
-        total_questions=total_questions,
-        correct_answers=correct_answers,
-    )
-    estimate = score_attempt_default(scoring_input)
+        scoring_input = build_scoring_input_from_events(
+            [dict(r) for r in event_rows],
+            attempt_id=attempt_id,
+            total_questions=total_questions,
+            correct_answers=correct_answers,
+        )
+        estimate = score_attempt_default(scoring_input)
+    except sqlite3.OperationalError:
+        estimate = {
+            "estimated_vocab_size": row["estimated_vocab_size"] if "estimated_vocab_size" in row.keys() else None,
+            "estimated_vocab_band": row["estimated_vocab_band"] if "estimated_vocab_band" in row.keys() else None,
+            "confidence": row["confidence"] if "confidence" in row.keys() else None,
+            "scoring_model": "runtime_scoring_fallback_from_attempt_row",
+            "coverage_score": None,
+            "difficulty_score": None,
+            "spread_score": None,
+            "sample_score": None,
+            "weighted_bin_hits": {},
+        }
 
     estimated_vocab_size = (
         row["estimated_vocab_size"]
@@ -777,6 +792,91 @@ def persist_finished_result(conn: sqlite3.Connection, *, attempt_id: int) -> dic
                 ),
             )
 
+    try:
+        product_band, confidence, snapshot_json = _build_vocab_attempt_snapshot_payload_from_stats(stats=stats)
+        try:
+            conn.execute(
+                """
+                UPDATE vocab_attempts
+                SET product_band = ?,
+                    result_snapshot_json = ?
+                WHERE id = ?
+                """,
+                (product_band, snapshot_json, attempt_id),
+            )
+            stats["product_band"] = product_band
+            stats["result_snapshot_json"] = snapshot_json
+            if confidence is not None:
+                stats["confidence"] = confidence
+        except sqlite3.OperationalError:
+            pass
+    except Exception:
+        pass
+
     conn.commit()
     stats = _upsert_user_mode_baseline(conn, stats=stats, mode="vocab")
     return stats
+
+
+def _build_vocab_attempt_snapshot_payload(*, range_min: int, range_max: int, correct_answers: int, total_questions: int, finished_at: str) -> tuple[str, str, str]:
+    snapshot = build_vocab_result_snapshot(
+        range_min=range_min,
+        range_max=range_max,
+        correct_count=correct_answers,
+        total_questions=total_questions,
+        generated_at=finished_at,
+    )
+    return snapshot.product_band, snapshot.confidence, snapshot.to_json_text()
+
+
+def _band_to_range_from_estimated_vocab_size(estimated_vocab_size: int | None) -> tuple[int, int]:
+    size = int(estimated_vocab_size or 0)
+    if size < 500:
+        return (0, 500)
+    if size <= 1000:
+        return (500, 1000)
+    if size <= 1500:
+        return (1000, 1500)
+    if size <= 2500:
+        return (1500, 2500)
+    if size <= 4000:
+        return (2500, 4000)
+    if size <= 6500:
+        return (4000, 6500)
+    if size <= 8000:
+        return (6500, 8000)
+    return (8000, 12000)
+
+
+def _build_vocab_attempt_snapshot_payload_from_stats(*, stats: dict[str, Any]) -> tuple[str, float | None, str]:
+    estimated_vocab_size = stats.get("estimated_vocab_size")
+    range_min, range_max = _band_to_range_from_estimated_vocab_size(estimated_vocab_size)
+
+    total_questions = int(
+        stats.get("total_questions")
+        or stats.get("question_limit")
+        or stats.get("questions_answered")
+        or 24
+    )
+    correct_answers = int(
+        stats.get("correct_answers")
+        or 0
+    )
+
+    dont_know_count = stats.get("dont_know_count")
+    dont_know_rate = None
+    if dont_know_count is not None and total_questions > 0:
+        dont_know_rate = float(dont_know_count) / float(total_questions)
+
+    snapshot = build_vocab_result_snapshot(
+        range_min=range_min,
+        range_max=range_max,
+        correct_count=correct_answers,
+        total_questions=total_questions,
+        confidence="medium",
+        dont_know_rate=dont_know_rate,
+        fast_answer_rate=None,
+        slow_answer_rate=None,
+        generated_at=str(stats.get("finished_at") or ""),
+    )
+    return snapshot.product_band, stats.get("confidence"), snapshot.to_json_text()
