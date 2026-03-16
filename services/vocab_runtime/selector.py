@@ -2,9 +2,99 @@ from __future__ import annotations
 
 import os
 import sqlite3
+import json
+
+
+_DEFAULT_POS_TARGET_SHARE = {
+    "noun": 0.40,
+    "verb": 0.25,
+    "adjective": 0.20,
+    "adverb": 0.15,
+}
+
+
+def rebalance_pos_weights(
+    base_weights: dict[str, float],
+    pos_counters: dict[str, int],
+    *,
+    asked_count: int,
+) -> dict[str, float]:
+    """
+    Soft POS balancing for 24-question vocab attempts.
+
+    Goals:
+    - nouns can dominate, but not completely
+    - verbs must not disappear
+    - underrepresented POS get progressive boost
+    """
+    if not base_weights:
+        return {}
+
+    out: dict[str, float] = {}
+    total_asked = max(asked_count, 0)
+
+    for pos, base in base_weights.items():
+        current = int(pos_counters.get(pos, 0))
+        target_share = _DEFAULT_POS_TARGET_SHARE.get(pos, 0.10)
+        target_count = target_share * max(total_asked, 1)
+
+        # shortage > 0 means this POS is under target
+        shortage = max(target_count - current, 0.0)
+        overshoot = max(current - target_count, 0.0)
+
+        boost = 1.0 + (shortage * 0.65)
+        penalty = max(0.20, 1.0 - (overshoot * 0.18))
+
+        # hard anti-starvation rule for verbs and adjectives
+        if total_asked >= 8 and pos == "verb" and current == 0:
+            boost = max(boost, 4.0)
+        elif total_asked >= 12 and pos == "verb" and current <= 1:
+            boost = max(boost, 3.0)
+        elif total_asked >= 10 and pos == "adjective" and current == 0:
+            boost = max(boost, 2.5)
+        elif total_asked >= 12 and pos == "adverb" and current == 0:
+            boost = max(boost, 2.0)
+
+        out[pos] = float(base) * boost * penalty
+
+    return out
 
 
 _SHOWN_EVENT_TYPES = ("shown", "question_shown")
+
+
+def _selector_trace_enabled() -> bool:
+    return os.getenv("VOCAB_SELECTOR_TRACE", "").strip().lower() in {"1", "true", "yes", "on"}
+
+
+def _trace_selector(
+    conn: sqlite3.Connection,
+    *,
+    attempt_id: int,
+    step: int,
+    preferred_pos_order: list[str],
+    chosen_row: sqlite3.Row | None,
+    chosen_source: str,
+) -> None:
+    if not _selector_trace_enabled():
+        return
+    try:
+        payload = {
+            "attempt_id": attempt_id,
+            "step": step,
+            "preferred_pos_order": preferred_pos_order,
+            "chosen_source": chosen_source,
+            "chosen_item_id": None if chosen_row is None else chosen_row["id"],
+            "chosen_lemma": None if chosen_row is None else chosen_row["lemma"],
+            "chosen_pos": None if chosen_row is None else chosen_row["pos"],
+            "chosen_bin_name": None if chosen_row is None else chosen_row["bin_name"] if "bin_name" in chosen_row.keys() else None,
+            "chosen_freq_rank": None if chosen_row is None else chosen_row["freq_rank"] if "freq_rank" in chosen_row.keys() else None,
+        }
+        print("VOCAB_SELECTOR_TRACE " + json.dumps(payload, ensure_ascii=False))
+    except Exception as exc:
+        print(f"VOCAB_SELECTOR_TRACE_FAILED: {exc}")
+
+# POS balancing helper inserted below.
 
 
 def _table_exists(conn: sqlite3.Connection, *, table: str) -> bool:
@@ -103,12 +193,79 @@ def _derive_target_bin(last_answers: list[dict[str, object]]) -> str | None:
     return str(latest_bin)
 
 
+def _load_attempt_pos_counts(conn: sqlite3.Connection, *, attempt_id: int) -> dict[str, int]:
+    conn.row_factory = sqlite3.Row
+    placeholders = ", ".join("?" for _ in _SHOWN_EVENT_TYPES)
+    rows = conn.execute(
+        f'''
+        SELECT vi.pos AS pos, COUNT(*) AS n
+        FROM vocab_attempt_events vae
+        JOIN vocab_items vi ON vi.id = vae.item_id
+        WHERE vae.attempt_id = ?
+          AND vae.event_type IN ({placeholders})
+          AND vi.pos IS NOT NULL
+        GROUP BY vi.pos
+        ''',
+        (attempt_id, *_SHOWN_EVENT_TYPES),
+    ).fetchall()
+    return {str(row["pos"]): int(row["n"] or 0) for row in rows}
+
+
+def _load_available_pos_counts(
+    conn: sqlite3.Connection,
+    *,
+    soft_start_bins: tuple[str, ...] | None = None,
+) -> dict[str, int]:
+    conn.row_factory = sqlite3.Row
+    where_parts = ["is_active = 1", "pos IS NOT NULL"]
+    params: list[object] = []
+    if _has_column(conn, table="vocab_items", column="bin_name") and soft_start_bins:
+        placeholders = ", ".join("?" for _ in soft_start_bins)
+        where_parts.append(f"bin_name IN ({placeholders})")
+        params.extend(list(soft_start_bins))
+    sql = f'''
+        SELECT pos, COUNT(*) AS n
+        FROM vocab_items
+        WHERE {" AND ".join(where_parts)}
+        GROUP BY pos
+    '''
+    rows = conn.execute(sql, tuple(params)).fetchall()
+    return {str(row["pos"]): int(row["n"] or 0) for row in rows}
+
+
+def _preferred_pos_order(
+    conn: sqlite3.Connection,
+    *,
+    attempt_id: int,
+    asked_count: int,
+    soft_start_bins: tuple[str, ...] | None = None,
+) -> list[str]:
+    available = _load_available_pos_counts(conn, soft_start_bins=soft_start_bins)
+    if not available:
+        return []
+
+    pos_counters = _load_attempt_pos_counts(conn, attempt_id=attempt_id)
+    base_weights = {pos: 1.0 for pos in available}
+    weights = rebalance_pos_weights(base_weights, pos_counters, asked_count=asked_count)
+
+    def sort_key(pos: str) -> tuple[float, int, int, str]:
+        return (
+            -float(weights.get(pos, 0.0)),
+            int(pos_counters.get(pos, 0)),
+            -int(available.get(pos, 0)),
+            pos,
+        )
+
+    return sorted(available.keys(), key=sort_key)
+
+
 def _build_selector_sql(
     conn: sqlite3.Connection,
     *,
     apply_cooldown: bool,
     target_bin: str | None = None,
     soft_start_bins: tuple[str, ...] | None = None,
+    required_pos: str | None = None,
 ) -> tuple[str, tuple[object, ...], tuple[object, ...]]:
     select_cols = "vi.id, vi.lemma, vi.question_text, vi.correct_answer, vi.pos"
     join_sql = ""
@@ -131,6 +288,10 @@ def _build_selector_sql(
         placeholders = ", ".join("?" for _ in soft_start_bins)
         where_parts.append(f"vi.bin_name IN ({placeholders})")
         params_before_shown.extend(list(soft_start_bins))
+
+    if required_pos:
+        where_parts.append("vi.pos = ?")
+        params_before_shown.append(required_pos)
 
     if has_exposure:
         select_cols += ", COALESCE(vie.shown_count, 0) AS global_shown_count"
@@ -228,27 +389,90 @@ def get_next_item(conn: sqlite3.Connection, *, attempt_id: int) -> sqlite3.Row |
 
     soft_start_bins: tuple[str, ...] | None = ("1K", "2K") if step < 6 else None
     target_bin = _derive_target_bin(_load_recent_answer_signals(conn, attempt_id=attempt_id))
+    preferred_pos_order = _preferred_pos_order(
+        conn,
+        attempt_id=attempt_id,
+        asked_count=step,
+        soft_start_bins=soft_start_bins,
+    )
+
+    for required_pos in preferred_pos_order:
+        sql_cooldown, before_cooldown, after_cooldown = _build_selector_sql(
+            conn,
+            apply_cooldown=True,
+            target_bin=target_bin,
+            soft_start_bins=soft_start_bins,
+            required_pos=required_pos,
+        )
+        row = conn.execute(
+            sql_cooldown.replace("{shown_filter_sql}", shown_filter_sql),
+            (*before_cooldown, *shown_params, *after_cooldown),
+        ).fetchone()
+        if row is not None:
+            _trace_selector(
+                conn,
+                attempt_id=attempt_id,
+                step=step,
+                preferred_pos_order=preferred_pos_order,
+                chosen_row=row,
+                chosen_source=f"cooldown_required_pos:{required_pos}",
+            )
+            return row
 
     sql_cooldown, before_cooldown, after_cooldown = _build_selector_sql(
         conn,
         apply_cooldown=True,
         target_bin=target_bin,
         soft_start_bins=soft_start_bins,
+        required_pos=None,
     )
     row = conn.execute(
         sql_cooldown.replace("{shown_filter_sql}", shown_filter_sql),
         (*before_cooldown, *shown_params, *after_cooldown),
     ).fetchone()
     if row is not None:
+        _trace_selector(
+            conn,
+            attempt_id=attempt_id,
+            step=step,
+            preferred_pos_order=preferred_pos_order,
+            chosen_row=row,
+            chosen_source="cooldown_no_required_pos",
+        )
         return row
+
+    for required_pos in preferred_pos_order:
+        sql_fallback, before_fallback, after_fallback = _build_selector_sql(
+            conn,
+            apply_cooldown=False,
+            target_bin=target_bin,
+            soft_start_bins=soft_start_bins,
+            required_pos=required_pos,
+        )
+        row = conn.execute(
+            sql_fallback.replace("{shown_filter_sql}", shown_filter_sql),
+            (*before_fallback, *shown_params, *after_fallback),
+        ).fetchone()
+        if row is not None:
+            return row
 
     sql_fallback, before_fallback, after_fallback = _build_selector_sql(
         conn,
         apply_cooldown=False,
         target_bin=target_bin,
         soft_start_bins=soft_start_bins,
+        required_pos=None,
     )
-    return conn.execute(
+    row = conn.execute(
         sql_fallback.replace("{shown_filter_sql}", shown_filter_sql),
         (*before_fallback, *shown_params, *after_fallback),
     ).fetchone()
+    _trace_selector(
+        conn,
+        attempt_id=attempt_id,
+        step=step,
+        preferred_pos_order=preferred_pos_order,
+        chosen_row=row,
+        chosen_source="fallback_no_required_pos",
+    )
+    return row
