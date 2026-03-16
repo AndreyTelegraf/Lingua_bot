@@ -1,0 +1,38 @@
+{
+  "culpa|noun": {
+    "canonical_ru": "вина",
+    "allowed_ru_variants": ["вина", "виновность"],
+    "forbidden_ru_variants": ["изъян"],
+    "status": "approved"
+  },
+  "parecer|verb": {
+    "canonical_ru": "казаться",
+    "allowed_ru_variants": ["казаться"],
+    "forbidden_ru_variants": ["появляться"],
+    "status": "approved"
+  },
+  "enviar|verb": {
+    "canonical_ru": "послать",
+    "allowed_ru_variants": ["послать", "отправить"],
+    "forbidden_ru_variants": ["бросить"],
+    "status": "approved"
+  },
+  "beber|verb": {
+    "canonical_ru": "пить",
+    "allowed_ru_variants": ["пить"],
+    "forbidden_ru_variants": ["выпить"],
+    "status": "approved"
+  },
+  "melhorar|verb": {
+    "canonical_ru": "улучшать",
+    "allowed_ru_variants": ["улучшать"],
+    "forbidden_ru_variants": ["поднять"],
+    "status": "approved"
+  },
+  "andar|verb": {
+    "canonical_ru": "ходить",
+    "allowed_ru_variants": ["ходить"],
+    "forbidden_ru_variants": ["гулять"],
+    "status": "approved"
+  }
+}
