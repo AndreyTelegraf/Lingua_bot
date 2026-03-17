@@ -1,7 +1,12 @@
 from __future__ import annotations
 
 import os
+from services.vocab_runtime.attempt_coverage import (
+    coverage_priority_order,
+    coverage_priority_order_soft_bias,
+)
 import sqlite3
+import os
 import json
 
 
@@ -96,6 +101,26 @@ def _trace_selector(
 
 # POS balancing helper inserted below.
 
+
+
+def _coverage_priority_order_for_runtime(
+    conn,
+    *,
+    attempt_id: int,
+    total_questions: int,
+) -> list[str]:
+    use_soft_bias = os.getenv("VOCAB_SOFT_BIAS_SELECTOR", "0").strip() == "1"
+    if use_soft_bias:
+        return coverage_priority_order_soft_bias(
+            conn,
+            attempt_id=attempt_id,
+            total_questions=total_questions,
+        )
+    return coverage_priority_order(
+        conn,
+        attempt_id=attempt_id,
+        total_questions=total_questions,
+    )
 
 def _table_exists(conn: sqlite3.Connection, *, table: str) -> bool:
     row = conn.execute(

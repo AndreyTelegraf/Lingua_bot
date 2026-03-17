@@ -1,6 +1,9 @@
-from pathlib import Path
+from __future__ import annotations
+
+import json
+import sqlite3
 import sys
-import sqlite3, json, time
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
@@ -8,39 +11,46 @@ if str(ROOT) not in sys.path:
 
 from services.vocab_runtime.attempt_coverage import (
     coverage_priority_order,
-    coverage_soft_bias_weights
+    coverage_priority_order_soft_bias,
 )
 
-DB = "data/lingua_staging.db"
+DB = ROOT / "data/lingua_staging.db"
+OUT = ROOT / "artifacts" / f"vocab_shadow_eval_{__import__('time').time_ns() // 1_000_000_000}"
+OUT.mkdir(parents=True, exist_ok=True)
 
 conn = sqlite3.connect(DB)
 conn.row_factory = sqlite3.Row
 
-attempts = [r["attempt_id"] for r in conn.execute(
-    "SELECT DISTINCT attempt_id FROM vocab_answers ORDER BY attempt_id DESC LIMIT 200"
-)]
+attempt_ids = [
+    r["attempt_id"]
+    for r in conn.execute(
+        "SELECT DISTINCT attempt_id FROM vocab_answers ORDER BY attempt_id"
+    ).fetchall()
+]
 
-diff = 0
-total = 0
-
-for aid in attempts:
+changed = 0
+rows = []
+for aid in attempt_ids:
     legacy = coverage_priority_order(conn, attempt_id=aid, total_questions=24)
-    weights = coverage_soft_bias_weights(conn, attempt_id=aid, total_questions=24)
+    soft = coverage_priority_order_soft_bias(conn, attempt_id=aid, total_questions=24)
+    is_changed = legacy != soft
+    if is_changed:
+        changed += 1
+    rows.append(
+        {
+            "attempt_id": aid,
+            "legacy_priority": legacy,
+            "soft_priority": soft,
+            "changed": is_changed,
+        }
+    )
 
-    shadow = sorted(weights.keys(), key=lambda k: weights[k], reverse=True)
-
-    if legacy != shadow:
-        diff += 1
-    total += 1
-
-out = {
-    "attempts": total,
-    "changed_priority": diff,
-    "change_rate": round(diff / total, 3) if total else 0
+summary = {
+    "attempts": len(attempt_ids),
+    "changed_priority": changed,
+    "change_rate": round(changed / len(attempt_ids), 6) if attempt_ids else 0.0,
 }
 
-p = Path(f"artifacts/vocab_shadow_eval_{int(time.time())}")
-p.mkdir(parents=True, exist_ok=True)
-
-(p / "summary.json").write_text(json.dumps(out, indent=2))
-print(json.dumps(out, indent=2))
+(OUT / "summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
+(OUT / "details.json").write_text(json.dumps(rows, ensure_ascii=False, indent=2), encoding="utf-8")
+print(json.dumps(summary, ensure_ascii=False, indent=2))

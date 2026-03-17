@@ -62,6 +62,16 @@ def _observed_pos_counts(conn: sqlite3.Connection, *, attempt_id: int) -> dict[s
     return out
 
 
+
+
+def observed_pos_counts_for_attempt(
+    conn,
+    *,
+    attempt_id: int,
+) -> dict[str, int]:
+    return _observed_pos_counts(conn, attempt_id=attempt_id)
+
+
 def remaining_targets_for_attempt(
     conn: sqlite3.Connection,
     *,
@@ -162,3 +172,32 @@ def coverage_soft_bias_weights(
 
         out[pos] = round(weight, 4)
     return out
+
+
+def coverage_priority_order_soft_bias(
+    conn,
+    *,
+    attempt_id: int,
+    total_questions: int,
+) -> list[str]:
+    observed = observed_pos_counts_for_attempt(conn, attempt_id=attempt_id)
+    remaining = remaining_targets_for_attempt(
+        conn,
+        attempt_id=attempt_id,
+        total_questions=total_questions,
+    )
+    weights = coverage_soft_bias_weights(
+        conn,
+        attempt_id=attempt_id,
+        total_questions=total_questions,
+    )
+
+    ranked = []
+    for pos in ("noun", "verb", "adjective", "adverb"):
+        rem = int(remaining.get(pos, 0) or 0)
+        seen = int(observed.get(pos, 0) or 0)
+        weight = float(weights.get(pos, 1.0) or 1.0)
+        ranked.append((pos, (-weight, -rem, seen, pos)))
+
+    ranked.sort(key=lambda x: x[1])
+    return [pos for pos, _ in ranked]
