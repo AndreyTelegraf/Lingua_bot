@@ -107,7 +107,43 @@ def ensure_default_chats(conn) -> None:
     for row in DEFAULT_CHAT_DEFINITIONS:
         if str(row["chat_key"]) not in seen:
             continue
-        repo.upsert_chat(conn, **row)
+
+        existing = repo.get_chat_by_key(conn, chat_key=str(row["chat_key"]))
+        if existing is None:
+            repo.upsert_chat(conn, **row)
+            continue
+
+        conn.execute(
+            """
+            UPDATE community_chats
+            SET chat_type = ?,
+                region = ?,
+                daily_post_time = ?,
+                max_posts_per_day = ?,
+                cooldown_hours = ?,
+                updated_at = CURRENT_TIMESTAMP
+            WHERE chat_key = ?
+            """,
+            (
+                row["chat_type"],
+                row["region"],
+                row["daily_post_time"],
+                row["max_posts_per_day"],
+                row["cooldown_hours"],
+                row["chat_key"],
+            ),
+        )
+
+        if existing["default_topic_id"] is None and row["default_topic_id"] is not None:
+            conn.execute(
+                """
+                UPDATE community_chats
+                SET default_topic_id = ?,
+                    updated_at = CURRENT_TIMESTAMP
+                WHERE chat_key = ?
+                """,
+                (row["default_topic_id"], row["chat_key"]),
+            )
 
 def ensure_default_content(conn) -> None:
     for item in DEFAULT_CONTENT_ITEMS:
