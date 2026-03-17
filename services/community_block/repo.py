@@ -145,6 +145,55 @@ def list_all_chats(conn: sqlite3.Connection) -> list[dict[str, Any]]:
     return [_row_to_dict(row) for row in rows]
 
 
+def disable_all_chats(conn: sqlite3.Connection) -> int:
+    cur = conn.execute(
+        """
+        UPDATE community_chats
+        SET is_enabled = 0,
+            updated_at = CURRENT_TIMESTAMP
+        WHERE is_enabled != 0
+        """
+    )
+    return int(cur.rowcount)
+
+
+def bind_chat_identity(
+    conn: sqlite3.Connection,
+    *,
+    chat_key: str,
+    real_chat_id: int,
+    has_topics: bool = False,
+    default_topic_id: int | None = None,
+) -> None:
+    conn.execute(
+        """
+        UPDATE community_chats
+        SET chat_id = ?,
+            has_topics = ?,
+            default_topic_id = ?,
+            updated_at = CURRENT_TIMESTAMP
+        WHERE chat_key = ?
+        """,
+        (
+            real_chat_id,
+            1 if has_topics else 0,
+            default_topic_id,
+            chat_key,
+        ),
+    )
+
+
+def enable_only_chat(conn: sqlite3.Connection, *, chat_key: str) -> None:
+    conn.execute(
+        """
+        UPDATE community_chats
+        SET is_enabled = CASE WHEN chat_key = ? THEN 1 ELSE 0 END,
+            updated_at = CURRENT_TIMESTAMP
+        """,
+        (chat_key,),
+    )
+
+
 def create_content_item(
     conn: sqlite3.Connection,
     *,
@@ -183,6 +232,19 @@ def create_content_item(
         ),
     )
     return int(cur.lastrowid)
+
+
+def get_content_item(conn: sqlite3.Connection, *, content_id: int) -> dict[str, Any] | None:
+    conn.row_factory = sqlite3.Row
+    row = conn.execute(
+        """
+        SELECT *
+        FROM community_content_items
+        WHERE id = ?
+        """,
+        (content_id,),
+    ).fetchone()
+    return _row_to_dict(row)
 
 
 def list_candidate_content(

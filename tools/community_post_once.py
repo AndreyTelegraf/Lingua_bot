@@ -1,0 +1,88 @@
+from __future__ import annotations
+
+import argparse
+import asyncio
+import sqlite3
+
+from aiogram import Bot
+
+from app.config import get_settings
+from services.community_block.bootstrap import bootstrap_community_layer
+from services.community_block.decision import choose_post_candidate
+from services.community_block import repo
+from services.community_block.sender import send_post
+
+
+async def amain() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--chat-key", required=True)
+    parser.add_argument("--content-id", type=int, default=None)
+    parser.add_argument("--dry-run", action="store_true")
+    args = parser.parse_args()
+
+    settings = get_settings()
+    conn = sqlite3.connect(settings.db_path)
+    conn.row_factory = sqlite3.Row
+
+    try:
+        bootstrap_community_layer(conn)
+
+        chat = repo.get_chat_by_key(conn, chat_key=args.chat_key)
+        if chat is None:
+            raise RuntimeError(f"unknown chat_key: {args.chat_key}")
+
+        if args.content_id is not None:
+            content = repo.get_content_item(conn, content_id=args.content_id)
+            if content is None:
+                raise RuntimeError(f"unknown content_id: {args.content_id}")
+            decision_allowed = bool(chat["is_enabled"])
+            text = str(content["text"])
+            content_id = int(content["id"])
+        else:
+            decision = choose_post_candidate(conn, chat=chat, recent_messages_count=0, dry_run=args.dry_run)
+            print("decision=", decision)
+            if not decision.allowed:
+                raise RuntimeError(f"posting blocked: {decision.reason}")
+            content = repo.get_content_item(conn, content_id=int(decision.content_id))
+            if content is None:
+                raise RuntimeError("chosen content not found")
+            decision_allowed = True
+            text = str(content["text"])
+            content_id = int(content["id"])
+
+        if not decision_allowed:
+            raise RuntimeError("chat is not enabled")
+
+        if args.dry_run:
+            print("dry_run_chat=", dict(chat))
+            print("dry_run_content=", dict(content))
+            return
+
+        bot = Bot(token=settings.bot_token)
+        try:
+            message_id = await send_post(
+                bot,
+                chat_id=int(chat["chat_id"]),
+                text=text,
+                default_topic_id=chat["default_topic_id"],
+            )
+        finally:
+            await bot.session.close()
+
+        post_log_id = repo.log_post(
+            conn,
+            chat_id=int(chat["chat_id"]),
+            content_id=content_id,
+            thread_root_message_id=message_id,
+            posted_message_id=message_id,
+        )
+        conn.commit()
+
+        print("posted_message_id=", message_id)
+        print("post_log_id=", post_log_id)
+    finally:
+        conn.close()
+
+
+if __name__ == "__main__":
+    asyncio.run(amain())
