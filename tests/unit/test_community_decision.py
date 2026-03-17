@@ -23,8 +23,23 @@ def build_conn() -> sqlite3.Connection:
     return conn
 
 
+def test_choose_post_candidate_skips_disabled_chat() -> None:
+    conn = build_conn()
+    chat = repo.get_chat_by_key(conn, chat_key="chatlisboa")
+    assert chat is not None
+    assert chat["is_enabled"] == 0
+
+    decision = choose_post_candidate(conn, chat=chat, recent_messages_count=0, dry_run=True)
+
+    assert decision.allowed is False
+    assert decision.reason == "chat_disabled"
+
+
 def test_choose_post_candidate_selects_first_available() -> None:
     conn = build_conn()
+    conn.execute("UPDATE community_chats SET is_enabled = 1 WHERE chat_key = 'chatlisboa'")
+    conn.commit()
+
     chat = repo.get_chat_by_key(conn, chat_key="chatlisboa")
     assert chat is not None
 
@@ -38,6 +53,9 @@ def test_choose_post_candidate_selects_first_available() -> None:
 
 def test_choose_post_candidate_respects_activity_suppression() -> None:
     conn = build_conn()
+    conn.execute("UPDATE community_chats SET is_enabled = 1 WHERE chat_key = 'chatlisboa'")
+    conn.commit()
+
     chat = repo.get_chat_by_key(conn, chat_key="chatlisboa")
     assert chat is not None
 
@@ -49,6 +67,9 @@ def test_choose_post_candidate_respects_activity_suppression() -> None:
 
 def test_choose_post_candidate_respects_anti_repeat_90_days() -> None:
     conn = build_conn()
+    conn.execute("UPDATE community_chats SET is_enabled = 1 WHERE chat_key = 'chatlisboa'")
+    conn.commit()
+
     chat = repo.get_chat_by_key(conn, chat_key="chatlisboa")
     assert chat is not None
 
@@ -71,6 +92,9 @@ def test_choose_post_candidate_respects_anti_repeat_90_days() -> None:
 
 def test_choose_post_candidate_skips_same_format_as_last_post() -> None:
     conn = build_conn()
+    conn.execute("UPDATE community_chats SET is_enabled = 1 WHERE chat_key = 'chatlisboa'")
+    conn.commit()
+
     chat = repo.get_chat_by_key(conn, chat_key="chatlisboa")
     assert chat is not None
 

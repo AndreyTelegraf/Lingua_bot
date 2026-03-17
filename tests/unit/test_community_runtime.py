@@ -89,3 +89,18 @@ def test_start_and_stop_community_runtime(monkeypatch) -> None:
         assert any("PRAGMA foreign_keys" in x for x in conn.executed) is False
 
     asyncio.run(scenario())
+
+
+def test_stop_community_runtime_swallows_task_exception() -> None:
+    async def boom():
+        raise RuntimeError("boom")
+
+    async def scenario():
+        runtime_mod._runtime.stop_event = asyncio.Event()
+        runtime_mod._runtime.task = asyncio.create_task(boom())
+        await asyncio.sleep(0)
+        await runtime_mod.stop_community_runtime()
+        assert runtime_mod._runtime.task is None
+        assert runtime_mod._runtime.stop_event is None
+
+    asyncio.run(scenario())

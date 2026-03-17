@@ -9,7 +9,6 @@ from services.community_block.policy import (
     ANTI_REPEAT_DAYS_PER_CHAT,
 )
 from services.community_block.scheduler import (
-    SchedulerDecision,
     should_skip_for_activity,
     should_skip_for_cooldown,
 )
@@ -38,6 +37,16 @@ def choose_post_candidate(
     recent_messages_count: int = 0,
     dry_run: bool = True,
 ) -> CommunityDecision:
+    chat_id = int(chat["chat_id"])
+
+    if not bool(chat.get("is_enabled")):
+        return CommunityDecision(
+            allowed=False,
+            reason="chat_disabled",
+            chat_id=chat_id,
+            dry_run=dry_run,
+        )
+
     now = datetime.now(UTC)
 
     cooldown_check = should_skip_for_cooldown(
@@ -49,7 +58,7 @@ def choose_post_candidate(
         return CommunityDecision(
             allowed=False,
             reason=cooldown_check.reason,
-            chat_id=int(chat["chat_id"]),
+            chat_id=chat_id,
             dry_run=dry_run,
         )
 
@@ -61,13 +70,13 @@ def choose_post_candidate(
         return CommunityDecision(
             allowed=False,
             reason=activity_check.reason,
-            chat_id=int(chat["chat_id"]),
+            chat_id=chat_id,
             dry_run=dry_run,
         )
 
     recent_formats = repo.get_recent_format_types_for_chat(
         conn,
-        chat_id=int(chat["chat_id"]),
+        chat_id=chat_id,
         limit=3,
     )
     excluded_format_type = recent_formats[0] if recent_formats else None
@@ -84,7 +93,7 @@ def choose_post_candidate(
 
         if repo.was_content_used_in_chat_within_days(
             conn,
-            chat_id=int(chat["chat_id"]),
+            chat_id=chat_id,
             content_id=content_id,
             days=ANTI_REPEAT_DAYS_PER_CHAT,
         ):
@@ -92,7 +101,7 @@ def choose_post_candidate(
 
         if repo.count_recent_format_type_usage(
             conn,
-            chat_id=int(chat["chat_id"]),
+            chat_id=chat_id,
             format_type=format_type,
             limit=3,
         ) >= 2:
@@ -101,7 +110,7 @@ def choose_post_candidate(
         return CommunityDecision(
             allowed=True,
             reason="candidate_selected",
-            chat_id=int(chat["chat_id"]),
+            chat_id=chat_id,
             content_id=content_id,
             content_format_type=format_type,
             dry_run=dry_run,
@@ -110,6 +119,6 @@ def choose_post_candidate(
     return CommunityDecision(
         allowed=False,
         reason="no_candidate",
-        chat_id=int(chat["chat_id"]),
+        chat_id=chat_id,
         dry_run=dry_run,
     )

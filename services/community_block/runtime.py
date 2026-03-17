@@ -48,7 +48,6 @@ async def _run_loop(*, tick_seconds: int, dry_run: bool) -> None:
             conn = None
             try:
                 conn = _open_runtime_db()
-
                 bootstrap_community_layer(conn)
 
                 global_enabled = repo.get_runtime_flag(conn, key="global_enabled", default="1")
@@ -91,7 +90,6 @@ async def _run_loop(*, tick_seconds: int, dry_run: bool) -> None:
 
             except Exception:
                 log.exception("community_runtime_tick_failed")
-                raise
             finally:
                 if conn is not None:
                     conn.close()
@@ -143,3 +141,5 @@ async def stop_community_runtime() -> None:
         await task
     except asyncio.CancelledError:
         pass
+    except Exception:
+        log.exception("community_runtime_stop_join_failed")
