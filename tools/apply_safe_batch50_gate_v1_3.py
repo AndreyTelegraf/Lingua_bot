@@ -1,4 +1,15 @@
 from __future__ import annotations
+
+import os
+import sys
+
+if os.environ.get("LINGUABOT_ALLOW_UNSAFE_DIRECT_ACTIVATION") != "1":
+    raise SystemExit(
+        "Blocked: this legacy script performs direct vocab_items.is_active=1 writes and bypasses the strict activation gate in services/vocab_bank/validate_items.py. "
+        "Use the canonical publish path instead. "
+        "Override only for forensic/manual recovery with LINGUABOT_ALLOW_UNSAFE_DIRECT_ACTIVATION=1."
+    )
+
 import csv
 import json
 import sqlite3

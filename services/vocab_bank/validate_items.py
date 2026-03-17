@@ -120,11 +120,46 @@ def validate_and_publish_items(
             )
 
         if publish and item_passed:
-            conn.execute(
-                "UPDATE vocab_items SET is_active = 1 WHERE id = ?",
+            cur = conn.execute(
+                "UPDATE vocab_items
+SET is_active = 1
+WHERE id = ?
+  AND (
+    SELECT COUNT(*)
+    FROM vocab_choices vc
+    WHERE vc.item_id = vocab_items.id
+  ) = 6
+  AND (
+    SELECT SUM(CASE WHEN COALESCE(vc.is_correct,0)=1 THEN 1 ELSE 0 END)
+    FROM vocab_choices vc
+    WHERE vc.item_id = vocab_items.id
+  ) = 1
+  AND (
+    SELECT COUNT(DISTINCT TRIM(LOWER(vc.choice_text)))
+    FROM vocab_choices vc
+    WHERE vc.item_id = vocab_items.id
+  ) = 6
+  AND NOT EXISTS (
+    SELECT 1
+    FROM vocab_choices vc
+    LEFT JOIN vocab_items vi2
+      ON TRIM(LOWER(vi2.lemma)) = TRIM(LOWER(vc.choice_text))
+    WHERE vc.item_id = vocab_items.id
+      AND COALESCE(vc.is_correct,0) = 0
+      AND vi2.id IS NULL
+  )
+  AND NOT EXISTS (
+    SELECT 1
+    FROM vocab_items v2
+    WHERE v2.is_active = 1
+      AND v2.id != vocab_items.id
+      AND TRIM(LOWER(v2.lemma)) = TRIM(LOWER(vocab_items.lemma))
+      AND COALESCE(TRIM(LOWER(v2.pos)), '') = COALESCE(TRIM(LOWER(vocab_items.pos)), '')
+  )",
                 (item_id,),
             )
-            passed_count += 1
+            if cur.rowcount == 1:
+                passed_count += 1
         elif publish and not item_passed:
             conn.execute(
                 "UPDATE vocab_items SET is_active = 0 WHERE id = ?",
