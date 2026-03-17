@@ -3,14 +3,19 @@ import asyncio
 import structlog
 from aiogram import Bot, Dispatcher
 
-from app.config import get_settings
 from app.container import close_container, init_container
 from app.logging import setup_logging
 from bot.router import build_root_router
+from services.community_block.runtime import (
+    start_community_runtime,
+    stop_community_runtime,
+)
 
 
 async def main() -> None:
     setup_logging()
+    from app.config import get_settings
+
     settings = get_settings()
     log = structlog.get_logger(__name__)
 
@@ -30,8 +35,10 @@ async def main() -> None:
     )
 
     try:
+        await start_community_runtime()
         await dp.start_polling(bot)
     finally:
+        await stop_community_runtime()
         await bot.session.close()
         await close_container()
         log.info("bot_stopped")

@@ -3,6 +3,7 @@ from dataclasses import dataclass
 import aiosqlite
 
 from db.connection import open_db
+from db.migrate import apply_migrations
 
 
 @dataclass
@@ -14,6 +15,7 @@ container = Container()
 
 
 async def init_container() -> None:
+    await apply_migrations()
     if container.db is None:
         container.db = await open_db()
 

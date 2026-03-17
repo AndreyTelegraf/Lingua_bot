@@ -20,6 +20,9 @@ class Settings(BaseSettings):
     feature_vocab_enabled: bool = Field(default=True)
     feature_level_enabled: bool = Field(default=False)
     feature_ciple_enabled: bool = Field(default=False)
+    feature_community_enabled: bool = Field(default=False)
+    community_dry_run: bool = Field(default=True)
+    community_tick_seconds: int = Field(default=60)
 
 
 @lru_cache(maxsize=1)
