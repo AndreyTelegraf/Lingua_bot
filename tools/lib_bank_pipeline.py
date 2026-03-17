@@ -405,6 +405,7 @@ def run_layer_pipeline(
 
         audit_after_fix = build_priority_audit_fn(conn, spec)["summary"]["audit_rows"] if build_priority_audit else 0
         after_rows = fetch_layer_rows(conn, spec)
+        duplicate_groups_after_count = len(duplicate_groups(after_rows))
 
         metrics = {
             "pos": spec.pos,
@@ -414,14 +415,14 @@ def run_layer_pipeline(
             "active_rows": sum(1 for r in after_rows if int(r["is_active"]) == 1),
             "valid_6_1_rows": sum(1 for r in after_rows if int(r["choice_count"]) == 6 and int(r["correct_count"]) == 1),
             "duplicate_groups_before": dup_before,
-            "duplicate_groups_after": len(duplicate_groups(after_rows)),
+            "duplicate_groups_after": duplicate_groups_after_count,
             "deleted_zero_choice_inactive_duplicates": cleanup_stats["deleted_zero_choice_inactive_duplicates"],
             "purged_fully_inactive_duplicate_group_count": purge_stats["purged_fully_inactive_duplicate_group_count"],
             "purged_fully_inactive_duplicate_item_count": purge_stats["purged_fully_inactive_duplicate_item_count"],
             "semantic_updates": semantic_stats["semantic_updates"],
             "audit_rows_before_fix": audit_before_fix,
             "audit_rows_after_fix": audit_after_fix,
-            "final_status": "PASS" if audit_after_fix == 0 else "FAIL",
+            "final_status": "PASS" if (audit_after_fix == 0 and duplicate_groups_after_count == 0) else "FAIL",
         }
 
         manifest = {
