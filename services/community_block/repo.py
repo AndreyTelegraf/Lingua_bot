@@ -107,6 +107,19 @@ def get_chat(conn: sqlite3.Connection, *, chat_id: int) -> dict[str, Any] | None
     return _row_to_dict(row)
 
 
+def get_chat_by_key(conn: sqlite3.Connection, *, chat_key: str) -> dict[str, Any] | None:
+    conn.row_factory = sqlite3.Row
+    row = conn.execute(
+        """
+        SELECT *
+        FROM community_chats
+        WHERE chat_key = ?
+        """,
+        (chat_key,),
+    ).fetchone()
+    return _row_to_dict(row)
+
+
 def list_enabled_chats(conn: sqlite3.Connection) -> list[dict[str, Any]]:
     conn.row_factory = sqlite3.Row
     rows = conn.execute(
@@ -114,6 +127,18 @@ def list_enabled_chats(conn: sqlite3.Connection) -> list[dict[str, Any]]:
         SELECT *
         FROM community_chats
         WHERE is_enabled = 1
+        ORDER BY chat_key
+        """
+    ).fetchall()
+    return [_row_to_dict(row) for row in rows]
+
+
+def list_all_chats(conn: sqlite3.Connection) -> list[dict[str, Any]]:
+    conn.row_factory = sqlite3.Row
+    rows = conn.execute(
+        """
+        SELECT *
+        FROM community_chats
         ORDER BY chat_key
         """
     ).fetchall()
@@ -158,6 +183,81 @@ def create_content_item(
         ),
     )
     return int(cur.lastrowid)
+
+
+def list_candidate_content(
+    conn: sqlite3.Connection,
+    *,
+    region: str | None,
+    excluded_format_type: str | None = None,
+) -> list[dict[str, Any]]:
+    conn.row_factory = sqlite3.Row
+
+    params: list[object] = []
+    where = ["is_active = 1"]
+
+    if region is not None:
+        where.append("(region IS NULL OR region = ?)")
+        params.append(region)
+
+    if excluded_format_type is not None:
+        where.append("format_type != ?")
+        params.append(excluded_format_type)
+
+    sql = f"""
+    SELECT *
+    FROM community_content_items
+    WHERE {" AND ".join(where)}
+    ORDER BY priority ASC, id ASC
+    """
+    rows = conn.execute(sql, tuple(params)).fetchall()
+    return [_row_to_dict(row) for row in rows]
+
+
+def get_last_post_for_chat(conn: sqlite3.Connection, *, chat_id: int) -> dict[str, Any] | None:
+    conn.row_factory = sqlite3.Row
+    row = conn.execute(
+        """
+        SELECT *
+        FROM community_post_log
+        WHERE chat_id = ?
+        ORDER BY posted_at DESC, id DESC
+        LIMIT 1
+        """,
+        (chat_id,),
+    ).fetchone()
+    return _row_to_dict(row)
+
+
+def get_recent_format_types_for_chat(
+    conn: sqlite3.Connection,
+    *,
+    chat_id: int,
+    limit: int = 3,
+) -> list[str]:
+    rows = conn.execute(
+        """
+        SELECT c.format_type
+        FROM community_post_log p
+        JOIN community_content_items c ON c.id = p.content_id
+        WHERE p.chat_id = ?
+        ORDER BY p.posted_at DESC, p.id DESC
+        LIMIT ?
+        """,
+        (chat_id, limit),
+    ).fetchall()
+    return [str(row[0]) for row in rows]
+
+
+def count_recent_format_type_usage(
+    conn: sqlite3.Connection,
+    *,
+    chat_id: int,
+    format_type: str,
+    limit: int = 3,
+) -> int:
+    rows = get_recent_format_types_for_chat(conn, chat_id=chat_id, limit=limit)
+    return sum(1 for item in rows if item == format_type)
 
 
 def log_post(

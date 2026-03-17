@@ -8,6 +8,8 @@ import structlog
 from app.config import get_settings
 from db.connection import open_db
 from services.community_block import repo
+from services.community_block.bootstrap import bootstrap_community_layer
+from services.community_block.decision import choose_post_candidate
 
 
 @dataclass(slots=True)
@@ -33,18 +35,44 @@ async def _run_loop(*, tick_seconds: int, dry_run: bool) -> None:
         while _runtime.stop_event is not None and not _runtime.stop_event.is_set():
             conn = await open_db()
             try:
+                bootstrap_community_layer(conn)
+
                 global_enabled = repo.get_runtime_flag(conn, key="global_enabled", default="1")
                 followups_enabled = repo.get_runtime_flag(conn, key="followups_enabled", default="0")
                 default_mode = repo.get_runtime_flag(conn, key="default_mode", default="A")
-                enabled_chats = repo.list_enabled_chats(conn)
+                all_chats = repo.list_all_chats(conn)
+
                 log.info(
                     "community_runtime_tick",
                     dry_run=dry_run,
                     global_enabled=global_enabled,
                     followups_enabled=followups_enabled,
                     default_mode=default_mode,
-                    enabled_chat_count=len(enabled_chats),
+                    chat_count=len(all_chats),
                 )
+
+                if global_enabled != "1":
+                    log.info("community_runtime_globally_disabled")
+                else:
+                    for chat in all_chats:
+                        decision = choose_post_candidate(
+                            conn,
+                            chat=chat,
+                            recent_messages_count=0,
+                            dry_run=dry_run,
+                        )
+                        log.info(
+                            "community_decision",
+                            dry_run=dry_run,
+                            chat_id=chat["chat_id"],
+                            chat_key=chat["chat_key"],
+                            is_enabled=bool(chat["is_enabled"]),
+                            reason=decision.reason,
+                            allowed=decision.allowed,
+                            content_id=decision.content_id,
+                            content_format_type=decision.content_format_type,
+                        )
+                await conn.commit()
             finally:
                 await conn.close()
 
