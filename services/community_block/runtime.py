@@ -1,12 +1,13 @@
 from __future__ import annotations
 
 import asyncio
+import sqlite3
 from dataclasses import dataclass
+from pathlib import Path
 
 import structlog
 
 from app.config import get_settings
-from db.connection import open_db
 from services.community_block import repo
 from services.community_block.bootstrap import bootstrap_community_layer
 from services.community_block.decision import choose_post_candidate
@@ -22,6 +23,17 @@ _runtime = CommunityRuntime()
 log = structlog.get_logger(__name__)
 
 
+def _open_runtime_db() -> sqlite3.Connection:
+    settings = get_settings()
+    db_path = Path(settings.db_path)
+    db_path.parent.mkdir(parents=True, exist_ok=True)
+
+    conn = sqlite3.connect(db_path.as_posix())
+    conn.row_factory = sqlite3.Row
+    conn.execute("PRAGMA foreign_keys = ON;")
+    return conn
+
+
 async def _run_loop(*, tick_seconds: int, dry_run: bool) -> None:
     settings = get_settings()
     log.info(
@@ -33,8 +45,10 @@ async def _run_loop(*, tick_seconds: int, dry_run: bool) -> None:
 
     try:
         while _runtime.stop_event is not None and not _runtime.stop_event.is_set():
-            conn = await open_db()
+            conn = None
             try:
+                conn = _open_runtime_db()
+
                 bootstrap_community_layer(conn)
 
                 global_enabled = repo.get_runtime_flag(conn, key="global_enabled", default="1")
@@ -72,9 +86,15 @@ async def _run_loop(*, tick_seconds: int, dry_run: bool) -> None:
                             content_id=decision.content_id,
                             content_format_type=decision.content_format_type,
                         )
-                await conn.commit()
+
+                conn.commit()
+
+            except Exception:
+                log.exception("community_runtime_tick_failed")
+                raise
             finally:
-                await conn.close()
+                if conn is not None:
+                    conn.close()
 
             try:
                 await asyncio.wait_for(_runtime.stop_event.wait(), timeout=tick_seconds)
