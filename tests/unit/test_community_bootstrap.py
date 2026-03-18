@@ -21,13 +21,17 @@ def test_bootstrap_creates_default_rows() -> None:
     bootstrap_community_layer(conn)
     conn.commit()
 
-    chats = conn.execute("SELECT chat_key, is_enabled FROM community_chats ORDER BY chat_key").fetchall()
-    assert [row["chat_key"] for row in chats] == [
-        "chatalgarve",
-        "chatleiria",
-        "chatlisboa",
-        "chatporto",
-        "left4portugal",
+    chats = conn.execute(
+        "SELECT chat_key, chat_id, is_enabled FROM community_chats ORDER BY chat_key"
+    ).fetchall()
+    assert [(row["chat_key"], row["chat_id"]) for row in chats] == [
+        ("chatalcochete", -1001975356498),
+        ("chatalgarve", -1001690275466),
+        ("chatfigueira", -1002102744104),
+        ("chatleiria", -1001227461571),
+        ("chatlisboa", -1001656765898),
+        ("chatporto", -1001719116315),
+        ("left4portugal", -1001620974633),
     ]
     assert all(row["is_enabled"] == 0 for row in chats)
 
@@ -40,7 +44,7 @@ def test_bootstrap_creates_default_rows() -> None:
     assert flags["default_mode"] == "A"
 
 
-def test_bootstrap_preserves_bound_chat_identity() -> None:
+def test_bootstrap_preserves_bound_chat_enabled_state_and_syncs_canonical_id() -> None:
     conn = sqlite3.connect(":memory:")
     conn.row_factory = sqlite3.Row
     apply_all_sqlite_migrations(conn)
@@ -49,7 +53,7 @@ def test_bootstrap_preserves_bound_chat_identity() -> None:
     repo.bind_chat_identity(
         conn,
         chat_key="chatalgarve",
-        real_chat_id=-1001690275466,
+        real_chat_id=-999999,
         has_topics=False,
         default_topic_id=None,
     )

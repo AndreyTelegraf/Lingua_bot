@@ -194,6 +194,18 @@ def enable_only_chat(conn: sqlite3.Connection, *, chat_key: str) -> None:
     )
 
 
+def set_chat_daily_post_time(conn: sqlite3.Connection, *, chat_key: str, daily_post_time: str) -> None:
+    conn.execute(
+        """
+        UPDATE community_chats
+        SET daily_post_time = ?,
+            updated_at = CURRENT_TIMESTAMP
+        WHERE chat_key = ?
+        """,
+        (daily_post_time, chat_key),
+    )
+
+
 def create_content_item(
     conn: sqlite3.Connection,
     *,

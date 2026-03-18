@@ -38,7 +38,7 @@ def _open_runtime_db() -> sqlite3.Connection:
     return conn
 
 
-async def _maybe_send_scheduled_posts(*, dry_run: bool) -> None:
+async def _maybe_send_scheduled_posts(*, dry_run_default: bool) -> None:
     settings = get_settings()
     now = utc_now()
     conn = _open_runtime_db()
@@ -48,11 +48,19 @@ async def _maybe_send_scheduled_posts(*, dry_run: bool) -> None:
         global_enabled = repo.get_runtime_flag(conn, key="global_enabled", default="1")
         followups_enabled = repo.get_runtime_flag(conn, key="followups_enabled", default="0")
         default_mode = repo.get_runtime_flag(conn, key="default_mode", default="A")
+        dry_run_override = repo.get_runtime_flag(conn, key="dry_run_override", default=None)
+
+        if dry_run_override is None:
+            effective_dry_run = dry_run_default
+        else:
+            effective_dry_run = str(dry_run_override) == "1"
+
         all_chats = repo.list_all_chats(conn)
 
         log.info(
             "community_runtime_tick",
-            dry_run=dry_run,
+            dry_run=effective_dry_run,
+            dry_run_override=dry_run_override,
             global_enabled=global_enabled,
             followups_enabled=followups_enabled,
             default_mode=default_mode,
@@ -102,11 +110,11 @@ async def _maybe_send_scheduled_posts(*, dry_run: bool) -> None:
                     conn,
                     chat=chat,
                     recent_messages_count=0,
-                    dry_run=dry_run,
+                    dry_run=effective_dry_run,
                 )
                 log.info(
                     "community_decision",
-                    dry_run=dry_run,
+                    dry_run=effective_dry_run,
                     chat_id=chat["chat_id"],
                     chat_key=chat["chat_key"],
                     is_enabled=bool(chat["is_enabled"]),
@@ -130,7 +138,7 @@ async def _maybe_send_scheduled_posts(*, dry_run: bool) -> None:
                     )
                     continue
 
-                if dry_run:
+                if effective_dry_run:
                     log.info(
                         "community_send_planned",
                         dry_run=True,
@@ -190,7 +198,7 @@ async def _run_loop(*, tick_seconds: int, dry_run: bool) -> None:
     try:
         while _runtime.stop_event is not None and not _runtime.stop_event.is_set():
             try:
-                await _maybe_send_scheduled_posts(dry_run=dry_run)
+                await _maybe_send_scheduled_posts(dry_run_default=dry_run)
             except Exception:
                 log.exception("community_runtime_tick_failed")
 
