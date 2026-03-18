@@ -67,3 +67,20 @@ def test_bootstrap_preserves_bound_chat_enabled_state_and_syncs_canonical_id() -
     assert row is not None
     assert row["chat_id"] == -1001690275466
     assert row["is_enabled"] == 1
+
+
+def test_bootstrap_preserves_manual_daily_post_time() -> None:
+    conn = sqlite3.connect(":memory:")
+    conn.row_factory = sqlite3.Row
+    apply_all_sqlite_migrations(conn)
+
+    bootstrap_community_layer(conn)
+    repo.set_chat_daily_post_time(conn, chat_key="chatalgarve", daily_post_time="00:40")
+    conn.commit()
+
+    bootstrap_community_layer(conn)
+    conn.commit()
+
+    row = repo.get_chat_by_key(conn, chat_key="chatalgarve")
+    assert row is not None
+    assert row["daily_post_time"] == "00:40"
