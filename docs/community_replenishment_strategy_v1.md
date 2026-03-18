@@ -66,3 +66,10 @@ Previous generation attempts failed because diversity control happened after gen
 - builder prevents scenario reuse within one wave
 - awkward meta stems are explicitly blocked
 - wave v2 artifacts are generated as review candidates only, not as auto-import material
+
+
+## Added in v4
+
+- render cleanup layer removes punctuation artifacts and duplicate tail constructions
+- review pack exporter produces TSV/JSON for fast human triage
+- generated wave remains review-only until a curated import step is added

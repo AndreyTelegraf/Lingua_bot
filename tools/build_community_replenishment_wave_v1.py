@@ -101,15 +101,40 @@ def load_scenarios(path: Path) -> list[Scenario]:
     return [Scenario.from_dict(row) for row in rows]
 
 
+def _cleanup_scene(scene: str) -> str:
+    s = scene.strip()
+    s = s.rstrip(".!?")
+    s = re.sub(r"\s+", " ", s)
+    if s:
+        s = s[0].lower() + s[1:]
+    return s
+
+
+def _cleanup_text(text: str) -> str:
+    t = normalize(text)
+    t = t.replace(".,", ",")
+    t = t.replace("..", ".")
+    t = re.sub(r"\s+([,?.!])", r"\1", t)
+    t = re.sub(r",\s*,+", ", ", t)
+    t = re.sub(r"\?\s*\?", "?", t)
+    t = re.sub(r"(?i),\s*чтобы фраза звучала естественно и по-живому,\s*чтобы это звучало живо и по-местному\?", ", чтобы это звучало живо и по-местному?", t)
+    t = re.sub(r"(?i),\s*если нужен разговорный и нормальный вариант,\s*если нужен разговорный и нормальный вариант\?", ", если нужен разговорный и нормальный вариант?", t)
+    t = re.sub(r"(?i),\s*если хочется сказать естественно, а не как по учебнику,\s*если хочется сказать естественно, а не как по учебнику\?", ", если хочется сказать естественно, а не как по учебнику?", t)
+    return t.strip()
+
+
 def render_text(scenario: Scenario, opening_family: str, seed_pick: int) -> str:
-    variants = [
-        f"{opening_family} {scenario.scene.lower()}",
-        f"{opening_family} {scenario.scene.lower()}, если цель — {scenario.speaker_goal}",
-        f"{opening_family} {scenario.scene.lower()}, чтобы фраза звучала естественно и по-живому",
-    ]
-    base = variants[seed_pick % len(variants)]
+    scene = _cleanup_scene(scenario.scene)
     tail = TEXT_TAILS[seed_pick % len(TEXT_TAILS)]
-    return normalize(f"{base}, {tail}")
+
+    variants = [
+        f"{opening_family} {scene}, {tail}",
+        f"{opening_family} {scene}, если цель — {scenario.speaker_goal}, {tail}",
+        f"{opening_family} {scene}, чтобы это звучало естественно и по-живому?",
+    ]
+
+    text = variants[seed_pick % len(variants)]
+    return _cleanup_text(text)
 
 
 def would_break_prefix_limits(existing_texts: list[str], candidate_text: str, target_size: int) -> bool:
@@ -137,6 +162,12 @@ def is_text_allowed(text: str, scenario: Scenario) -> bool:
     if any(pat.lower() in low for pat in scenario.banned_stems):
         return False
     if any(pat.lower() in low for pat in AWKWARD_STEMS):
+        return False
+    if "., " in text or ".," in text:
+        return False
+    if len(re.findall(r"если .*если ", low)) > 0:
+        return False
+    if len(re.findall(r"чтобы .*чтобы ", low)) > 0:
         return False
     if not (85 <= len(text) <= 220):
         return False
@@ -254,6 +285,10 @@ def analyze(items: Iterable[WaveItem]) -> dict:
     awkward_hits = [text for text in texts if any(stem.lower() in text.lower() for stem in AWKWARD_STEMS)]
     if awkward_hits:
         violations.append("awkward_stem_detected")
+
+    punct_bad = [text for text in texts if ".," in text or "., " in text]
+    if punct_bad:
+        violations.append("punctuation_artifacts_detected")
 
     passed = not violations
 

@@ -86,3 +86,15 @@ def test_no_awkward_meta_stems_in_output() -> None:
         "когда уместно сказать в finanças, чтобы",
     )
     assert not any(any(stem in text for stem in banned) for text in texts)
+
+
+def test_no_punctuation_artifacts_in_output() -> None:
+    items = build_wave(
+        target_size=12,
+        max_per_opening=2,
+        min_openings=8,
+        seed=42,
+        scenario_pack_path=SCENARIO_PACK,
+    )
+    texts = [item.text for item in items]
+    assert not any(".," in text or "., " in text for text in texts)
