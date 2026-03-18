@@ -453,3 +453,22 @@ def was_content_used_in_chat_within_days(
         (chat_id, content_id, f"-{int(days)} days"),
     ).fetchone()
     return row is not None
+
+
+def has_post_for_chat_on_date(
+    conn: sqlite3.Connection,
+    *,
+    chat_id: int,
+    yyyy_mm_dd: str,
+) -> bool:
+    row = conn.execute(
+        """
+        SELECT 1
+        FROM community_post_log
+        WHERE chat_id = ?
+          AND date(posted_at) = ?
+        LIMIT 1
+        """,
+        (chat_id, yyyy_mm_dd),
+    ).fetchone()
+    return row is not None
