@@ -46,7 +46,7 @@ def test_choose_post_candidate_selects_first_available() -> None:
     decision = choose_post_candidate(conn, chat=chat, recent_messages_count=0, dry_run=True)
 
     assert decision.allowed is True
-    assert decision.reason == "candidate_selected"
+    assert decision.reason == "candidate_selected_fresh"
     assert decision.content_id is not None
     assert decision.content_format_type is not None
 
