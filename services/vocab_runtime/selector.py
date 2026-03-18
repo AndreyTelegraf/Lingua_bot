@@ -11,9 +11,9 @@ import json
 
 
 _DEFAULT_POS_TARGET_SHARE = {
-    "noun": 0.40,
-    "verb": 0.25,
-    "adjective": 0.20,
+    "noun": 0.30,
+    "verb": 0.30,
+    "adjective": 0.25,
     "adverb": 0.15,
 }
 
@@ -56,9 +56,9 @@ def rebalance_pos_weights(
         elif total_asked >= 12 and pos == "verb" and current <= 1:
             boost = max(boost, 3.0)
         elif total_asked >= 10 and pos == "adjective" and current == 0:
-            boost = max(boost, 2.5)
+            boost = max(boost, 3.5)
         elif total_asked >= 12 and pos == "adverb" and current == 0:
-            boost = max(boost, 2.0)
+            boost = max(boost, 3.0)
 
         out[pos] = float(base) * boost * penalty
 

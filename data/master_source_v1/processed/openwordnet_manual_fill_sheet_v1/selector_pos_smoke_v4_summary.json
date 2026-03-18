@@ -1,0 +1,130 @@
+{
+  "runs": 120,
+  "questions_per_run_target": 24,
+  "commit_every": 10,
+  "event_table_columns": [
+    "id",
+    "attempt_id",
+    "user_id",
+    "event_type",
+    "step_index",
+    "item_id",
+    "reason_code",
+    "payload_json",
+    "created_at"
+  ],
+  "avg_per_run": {
+    "noun": 7.0,
+    "verb": 7.0,
+    "adjective": 6.0,
+    "adverb": 4.0,
+    "unknown": 0.0,
+    "total": 24.0
+  },
+  "aggregate_counts": {
+    "noun": 840,
+    "verb": 840,
+    "adjective": 720,
+    "adverb": 480
+  },
+  "aggregate_shares": {
+    "adjective": 0.25,
+    "adverb": 0.1667,
+    "noun": 0.2917,
+    "verb": 0.2917
+  },
+  "min_run_len": 24,
+  "max_run_len": 24,
+  "sample_runs": [
+    {
+      "attempt_id": 9000000,
+      "total": 24,
+      "noun": 7,
+      "verb": 7,
+      "adjective": 6,
+      "adverb": 4,
+      "unknown": 0
+    },
+    {
+      "attempt_id": 9000001,
+      "total": 24,
+      "noun": 7,
+      "verb": 7,
+      "adjective": 6,
+      "adverb": 4,
+      "unknown": 0
+    },
+    {
+      "attempt_id": 9000002,
+      "total": 24,
+      "noun": 7,
+      "verb": 7,
+      "adjective": 6,
+      "adverb": 4,
+      "unknown": 0
+    },
+    {
+      "attempt_id": 9000003,
+      "total": 24,
+      "noun": 7,
+      "verb": 7,
+      "adjective": 6,
+      "adverb": 4,
+      "unknown": 0
+    },
+    {
+      "attempt_id": 9000004,
+      "total": 24,
+      "noun": 7,
+      "verb": 7,
+      "adjective": 6,
+      "adverb": 4,
+      "unknown": 0
+    },
+    {
+      "attempt_id": 9000005,
+      "total": 24,
+      "noun": 7,
+      "verb": 7,
+      "adjective": 6,
+      "adverb": 4,
+      "unknown": 0
+    },
+    {
+      "attempt_id": 9000006,
+      "total": 24,
+      "noun": 7,
+      "verb": 7,
+      "adjective": 6,
+      "adverb": 4,
+      "unknown": 0
+    },
+    {
+      "attempt_id": 9000007,
+      "total": 24,
+      "noun": 7,
+      "verb": 7,
+      "adjective": 6,
+      "adverb": 4,
+      "unknown": 0
+    },
+    {
+      "attempt_id": 9000008,
+      "total": 24,
+      "noun": 7,
+      "verb": 7,
+      "adjective": 6,
+      "adverb": 4,
+      "unknown": 0
+    },
+    {
+      "attempt_id": 9000009,
+      "total": 24,
+      "noun": 7,
+      "verb": 7,
+      "adjective": 6,
+      "adverb": 4,
+      "unknown": 0
+    }
+  ]
+}

@@ -1,0 +1,133 @@
+{
+  "db_path": "/home/andrey/Projects/lingua_bot_v2/data/lingua_staging.db",
+  "base_csv": "/home/andrey/Projects/lingua_bot_v2/data/master_source_v1/processed/openwordnet_manual_fill_sheet_v1/openwordnet_manual_fill_sheet_v1.csv",
+  "topic_tag": "openwordnet_manual_fill_v1",
+  "items_total": 62,
+  "bucket_counts": {
+    "high": 0,
+    "medium": 9,
+    "low": 11,
+    "ok": 42
+  },
+  "high_risk_items": [],
+  "medium_risk_items": [
+    {
+      "item_id": 10645,
+      "lemma": "apreciar",
+      "pos": "verb",
+      "external_key": "00892315-v",
+      "correct_answer": "быть признательным",
+      "risk_score": 5,
+      "risk_bucket": "medium",
+      "reasons": "known_focus_lemma|verb_not_infinitive_ru",
+      "gloss_en": "express gratitude or show appreciation to",
+      "gloss_pt": "expressar gratidão ou mostrar apreciação",
+      "question_text": "[owmfill_v1] Переведите на русский слово \"apreciar\"."
+    },
+    {
+      "item_id": 10643,
+      "lemma": "nave",
+      "pos": "noun",
+      "external_key": "02694045-n",
+      "correct_answer": "неф",
+      "risk_score": 5,
+      "risk_bucket": "medium",
+      "reasons": "known_focus_lemma|one_word_ru_vs_long_definition|hint_match:church|church_architecture_specialized_term",
+      "gloss_en": "part of a church divided laterally from the nave proper by rows of pillars or columns",
+      "gloss_pt": "Parte de uma igreja separadam lateralmente da nave propriamente dita por linhas de colunas ou pilares",
+      "question_text": "[owmfill_v1] Переведите на русский слово \"nave\"."
+    },
+    {
+      "item_id": 10649,
+      "lemma": "negligenciar",
+      "pos": "verb",
+      "external_key": "02166361-v",
+      "correct_answer": "упускать из виду",
+      "risk_score": 5,
+      "risk_bucket": "medium",
+      "reasons": "known_focus_lemma|verb_not_infinitive_ru",
+      "gloss_en": "look past, fail to notice",
+      "gloss_pt": "deixar de reparar",
+      "question_text": "[owmfill_v1] Переведите на русский слово \"negligenciar\"."
+    },
+    {
+      "item_id": 10650,
+      "lemma": "plotar",
+      "pos": "verb",
+      "external_key": "01693453-v",
+      "correct_answer": "строить схему",
+      "risk_score": 5,
+      "risk_bucket": "medium",
+      "reasons": "known_focus_lemma|verb_not_infinitive_ru",
+      "gloss_en": "make a schematic or technical drawing of that shows interactions among variables or how something is constructed",
+      "gloss_pt": "fazer um desenho esquemático ou técnico que mostra as interações entre as variáveis ou como algo é construído",
+      "question_text": "[owmfill_v1] Переведите на русский слово \"plotar\"."
+    },
+    {
+      "item_id": 10631,
+      "lemma": "amplidão",
+      "pos": "noun",
+      "external_key": "05093581-n",
+      "correct_answer": "протяжённость",
+      "risk_score": 4,
+      "risk_bucket": "medium",
+      "reasons": "known_focus_lemma|one_word_ru_vs_long_definition|hint_match:magnitude",
+      "gloss_en": "the magnitude of something in a particular direction (especially length or width or height)",
+      "gloss_pt": "a magnitude de algo em uma determinada direção (especialmente comprimento ou largura ou altura)",
+      "question_text": "[owmfill_v1] Переведите на русский слово \"amplidão\"."
+    },
+    {
+      "item_id": 10633,
+      "lemma": "causador",
+      "pos": "noun",
+      "external_key": "00007347-n",
+      "correct_answer": "причинитель",
+      "risk_score": 4,
+      "risk_bucket": "medium",
+      "reasons": "known_focus_lemma|one_word_ru_vs_long_definition",
+      "gloss_en": "any entity that produces an effect or is responsible for events or results",
+      "gloss_pt": "qualquer entidade que produz um efeito ou é responsável por eventos ou resultados",
+      "question_text": "[owmfill_v1] Переведите на русский слово \"causador\"."
+    },
+    {
+      "item_id": 10640,
+      "lemma": "fenómeno",
+      "pos": "noun",
+      "external_key": "00034213-n",
+      "correct_answer": "явление",
+      "risk_score": 4,
+      "risk_bucket": "medium",
+      "reasons": "generic_ru_gloss|one_word_ru_vs_long_definition|phenomenon_generic_but_plausible",
+      "gloss_en": "any state or process known through the senses rather than by intuition or reasoning",
+      "gloss_pt": "qualquer estado ou processo cujo conhecimento é adquirido através dos sentidos e não pela intuição ou raciocínio",
+      "question_text": "[owmfill_v1] Переведите на русский слово \"fenómeno\"."
+    },
+    {
+      "item_id": 10621,
+      "lemma": "insight",
+      "pos": "noun",
+      "external_key": "05807306-n",
+      "correct_answer": "озарение",
+      "risk_score": 4,
+      "risk_bucket": "medium",
+      "reasons": "known_focus_lemma|one_word_ru_vs_long_definition",
+      "gloss_en": "the clear (and often sudden) understanding of a complex situation",
+      "gloss_pt": "a compreensão clara (e muitas vezes súbita) de uma situação complexa",
+      "question_text": "[owmfill_v1] Переведите на русский слово \"insight\"."
+    },
+    {
+      "item_id": 10627,
+      "lemma": "preconizar",
+      "pos": "verb",
+      "external_key": "00882948-v",
+      "correct_answer": "одобрительно отзываться",
+      "risk_score": 3,
+      "risk_bucket": "medium",
+      "reasons": "known_focus_lemma",
+      "gloss_en": "express a good opinion of",
+      "gloss_pt": "expressar uma boa opinião de",
+      "question_text": "[owmfill_v1] Переведите на русский слово \"preconizar\"."
+    }
+  ],
+  "detail_csv": "/home/andrey/Projects/lingua_bot_v2/data/master_source_v1/processed/openwordnet_manual_fill_sheet_v1/semantic_audit_openwordnet_import_batch_v1_details.csv"
+}
