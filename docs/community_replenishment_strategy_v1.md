@@ -73,3 +73,11 @@ Previous generation attempts failed because diversity control happened after gen
 - render cleanup layer removes punctuation artifacts and duplicate tail constructions
 - review pack exporter produces TSV/JSON for fast human triage
 - generated wave remains review-only until a curated import step is added
+
+
+## Added in v5
+
+- replenishment wave v3 is generated against the live active bank rather than in isolation
+- builder now blocks new items that would worsen live opener concentration
+- scenario_pack_v2 is intended to refill a cleaned bank after legacy-prune
+- outputs include wave TSV/JSONL, review pack v2, and import preview v2
