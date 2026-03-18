@@ -24,6 +24,34 @@ def latest(prefix: str) -> Path:
         raise FileNotFoundError(f"artifact not found for prefix={prefix}")
     return matches[0]
 
+
+
+def is_valid_ru_translation(lemma: str, ru: str) -> bool:
+    ru_l = ru.strip().lower()
+
+    # reject empty or too short
+    if not ru_l or len(ru_l) < 3:
+        return False
+
+    # reject latin leftovers
+    if any(c.isascii() and c.isalpha() for c in ru_l):
+        return False
+
+    # reject stop garbage
+    bad = {"для","почти","такой","это","тот","там","здесь"}
+    if ru_l in bad:
+        return False
+
+    # reject transliteration (very rough)
+    if ru_l.startswith(lemma[:3]):
+        return False
+
+    # reject verbs/adjectives heuristics
+    if ru_l.endswith(("ый","ий","ой","ая","ое","ые","ать","ить","ться")):
+        return False
+
+    return True
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--source-report", default="", help="Path to top400_needs_manual_ru_v2.json")

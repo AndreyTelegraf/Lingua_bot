@@ -15,7 +15,7 @@ APPLY_V5 = ROOT / "tools/vocab_noun_remediation_apply_v5.py"
 STATUS = ROOT / "tools/vocab_noun_orchestrator_status.py"
 READINESS = ROOT / "tools/vocab_prod_readiness_report.py"
 FORENSICS = ROOT / "tools/run_vocab_post_wiring_forensics.py"
-MANUAL_MAP_V5 = ROOT / "data/manual/noun_manual_ru_map_v5.json"
+MANUAL_MAP_V5 = ROOT / "data/manual/noun_manual_ru_map_v6.json"
 
 def latest_dir(prefix: str) -> Path | None:
     matches = sorted(ART.glob(f"{prefix}_*"), key=lambda p: p.stat().st_mtime, reverse=True)
