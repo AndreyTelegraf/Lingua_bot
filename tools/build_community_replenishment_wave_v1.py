@@ -10,175 +10,66 @@ from dataclasses import dataclass, asdict
 from pathlib import Path
 from typing import Iterable
 
-OPENING_FAMILIES: list[str] = [
-    "Что обычно говорят",
-    "Как обычно называют",
-    "Какая фраза здесь звучит",
-    "Где чаще спотыкаются в речи",
-    "Когда уместно сказать",
-    "Зачем здесь добавляют",
-    "Почему местные скорее скажут",
-    "В какой форме лучше спросить",
-    "О чём обычно уточняют",
-    "Какими словами мягче сказать",
-    "Какой оборот здесь звучит естественно",
-    "В каком варианте это звучит живее",
-]
-
-CONTEXTS: list[str] = [
-    "при аренде квартиры",
-    "в переписке с senhorio",
-    "в разговоре с врачом",
-    "в супермаркете",
-    "в кафе",
-    "на почте",
-    "в Finanças",
-    "в AIMA",
-    "в школе ребёнка",
-    "в чате соседей",
-    "в сервисе доставки",
-    "в разговоре с механиком",
-    "на автовокзале",
-    "в клинике",
-    "при записи в Câmara",
-]
-
-CONTEXT_TO_INTENTS: dict[str, list[str]] = {
-    "при аренде квартиры": [
-        "чтобы вежливо уточнить цену",
-        "чтобы спросить, какие документы нужны",
-        "чтобы мягко обозначить проблему",
-        "чтобы уточнить, можно ли перенести встречу",
-        "чтобы договориться о времени",
-        "чтобы спросить о сроках",
-        "чтобы выяснить, что делать дальше",
-    ],
-    "в переписке с senhorio": [
-        "чтобы вежливо уточнить цену",
-        "чтобы мягко обозначить проблему",
-        "чтобы уточнить, можно ли перенести встречу",
-        "чтобы договориться о времени",
-        "чтобы аккуратно отказаться",
-        "чтобы спросить о сроках",
-        "чтобы выяснить, что делать дальше",
-    ],
-    "в разговоре с врачом": [
-        "чтобы мягко обозначить проблему",
-        "чтобы переспросить без грубости",
-        "чтобы попросить ответ попроще",
-        "чтобы проверить, правильно ли поняли",
-        "чтобы спросить о сроках",
-        "чтобы выяснить, что делать дальше",
-    ],
-    "в супермаркете": [
-        "чтобы вежливо уточнить цену",
-        "чтобы переспросить без грубости",
-        "чтобы уточнить, что входит в услугу",
-        "чтобы аккуратно отказаться",
-        "чтобы проверить, правильно ли поняли",
-    ],
-    "в кафе": [
-        "чтобы вежливо уточнить цену",
-        "чтобы переспросить без грубости",
-        "чтобы уточнить, что входит в услугу",
-        "чтобы аккуратно отказаться",
-        "чтобы проверить, правильно ли поняли",
-    ],
-    "на почте": [
-        "чтобы спросить, какие документы нужны",
-        "чтобы переспросить без грубости",
-        "чтобы договориться о времени",
-        "чтобы проверить, правильно ли поняли",
-        "чтобы спросить о сроках",
-        "чтобы выяснить, что делать дальше",
-    ],
-    "в Finanças": [
-        "чтобы спросить, какие документы нужны",
-        "чтобы переспросить без грубости",
-        "чтобы попросить ответ попроще",
-        "чтобы проверить, правильно ли поняли",
-        "чтобы спросить о сроках",
-        "чтобы выяснить, что делать дальше",
-    ],
-    "в AIMA": [
-        "чтобы спросить, какие документы нужны",
-        "чтобы переспросить без грубости",
-        "чтобы попросить ответ попроще",
-        "чтобы проверить, правильно ли поняли",
-        "чтобы спросить о сроках",
-        "чтобы выяснить, что делать дальше",
-    ],
-    "в школе ребёнка": [
-        "чтобы уточнить, можно ли перенести встречу",
-        "чтобы переспросить без грубости",
-        "чтобы договориться о времени",
-        "чтобы проверить, правильно ли поняли",
-        "чтобы спросить о сроках",
-    ],
-    "в чате соседей": [
-        "чтобы мягко обозначить проблему",
-        "чтобы уточнить, можно ли перенести встречу",
-        "чтобы переспросить без грубости",
-        "чтобы договориться о времени",
-        "чтобы аккуратно отказаться",
-        "чтобы проверить, правильно ли поняли",
-    ],
-    "в сервисе доставки": [
-        "чтобы вежливо уточнить цену",
-        "чтобы мягко обозначить проблему",
-        "чтобы переспросить без грубости",
-        "чтобы попросить ответ попроще",
-        "чтобы проверить, правильно ли поняли",
-        "чтобы спросить о сроках",
-    ],
-    "в разговоре с механиком": [
-        "чтобы вежливо уточнить цену",
-        "чтобы мягко обозначить проблему",
-        "чтобы переспросить без грубости",
-        "чтобы уточнить, что входит в услугу",
-        "чтобы проверить, правильно ли поняли",
-        "чтобы спросить о сроках",
-    ],
-    "на автовокзале": [
-        "чтобы переспросить без грубости",
-        "чтобы договориться о времени",
-        "чтобы попросить ответ попроще",
-        "чтобы проверить, правильно ли поняли",
-        "чтобы спросить о сроках",
-        "чтобы выяснить, что делать дальше",
-    ],
-    "в клинике": [
-        "чтобы мягко обозначить проблему",
-        "чтобы переспросить без грубости",
-        "чтобы попросить ответ попроще",
-        "чтобы проверить, правильно ли поняли",
-        "чтобы спросить о сроках",
-        "чтобы выяснить, что делать дальше",
-    ],
-    "при записи в Câmara": [
-        "чтобы спросить, какие документы нужны",
-        "чтобы уточнить, можно ли перенести встречу",
-        "чтобы переспросить без грубости",
-        "чтобы договориться о времени",
-        "чтобы проверить, правильно ли поняли",
-        "чтобы спросить о сроках",
-        "чтобы выяснить, что делать дальше",
-    ],
-}
-
 FORBID_PATTERNS: tuple[str, ...] = (
     "как бы вы",
     "чем в живой",
     "как по-португальски",
+    "переведите на португальский",
+    "буквально перевести",
+    "официально спросить",
+    "официально сформулировать",
+    "дословно перевести",
 )
 
 FIRST_WORD_LIMIT_RATIO = 0.25
 FIRST2_LIMIT_RATIO = 0.20
 FIRST3_LIMIT_RATIO = 0.15
 
+AWKWARD_STEMS: tuple[str, ...] = (
+    "Как обычно называют на почте, чтобы",
+    "Когда уместно сказать в Finanças, чтобы",
+    "Что обычно говорят в школе ребёнка, чтобы проверить, правильно ли поняли",
+    "О чём обычно уточняют при записи в Câmara, чтобы проверить, правильно ли поняли",
+)
+
+TEXT_TAILS: tuple[str, ...] = (
+    "чтобы это звучало живо и по-местному?",
+    "если хочется сказать естественно, а не как по учебнику?",
+    "если нужен разговорный и нормальный вариант?",
+    "чтобы не звучать слишком прямолинейно?",
+)
+
+
+@dataclass(slots=True)
+class Scenario:
+    scenario_id: str
+    topic: str
+    format_type: str
+    context_label: str
+    scene: str
+    speaker_goal: str
+    natural_target: str
+    question_forms: list[str]
+    banned_stems: list[str]
+
+    @classmethod
+    def from_dict(cls, row: dict) -> "Scenario":
+        return cls(
+            scenario_id=row["scenario_id"],
+            topic=row["topic"],
+            format_type=row["format_type"],
+            context_label=row["context_label"],
+            scene=row["scene"],
+            speaker_goal=row["speaker_goal"],
+            natural_target=row["natural_target"],
+            question_forms=list(row["question_forms"]),
+            banned_stems=list(row["banned_stems"]),
+        )
+
 
 @dataclass(slots=True)
 class WaveItem:
+    scenario_id: str
     opening_family: str
     context: str
     intent: str
@@ -201,44 +92,24 @@ def first_words(text: str, n: int) -> str:
     return " ".join(words[:n])
 
 
-def pick_topics() -> list[str]:
-    return [
-        "housing",
-        "documents",
-        "shopping",
-        "work",
-        "transport",
-        "services",
-        "financas",
-        "culture",
-        "bureaucracy",
-        "health",
-        "food",
-    ]
-
-
-def pick_formats() -> list[str]:
-    return ["dialogue", "local", "nuance"]
-
-
-def is_semantically_valid(context: str, intent: str) -> bool:
-    allowed = CONTEXT_TO_INTENTS.get(context, [])
-    return intent in allowed
-
-
-def render_text(opening: str, context: str, intent: str) -> str:
-    templates = [
-        f"{opening} {context}, {intent}, чтобы это звучало живо и по-местному?",
-        f"{opening} {context}, {intent}, если хочется сказать естественно, а не как по учебнику?",
-        f"{opening} {context}, {intent}, если нужен разговорный и нормальный вариант?",
-        f"{opening} {context}, {intent}, чтобы не звучать слишком прямолинейно?",
-    ]
-    text = random.choice(templates)
-    return normalize(text)
-
-
 def distribution_limit(target_size: int, ratio: float) -> int:
     return max(1, math.ceil(target_size * ratio))
+
+
+def load_scenarios(path: Path) -> list[Scenario]:
+    rows = json.loads(path.read_text(encoding="utf-8"))
+    return [Scenario.from_dict(row) for row in rows]
+
+
+def render_text(scenario: Scenario, opening_family: str, seed_pick: int) -> str:
+    variants = [
+        f"{opening_family} {scenario.scene.lower()}",
+        f"{opening_family} {scenario.scene.lower()}, если цель — {scenario.speaker_goal}",
+        f"{opening_family} {scenario.scene.lower()}, чтобы фраза звучала естественно и по-живому",
+    ]
+    base = variants[seed_pick % len(variants)]
+    tail = TEXT_TAILS[seed_pick % len(TEXT_TAILS)]
+    return normalize(f"{base}, {tail}")
 
 
 def would_break_prefix_limits(existing_texts: list[str], candidate_text: str, target_size: int) -> bool:
@@ -247,7 +118,6 @@ def would_break_prefix_limits(existing_texts: list[str], candidate_text: str, ta
     first3_limit = distribution_limit(target_size, FIRST3_LIMIT_RATIO)
 
     trial = existing_texts + [candidate_text]
-
     first1 = Counter(first_words(t, 1) for t in trial)
     first2 = Counter(first_words(t, 2) for t in trial)
     first3 = Counter(first_words(t, 3) for t in trial)
@@ -259,92 +129,88 @@ def would_break_prefix_limits(existing_texts: list[str], candidate_text: str, ta
     )
 
 
-def build_wave(target_size: int, max_per_family: int, min_families: int, seed: int) -> list[WaveItem]:
+def is_text_allowed(text: str, scenario: Scenario) -> bool:
+    low = text.lower()
+
+    if any(pat in low for pat in FORBID_PATTERNS):
+        return False
+    if any(pat.lower() in low for pat in scenario.banned_stems):
+        return False
+    if any(pat.lower() in low for pat in AWKWARD_STEMS):
+        return False
+    if not (85 <= len(text) <= 220):
+        return False
+    return True
+
+
+def build_wave(
+    target_size: int,
+    max_per_opening: int,
+    min_openings: int,
+    seed: int,
+    scenario_pack_path: Path,
+) -> list[WaveItem]:
     random.seed(seed)
 
-    if min_families > len(OPENING_FAMILIES):
-        raise ValueError("min_families exceeds opening families count")
+    scenarios = load_scenarios(scenario_pack_path)
+    if not scenarios:
+        raise ValueError("empty scenario pack")
 
-    selected_families = OPENING_FAMILIES[:]
-    random.shuffle(selected_families)
-    selected_families = selected_families[:max(min_families, min(target_size, len(OPENING_FAMILIES)))]
-
-    contexts = CONTEXTS[:]
-    topics = pick_topics()
-    formats = pick_formats()
-
-    random.shuffle(contexts)
-    random.shuffle(topics)
-    random.shuffle(formats)
+    pool = scenarios[:]
+    random.shuffle(pool)
 
     out: list[WaveItem] = []
-    family_counts: Counter[str] = Counter()
+    opening_counts: Counter[str] = Counter()
+    used_scenarios: set[str] = set()
 
-    topic_idx = 0
-    format_idx = 0
-
-    family_cycle: list[str] = []
-    while len(family_cycle) < target_size * 10:
-        block = selected_families[:]
+    scenario_cycle: list[Scenario] = []
+    while len(scenario_cycle) < target_size * 8:
+        block = pool[:]
         random.shuffle(block)
-        family_cycle.extend(block)
+        scenario_cycle.extend(block)
 
-    context_cycle: list[str] = []
-    while len(context_cycle) < target_size * 10:
-        block = contexts[:]
-        random.shuffle(block)
-        context_cycle.extend(block)
-
-    ctx_ptr = 0
-
-    for family in family_cycle:
+    for scenario in scenario_cycle:
         if len(out) >= target_size:
             break
-        if family_counts[family] >= max_per_family:
+        if scenario.scenario_id in used_scenarios:
             continue
 
+        forms = scenario.question_forms[:]
+        random.shuffle(forms)
+
         built = False
-        for _ in range(len(context_cycle)):
-            context = context_cycle[ctx_ptr % len(context_cycle)]
-            ctx_ptr += 1
+        for idx, opening in enumerate(forms):
+            if opening_counts[opening] >= max_per_opening:
+                continue
 
-            allowed_intents = CONTEXT_TO_INTENTS[context][:]
-            random.shuffle(allowed_intents)
+            text = render_text(scenario, opening, seed_pick=seed + idx + len(out))
+            if not is_text_allowed(text, scenario):
+                continue
+            if would_break_prefix_limits([item.text for item in out], text, target_size):
+                continue
 
-            for intent in allowed_intents:
-                topic = topics[topic_idx % len(topics)]
-                format_type = formats[format_idx % len(formats)]
-                topic_idx += 1
-                format_idx += 1
-
-                text = render_text(family, context, intent)
-                low = text.lower()
-
-                if any(pat in low for pat in FORBID_PATTERNS):
-                    continue
-                if not (70 <= len(text) <= 160):
-                    continue
-                if not is_semantically_valid(context, intent):
-                    continue
-                if would_break_prefix_limits([item.text for item in out], text, target_size):
-                    continue
-
-                out.append(
-                    WaveItem(
-                        opening_family=family,
-                        context=context,
-                        intent=intent,
-                        format_type=format_type,
-                        topic=topic,
-                        text=text,
-                    )
+            out.append(
+                WaveItem(
+                    scenario_id=scenario.scenario_id,
+                    opening_family=opening,
+                    context=scenario.context_label,
+                    intent=scenario.speaker_goal,
+                    format_type=scenario.format_type,
+                    topic=scenario.topic,
+                    text=text,
                 )
-                family_counts[family] += 1
-                built = True
-                break
+            )
+            opening_counts[opening] += 1
+            used_scenarios.add(scenario.scenario_id)
+            built = True
+            break
 
-            if built:
-                break
+        if not built:
+            continue
+
+    unique_openings = len({item.opening_family for item in out})
+    if unique_openings < min_openings:
+        return []
 
     return out
 
@@ -359,6 +225,7 @@ def analyze(items: Iterable[WaveItem]) -> dict:
     openings = Counter(i.opening_family for i in items)
     topics = Counter(i.topic for i in items)
     formats = Counter(i.format_type for i in items)
+    scenario_ids = {i.scenario_id for i in items}
     lengths = [len(t) for t in texts]
 
     size = len(items)
@@ -378,16 +245,15 @@ def analyze(items: Iterable[WaveItem]) -> dict:
         if v > first3_limit:
             violations.append(f"first3:{k}={v}>{first3_limit}")
 
-    if not all(70 <= n <= 160 for n in lengths):
+    if not all(85 <= n <= 220 for n in lengths):
         violations.append("length_out_of_bounds")
 
-    semantic_invalid = [
-        {"context": i.context, "intent": i.intent, "text": i.text}
-        for i in items
-        if not is_semantically_valid(i.context, i.intent)
-    ]
-    if semantic_invalid:
-        violations.append("semantic_invalid_pairs")
+    if len(scenario_ids) != len(items):
+        violations.append("scenario_reuse_detected")
+
+    awkward_hits = [text for text in texts if any(stem.lower() in text.lower() for stem in AWKWARD_STEMS)]
+    if awkward_hits:
+        violations.append("awkward_stem_detected")
 
     passed = not violations
 
@@ -395,7 +261,7 @@ def analyze(items: Iterable[WaveItem]) -> dict:
         "generated_count": size,
         "passed": passed,
         "violations": violations,
-        "semantic_invalid_count": len(semantic_invalid),
+        "unique_scenarios": len(scenario_ids),
         "openings": openings,
         "topics": topics,
         "formats": formats,
@@ -417,17 +283,18 @@ def to_serializable_report(report: dict) -> dict:
 
 def write_outputs(items: list[WaveItem], out_dir: Path) -> tuple[Path, Path]:
     out_dir.mkdir(parents=True, exist_ok=True)
-    jsonl_path = out_dir / "community_replenishment_wave_v1.jsonl"
-    tsv_path = out_dir / "community_replenishment_wave_v1.tsv"
+    jsonl_path = out_dir / "community_replenishment_wave_v2.jsonl"
+    tsv_path = out_dir / "community_replenishment_wave_v2.tsv"
 
     with jsonl_path.open("w", encoding="utf-8") as f:
         for item in items:
             f.write(json.dumps(item.as_json(), ensure_ascii=False) + "\n")
 
     with tsv_path.open("w", encoding="utf-8") as f:
-        f.write("opening_family\tcontext\tintent\tformat_type\ttopic\ttext\n")
+        f.write("scenario_id\topening_family\tcontext\tintent\tformat_type\ttopic\ttext\n")
         for item in items:
             row = [
+                item.scenario_id,
                 item.opening_family,
                 item.context,
                 item.intent,
@@ -442,27 +309,34 @@ def write_outputs(items: list[WaveItem], out_dir: Path) -> tuple[Path, Path]:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--target-size", type=int, default=16)
-    parser.add_argument("--max-per-family", type=int, default=2)
-    parser.add_argument("--min-families", type=int, default=8)
+    parser.add_argument("--target-size", type=int, default=12)
+    parser.add_argument("--max-per-opening", type=int, default=2)
+    parser.add_argument("--min-openings", type=int, default=8)
     parser.add_argument("--seed", type=int, default=42)
-    parser.add_argument("--out-dir", type=Path, default=Path("data/community_waves/wave_v1"))
+    parser.add_argument(
+        "--scenario-pack",
+        type=Path,
+        default=Path("data/community_authoring/scenario_pack_v1.json"),
+    )
+    parser.add_argument("--out-dir", type=Path, default=Path("data/community_waves/wave_v2"))
     args = parser.parse_args()
 
     items = build_wave(
         target_size=args.target_size,
-        max_per_family=args.max_per_family,
-        min_families=args.min_families,
+        max_per_opening=args.max_per_opening,
+        min_openings=args.min_openings,
         seed=args.seed,
+        scenario_pack_path=args.scenario_pack,
     )
     report = analyze(items)
 
     payload = {
         "config": {
             "target_size": args.target_size,
-            "max_per_family": args.max_per_family,
-            "min_families": args.min_families,
+            "max_per_opening": args.max_per_opening,
+            "min_openings": args.min_openings,
             "seed": args.seed,
+            "scenario_pack": str(args.scenario_pack),
             "out_dir": str(args.out_dir),
         },
         "report": to_serializable_report(report),

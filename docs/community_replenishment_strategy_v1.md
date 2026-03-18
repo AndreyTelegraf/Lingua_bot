@@ -57,3 +57,12 @@ Previous generation attempts failed because diversity control happened after gen
 - semantic compatibility layer between context and intent
 - generator now rejects structurally diverse but semantically absurd pairs
 - full repository suite is currently not a valid gate for this layer because unrelated imports are broken elsewhere
+
+
+## Added in v3
+
+- authoring now starts from scenario pack rather than loose context+intent composition
+- each candidate wave item is grounded in a бытовой scenario with speaker goal and natural wording target
+- builder prevents scenario reuse within one wave
+- awkward meta stems are explicitly blocked
+- wave v2 artifacts are generated as review candidates only, not as auto-import material
