@@ -26,31 +26,24 @@ def latest(prefix: str) -> Path:
 
 
 
+
 def is_valid_ru_translation(lemma: str, ru: str) -> bool:
     ru_l = ru.strip().lower()
 
-    # reject empty or too short
-    if not ru_l or len(ru_l) < 3:
+    if not ru_l or len(ru_l) < 2:
         return False
 
-    # reject latin leftovers
+    # reject latin
     if any(c.isascii() and c.isalpha() for c in ru_l):
         return False
 
-    # reject stop garbage
-    bad = {"для","почти","такой","это","тот","там","здесь"}
+    # minimal garbage filter
+    bad = {"это","тот","там","здесь","что","как"}
     if ru_l in bad:
         return False
 
-    # reject transliteration (very rough)
-    if ru_l.startswith(lemma[:3]):
-        return False
-
-    # reject verbs/adjectives heuristics
-    if ru_l.endswith(("ый","ий","ой","ая","ое","ые","ать","ить","ться")):
-        return False
-
     return True
+
 
 def main() -> None:
     ap = argparse.ArgumentParser()
