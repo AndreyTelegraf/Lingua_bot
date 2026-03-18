@@ -121,8 +121,7 @@ def validate_and_publish_items(
 
         if publish and item_passed:
             cur = conn.execute(
-                "UPDATE vocab_items
-SET is_active = 1
+                """UPDATE vocab_items SET is_active = 1
 WHERE id = ?
   AND (
     SELECT COUNT(*)
@@ -155,14 +154,14 @@ WHERE id = ?
       AND v2.id != vocab_items.id
       AND TRIM(LOWER(v2.lemma)) = TRIM(LOWER(vocab_items.lemma))
       AND COALESCE(TRIM(LOWER(v2.pos)), '') = COALESCE(TRIM(LOWER(vocab_items.pos)), '')
-  )",
+  )""",
                 (item_id,),
             )
             if cur.rowcount == 1:
                 passed_count += 1
         elif publish and not item_passed:
             conn.execute(
-                "UPDATE vocab_items SET is_active = 0 WHERE id = ?",
+                """UPDATE vocab_items SET is_active = 0 WHERE id = ?""",
                 (item_id,),
             )
 
