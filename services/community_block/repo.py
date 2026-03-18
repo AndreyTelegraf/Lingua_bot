@@ -303,6 +303,18 @@ def get_last_post_for_chat(conn: sqlite3.Connection, *, chat_id: int) -> dict[st
     return _row_to_dict(row)
 
 
+def list_used_content_ids_for_chat(conn: sqlite3.Connection, *, chat_id: int) -> set[int]:
+    rows = conn.execute(
+        """
+        SELECT DISTINCT content_id
+        FROM community_post_log
+        WHERE chat_id = ?
+        """,
+        (chat_id,),
+    ).fetchall()
+    return {int(row[0]) for row in rows}
+
+
 def get_recent_format_types_for_chat(
     conn: sqlite3.Connection,
     *,

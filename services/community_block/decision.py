@@ -87,32 +87,69 @@ def choose_post_candidate(
         excluded_format_type=excluded_format_type,
     )
 
-    for candidate in candidates:
-        content_id = int(candidate["id"])
-        format_type = str(candidate["format_type"])
+    used_content_ids = repo.list_used_content_ids_for_chat(
+        conn,
+        chat_id=chat_id,
+    )
 
-        if repo.was_content_used_in_chat_within_days(
-            conn,
-            chat_id=chat_id,
-            content_id=content_id,
-            days=ANTI_REPEAT_DAYS_PER_CHAT,
-        ):
-            continue
-
-        if repo.count_recent_format_type_usage(
+    def _format_allowed(format_type: str) -> bool:
+        return repo.count_recent_format_type_usage(
             conn,
             chat_id=chat_id,
             format_type=format_type,
             limit=3,
-        ) >= 2:
-            continue
+        ) < 2
 
+    never_used_candidates = [
+        candidate
+        for candidate in candidates
+        if int(candidate["id"]) not in used_content_ids
+        and _format_allowed(str(candidate["format_type"]))
+    ]
+    if never_used_candidates:
+        candidate = never_used_candidates[0]
         return CommunityDecision(
             allowed=True,
-            reason="candidate_selected",
+            reason="candidate_selected_fresh",
             chat_id=chat_id,
-            content_id=content_id,
-            content_format_type=format_type,
+            content_id=int(candidate["id"]),
+            content_format_type=str(candidate["format_type"]),
+            dry_run=dry_run,
+        )
+
+    reusable_candidates = [
+        candidate
+        for candidate in candidates
+        if _format_allowed(str(candidate["format_type"]))
+    ]
+    if reusable_candidates:
+        candidate = reusable_candidates[0]
+        return CommunityDecision(
+            allowed=True,
+            reason="candidate_selected_reuse_after_exhaustion",
+            chat_id=chat_id,
+            content_id=int(candidate["id"]),
+            content_format_type=str(candidate["format_type"]),
+            dry_run=dry_run,
+        )
+
+    fallback_candidates = [
+        candidate
+        for candidate in repo.list_candidate_content(
+            conn,
+            region=chat.get("region"),
+            excluded_format_type=None,
+        )
+        if _format_allowed(str(candidate["format_type"]))
+    ]
+    if fallback_candidates:
+        candidate = fallback_candidates[0]
+        return CommunityDecision(
+            allowed=True,
+            reason="candidate_selected_format_fallback",
+            chat_id=chat_id,
+            content_id=int(candidate["id"]),
+            content_format_type=str(candidate["format_type"]),
             dry_run=dry_run,
         )
 
@@ -122,3 +159,4 @@ def choose_post_candidate(
         chat_id=chat_id,
         dry_run=dry_run,
     )
+
