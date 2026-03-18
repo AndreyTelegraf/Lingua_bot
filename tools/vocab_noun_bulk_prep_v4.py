@@ -50,8 +50,6 @@ def main() -> None:
         lemma = row["lemma"]
         reasons = []
 
-        if lemma not in PREFER:
-            reasons.append("not_in_prefer_list")
         if lemma in BLOCKED_LEMMAS:
             reasons.append("blocked_lemma")
 
