@@ -10,13 +10,12 @@ async def send_post(
     text: str,
     default_topic_id: int | None = None,
 ) -> int:
-    kwargs = {}
+    kwargs: dict[str, object] = {
+        "chat_id": chat_id,
+        "text": text,
+    }
     if default_topic_id is not None:
-        kwargs["message_thread_id"] = default_topic_id
+        kwargs["message_thread_id"] = int(default_topic_id)
 
-    message = await bot.send_message(
-        chat_id=chat_id,
-        text=text,
-        **kwargs,
-    )
+    message = await bot.send_message(**kwargs)
     return int(message.message_id)
