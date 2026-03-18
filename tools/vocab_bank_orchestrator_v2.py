@@ -17,6 +17,7 @@ TOOLS = {
     "apply_safe_core": ROOT / "tools/vocab_bank_orchestrator_apply_v1.py",
     "apply_adverb_followup": ROOT / "tools/vocab_adverb_followup_apply_v1.py",
     "apply_verb_remediation": ROOT / "tools/vocab_verb_remediation_apply_v1.py",
+    "apply_noun_dispatcher": ROOT / "tools/vocab_noun_dispatcher_apply_v1.py",
     "prod_readiness": ROOT / "tools/vocab_prod_readiness_report.py",
 }
 
@@ -115,7 +116,7 @@ def dryrun() -> dict:
         "notes": [
             "dispatcher mode only; no db mutations",
             "safe verb/adverb layers already mostly exhausted",
-            "noun factory is still missing and remains the main blocker toward 8000+",
+            "noun dispatcher is wired, but manual_ru_map remains the main blocker toward 8000+",
         ],
     }
 
@@ -123,7 +124,7 @@ def apply_once() -> dict:
     before = snapshot_state()
     tool_runs = []
 
-    for key in ["apply_safe_core", "apply_adverb_followup", "apply_verb_remediation"]:
+    for key in ["apply_safe_core", "apply_adverb_followup", "apply_verb_remediation", "apply_noun_dispatcher"]:
         path = TOOLS[key]
         if path.exists():
             tool_runs.append(run_py(path))
@@ -174,7 +175,7 @@ def loop(max_cycles: int) -> dict:
         "cycles": cycles,
         "final_state": snapshot_state(),
         "notes": [
-            "When loop converges with no change, next required layer is noun factory.",
+            "When loop converges with no change, next required layer is additional manual noun mapping.",
         ],
     }
 
