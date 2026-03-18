@@ -57,6 +57,14 @@ KNOWN_GOOD_ADVERBS = {
     "завтра",
 }
 
+ADVERB_SAFE_LEMMA_GLOSS = {
+    ("quase", "почти"),
+    ("embora", "прочь"),
+    ("principalmente", "главным образом"),
+    ("bem", "хорошо"),
+    ("mal", "плохо"),
+}
+
 
 @dataclass(slots=True)
 class RuleResult:
@@ -177,7 +185,7 @@ def evaluate_adverb_ru_gloss(*, lemma: str, pos: str, gloss: str) -> RuleResult:
     if tok_n >= 3 and g not in ADVERB_WHITELIST_MULTIWORD:
         risk += 40
 
-    if g in GENERIC_AI_GLOSSES:
+    if (normalize_text(lemma), g) not in ADVERB_SAFE_LEMMA_GLOSS and g in GENERIC_AI_GLOSSES:
         flags.append("generic_ai_gloss")
         risk += 35
 
@@ -194,15 +202,15 @@ def evaluate_adverb_ru_gloss(*, lemma: str, pos: str, gloss: str) -> RuleResult:
         flags.append("non_adverb_gloss_candidate")
         risk += 60
 
-    if toks and RU_ADJ_RE.search(toks[0]):
+    if (normalize_text(lemma), g) not in ADVERB_SAFE_LEMMA_GLOSS and toks and RU_ADJ_RE.search(toks[0]):
         flags.append("adjective_like_gloss")
         risk += 25
 
-    if toks and RU_INF_RE.search(toks[0]):
+    if (normalize_text(lemma), g) not in ADVERB_SAFE_LEMMA_GLOSS and toks and RU_INF_RE.search(toks[0]):
         flags.append("verb_like_gloss")
         risk += 50
 
-    if not looks_like_adverb(g):
+    if (normalize_text(lemma), g) not in ADVERB_SAFE_LEMMA_GLOSS and not looks_like_adverb(g):
         flags.append("not_adverb_like")
         risk += 20
 

@@ -57,6 +57,13 @@ BAD_MODAL_OR_PREDICATIVE = {
     "должны",
 }
 
+VERB_SAFE_LEMMA_GLOSS = {
+    ("dever", "должен"),
+    ("estar", "быть"),
+    ("fazer", "делать"),
+    ("ter", "иметь"),
+}
+
 @dataclass(slots=True)
 class RuleResult:
     status: str
@@ -178,7 +185,7 @@ def evaluate_verb_ru_gloss(*, lemma: str, pos: str, gloss: str) -> RuleResult:
     if tok_n >= 3 and g not in VERB_WHITELIST_MULTIWORD:
         risk += 40
 
-    if g in SUSPICIOUS_GENERIC:
+    if (normalize_text(lemma), g) not in VERB_SAFE_LEMMA_GLOSS and g in SUSPICIOUS_GENERIC:
         flags.append("generic_ai_gloss")
         risk += 40
 
@@ -195,11 +202,11 @@ def evaluate_verb_ru_gloss(*, lemma: str, pos: str, gloss: str) -> RuleResult:
         flags.append("non_verb_gloss_candidate")
         risk += 60
 
-    if toks and toks[0] in BAD_MODAL_OR_PREDICATIVE:
+    if (normalize_text(lemma), g) not in VERB_SAFE_LEMMA_GLOSS and toks and toks[0] in BAD_MODAL_OR_PREDICATIVE:
         flags.append("modal_or_predicative_gloss")
         risk += 50
 
-    if not looks_like_ru_infinitive(g):
+    if (normalize_text(lemma), g) not in VERB_SAFE_LEMMA_GLOSS and not looks_like_ru_infinitive(g):
         flags.append("not_infinitive_like")
         risk += 25
 

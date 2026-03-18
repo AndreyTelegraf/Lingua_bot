@@ -50,6 +50,11 @@ KNOWN_GOOD_SHORT_ADJ_FORMS = {
     "свеж",
 }
 
+ADJECTIVE_SAFE_LEMMA_GLOSS = {
+    ("bom", "хороший"),
+    ("mau", "плохой"),
+}
+
 
 @dataclass(slots=True)
 class RuleResult:
@@ -170,7 +175,7 @@ def evaluate_adjective_ru_gloss(*, lemma: str, pos: str, gloss: str) -> RuleResu
     if tok_n >= 3 and g not in ADJ_WHITELIST_MULTIWORD:
         risk += 40
 
-    if g in GENERIC_AI_GLOSSES:
+    if (normalize_text(lemma), g) not in ADJECTIVE_SAFE_LEMMA_GLOSS and g in GENERIC_AI_GLOSSES:
         flags.append("generic_ai_gloss")
         risk += 35
 

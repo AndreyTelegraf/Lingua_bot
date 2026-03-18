@@ -43,6 +43,11 @@ ARCHAIC_WATCHLIST = {
     "чело",
 }
 
+NOUN_SAFE_LEMMA_GLOSS = {
+    ("mulher", "женщина"),
+    ("dona", "женщина"),
+}
+
 NOUN_FALSE_POSITIVE_T_SOFT = {
     "смерть",
     "память",
@@ -185,7 +190,7 @@ def evaluate_ru_gloss(*, lemma: str, pos: str, gloss: str) -> RuleResult:
     if tok_n >= 3 and g not in MULTIWORD_WHITELIST:
         risk += 40
 
-    if g in SUSPICIOUS_GENERIC:
+    if (normalize_text(lemma), g) not in NOUN_SAFE_LEMMA_GLOSS and g in SUSPICIOUS_GENERIC:
         flags.append("generic_ai_gloss")
         risk += 60
 
