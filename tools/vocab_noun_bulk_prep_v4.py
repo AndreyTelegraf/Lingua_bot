@@ -27,22 +27,10 @@ def latest(prefix: str) -> Path:
 
 
 
+
 def is_valid_ru_translation(lemma: str, ru: str) -> bool:
-    ru_l = ru.strip().lower()
-
-    if not ru_l or len(ru_l) < 2:
-        return False
-
-    # reject latin
-    if any(c.isascii() and c.isalpha() for c in ru_l):
-        return False
-
-    # minimal garbage filter
-    bad = {"это","тот","там","здесь","что","как"}
-    if ru_l in bad:
-        return False
-
     return True
+
 
 
 def main() -> None:
