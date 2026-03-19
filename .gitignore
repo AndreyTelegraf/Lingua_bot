@@ -124,3 +124,13 @@ artifacts/
 *.bz2
 *.xz
 *.zip
+
+# === staging / forensic heavy artifacts ===
+data/master_source_v1/processed/**/lingua_staging.before_*.db
+data/master_source_v1/processed/**/latest_attempt_full.json
+data/master_source_v1/processed/**/top*.json
+data/master_source_v1/processed/**/items_full.json
+data/master_source_v1/processed/**/latest_attempt_residual_flagged.json
+
+# optional local scratch backups
+*.db.bak_*
