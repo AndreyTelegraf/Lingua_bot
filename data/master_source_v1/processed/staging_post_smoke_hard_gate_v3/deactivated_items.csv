@@ -1,0 +1,3 @@
+item_id,lemma,correct_answer,pos,topic_tag,bin_name,freq_rank,source_family,flags,hard_reasons,choices_preview
+3402,só,только,adverb,build:pilot_ptpt_004_adverb_curated,1K,50,adverb_curated,adverb_curated_source|functionish_lemma,functionish_surface,уже || только || аж || здесь || сейчас || хорошо
+57,dia,день,noun,build:pilot_ptpt_001_pilot_safe,1K,51,pilot_safe,pilot_safe_source|short_answer|noun_short_answer,pilot_safe_hot_short_noun,день || градус || ад || стена || гид || обед

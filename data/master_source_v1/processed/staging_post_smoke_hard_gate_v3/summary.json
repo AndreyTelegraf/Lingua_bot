@@ -1,0 +1,45 @@
+{
+  "db": "/home/andrey/Projects/lingua_bot_v2/data/lingua_staging.db",
+  "latest_attempt_id": 2,
+  "latest_attempt_meta": {
+    "id": 2,
+    "user_id": 1,
+    "created_at": "2026-03-19 13:53:14",
+    "finished_at": "2026-03-19 13:54:38",
+    "mode": null,
+    "score": null
+  },
+  "answers_in_latest_attempt": 24,
+  "report_events_count": 2,
+  "inspection_count": 24,
+  "candidate_count": 2,
+  "target_ids": [
+    3402,
+    57
+  ],
+  "reason_counts": {
+    "functionish_surface": 1,
+    "pilot_safe_hot_short_noun": 1
+  },
+  "source_family_counts": {
+    "adverb_curated": 1,
+    "pilot_safe": 1
+  },
+  "backup": "/home/andrey/Projects/lingua_bot_v2/data/master_source_v1/processed/staging_post_smoke_hard_gate_v3/lingua_staging.before_post_smoke_hard_gate_v3.20260319T145843Z.db",
+  "after": [
+    {
+      "item_id": 57,
+      "lemma": "dia",
+      "correct_answer": "день",
+      "active_value": 0
+    },
+    {
+      "item_id": 3402,
+      "lemma": "só",
+      "correct_answer": "только",
+      "active_value": 0
+    }
+  ],
+  "active_total_after": 2152,
+  "utc_timestamp": "2026-03-19T14:58:43.747482+00:00"
+}
