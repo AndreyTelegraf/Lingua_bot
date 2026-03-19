@@ -1,0 +1,37 @@
+{
+  "soak_id": "soak_20260319_214039",
+  "finished_at_utc": "2026-03-19T21:41:58+00:00",
+  "db": "/home/andrey/Projects/lingua_bot_v2/data/lingua_staging.db",
+  "runs_requested": 3,
+  "interval_sec": 30,
+  "green_runs": 3,
+  "yellow_runs": 0,
+  "red_runs": 0,
+  "all_green": true,
+  "records": [
+    {
+      "index": 1,
+      "status": "green",
+      "run_dir": "/home/andrey/Projects/lingua_bot_v2/data/community_operational_guardrail_v1/run_20260319_214039",
+      "candidate_count": 0,
+      "hard_failures": [],
+      "soft_warnings": []
+    },
+    {
+      "index": 2,
+      "status": "green",
+      "run_dir": "/home/andrey/Projects/lingua_bot_v2/data/community_operational_guardrail_v1/run_20260319_214120",
+      "candidate_count": 0,
+      "hard_failures": [],
+      "soft_warnings": []
+    },
+    {
+      "index": 3,
+      "status": "green",
+      "run_dir": "/home/andrey/Projects/lingua_bot_v2/data/community_operational_guardrail_v1/run_20260319_214154",
+      "candidate_count": 0,
+      "hard_failures": [],
+      "soft_warnings": []
+    }
+  ]
+}

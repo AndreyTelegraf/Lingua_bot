@@ -1,0 +1,2759 @@
+{
+  "run_id": "run_20260319_214120",
+  "started_at_utc": "2026-03-19T21:41:20+00:00",
+  "finished_at_utc": "2026-03-19T21:41:24+00:00",
+  "git_head": "4b1da87",
+  "mode": "verify",
+  "db": "/home/andrey/Projects/lingua_bot_v2/data/lingua_staging.db",
+  "restart_staging_requested": false,
+  "staging_service": "lingua-bot-staging.service",
+  "status": "green",
+  "hard_failures": [],
+  "soft_warnings": [],
+  "checks": {
+    "service_active": true
+  },
+  "pipeline_summary": {
+    "db": "/home/andrey/Projects/lingua_bot_v2/data/lingua_staging.db",
+    "run_dir": "/home/andrey/Projects/lingua_bot_v2/data/community_quality/community_cleanup_pipeline_v1_20260319_214120",
+    "mode": "dry_run",
+    "before": {
+      "active_count": 31,
+      "topics": {
+        "shopping": 2,
+        "documents": 4,
+        "transport": 3,
+        "bureaucracy": 3,
+        "services": 3,
+        "financas": 3,
+        "culture": 3,
+        "work": 3,
+        "food": 3,
+        "housing": 2,
+        "health": 2
+      },
+      "formats": {
+        "nuance": 9,
+        "local": 9,
+        "dialogue": 13
+      },
+      "head_ids": [
+        10,
+        23,
+        33,
+        255,
+        335,
+        336,
+        337,
+        339,
+        340,
+        343,
+        344,
+        345,
+        346,
+        347,
+        351,
+        353,
+        359,
+        361,
+        365,
+        372
+      ]
+    },
+    "duplicate_family_count": 0,
+    "theme_group_count": 0,
+    "candidate_count": 0,
+    "candidate_ids": [],
+    "candidate_topics": {},
+    "candidate_formats": {},
+    "decisions": []
+  },
+  "autorun_summary": {
+    "db": "/home/andrey/Projects/lingua_bot_v2/data/lingua_staging.db",
+    "run_dir": "/home/andrey/Projects/lingua_bot_v2/data/community_quality/community_cleanup_autorun_v1_20260319_214121",
+    "mode": "dry_run",
+    "steps": [
+      {
+        "step": "pipeline_dry_run",
+        "candidate_count": 0,
+        "run_dir": "/home/andrey/Projects/lingua_bot_v2/data/community_quality/community_cleanup_pipeline_v1_20260319_214121"
+      },
+      {
+        "step": "orchestrator_dry_run",
+        "run_dir": "/home/andrey/Projects/lingua_bot_v2/data/community_quality/community_cleanup_orchestrator_v1_20260319_214121"
+      }
+    ],
+    "pipeline_dry_run": {
+      "db": "/home/andrey/Projects/lingua_bot_v2/data/lingua_staging.db",
+      "run_dir": "/home/andrey/Projects/lingua_bot_v2/data/community_quality/community_cleanup_pipeline_v1_20260319_214121",
+      "mode": "dry_run",
+      "before": {
+        "active_count": 31,
+        "topics": {
+          "shopping": 2,
+          "documents": 4,
+          "transport": 3,
+          "bureaucracy": 3,
+          "services": 3,
+          "financas": 3,
+          "culture": 3,
+          "work": 3,
+          "food": 3,
+          "housing": 2,
+          "health": 2
+        },
+        "formats": {
+          "nuance": 9,
+          "local": 9,
+          "dialogue": 13
+        },
+        "head_ids": [
+          10,
+          23,
+          33,
+          255,
+          335,
+          336,
+          337,
+          339,
+          340,
+          343,
+          344,
+          345,
+          346,
+          347,
+          351,
+          353,
+          359,
+          361,
+          365,
+          372
+        ]
+      },
+      "duplicate_family_count": 0,
+      "theme_group_count": 0,
+      "candidate_count": 0,
+      "candidate_ids": [],
+      "candidate_topics": {},
+      "candidate_formats": {},
+      "decisions": []
+    },
+    "orchestrator": {
+      "db": "/home/andrey/Projects/lingua_bot_v2/data/lingua_staging.db",
+      "run_dir": "/home/andrey/Projects/lingua_bot_v2/data/community_quality/community_cleanup_orchestrator_v1_20260319_214121",
+      "mode": "dry_run",
+      "before": {
+        "active_count": 31,
+        "topics": {
+          "shopping": 2,
+          "documents": 4,
+          "transport": 3,
+          "bureaucracy": 3,
+          "services": 3,
+          "financas": 3,
+          "culture": 3,
+          "work": 3,
+          "food": 3,
+          "housing": 2,
+          "health": 2
+        },
+        "formats": {
+          "nuance": 9,
+          "local": 9,
+          "dialogue": 13
+        },
+        "head_ids": [
+          10,
+          23,
+          33,
+          255,
+          335,
+          336,
+          337,
+          339,
+          340,
+          343,
+          344,
+          345,
+          346,
+          347,
+          351,
+          353,
+          359,
+          361,
+          365,
+          372
+        ]
+      },
+      "pipeline": {
+        "db": "/home/andrey/Projects/lingua_bot_v2/data/lingua_staging.db",
+        "run_dir": "/home/andrey/Projects/lingua_bot_v2/data/community_quality/community_cleanup_pipeline_v1_20260319_214121",
+        "mode": "dry_run",
+        "before": {
+          "active_count": 31,
+          "topics": {
+            "shopping": 2,
+            "documents": 4,
+            "transport": 3,
+            "bureaucracy": 3,
+            "services": 3,
+            "financas": 3,
+            "culture": 3,
+            "work": 3,
+            "food": 3,
+            "housing": 2,
+            "health": 2
+          },
+          "formats": {
+            "nuance": 9,
+            "local": 9,
+            "dialogue": 13
+          },
+          "head_ids": [
+            10,
+            23,
+            33,
+            255,
+            335,
+            336,
+            337,
+            339,
+            340,
+            343,
+            344,
+            345,
+            346,
+            347,
+            351,
+            353,
+            359,
+            361,
+            365,
+            372
+          ]
+        },
+        "duplicate_family_count": 0,
+        "theme_group_count": 0,
+        "candidate_count": 0,
+        "candidate_ids": [],
+        "candidate_topics": {},
+        "candidate_formats": {},
+        "decisions": []
+      },
+      "after": {
+        "active_count": 31,
+        "topics": {
+          "shopping": 2,
+          "documents": 4,
+          "transport": 3,
+          "bureaucracy": 3,
+          "services": 3,
+          "financas": 3,
+          "culture": 3,
+          "work": 3,
+          "food": 3,
+          "housing": 2,
+          "health": 2
+        },
+        "formats": {
+          "nuance": 9,
+          "local": 9,
+          "dialogue": 13
+        },
+        "head_ids": [
+          10,
+          23,
+          33,
+          255,
+          335,
+          336,
+          337,
+          339,
+          340,
+          343,
+          344,
+          345,
+          346,
+          347,
+          351,
+          353,
+          359,
+          361,
+          365,
+          372
+        ]
+      },
+      "resolved_tools": {
+        "runtime_adjacent_tool": "/home/andrey/Projects/lingua_bot_v2/tools/run_community_runtime_adjacent_smoke_v1.py",
+        "multichat_tool": "/home/andrey/Projects/lingua_bot_v2/tools/run_community_multichat_cooldown_smoke_v2.py",
+        "global_antidup_tool": "/home/andrey/Projects/lingua_bot_v2/tools/run_community_global_antidup_smoke_v3.py"
+      },
+      "runtime_adjacent": {
+        "config": {
+          "db": "/home/andrey/Projects/lingua_bot_v2/data/lingua_staging.db",
+          "chat_id": -1001690275466,
+          "steps": 40,
+          "cooldown_steps": 8,
+          "log_table": "community_delivery_log_smoke_v1"
+        },
+        "summary": {
+          "reason_counts": {
+            "candidate_selected_fresh": 5,
+            "cooldown_blocked": 35
+          },
+          "picked_count": 5,
+          "topics": {
+            "shopping": 1,
+            "documents": 1,
+            "transport": 1,
+            "bureaucracy": 1,
+            "services": 1
+          },
+          "formats": {
+            "nuance": 3,
+            "local": 2
+          },
+          "first1": {
+            "какими": 3,
+            "как": 1,
+            "чем": 1
+          },
+          "first2": {
+            "какими словами": 3,
+            "как мягко": 1,
+            "чем люди": 1
+          },
+          "first3": {
+            "какими словами лучше": 2,
+            "как мягко сказать": 1,
+            "чем люди обычно": 1,
+            "какими словами аккуратно": 1
+          },
+          "length_min": 71,
+          "length_max": 142,
+          "length_avg": 100.8
+        },
+        "results": [
+          {
+            "step": 1,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 10,
+              "text": "Какими словами лучше намекнуть продавцу, что preço fixo звучит смело, но рынок видит это иначе?",
+              "format_type": "nuance",
+              "topic": "shopping",
+              "priority": 50
+            }
+          },
+          {
+            "step": 2,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "step": 3,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "step": 4,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "step": 5,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "step": 6,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "step": 7,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "step": 8,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "step": 9,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 23,
+              "text": "Как мягко сказать в AIMA, что вам бы update по делу, а не очередное depois vemos?",
+              "format_type": "nuance",
+              "topic": "documents",
+              "priority": 50
+            }
+          },
+          {
+            "step": 10,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "step": 11,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "step": 12,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "step": 13,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "step": 14,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "step": 15,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "step": 16,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "step": 17,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 33,
+              "text": "Чем люди обычно заменяют deslocação, когда говорят про обычную поездку?",
+              "format_type": "local",
+              "topic": "transport",
+              "priority": 50
+            }
+          },
+          {
+            "step": 18,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "step": 19,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "step": 20,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "step": 21,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "step": 22,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "step": 23,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "step": 24,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "step": 25,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 255,
+              "text": "Какими словами аккуратно спросили, что senha, fila и promessa de rapidez плохо дружат между собой, без канцелярита?",
+              "format_type": "nuance",
+              "topic": "bureaucracy",
+              "priority": 50
+            }
+          },
+          {
+            "step": 26,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "step": 27,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "step": 28,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "step": 29,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "step": 30,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "step": 31,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "step": 32,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "step": 33,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 335,
+              "text": "Какими словами лучше сказать, когда нужно мягко пожаловаться на шум, не начиная войну с соседями, если нужен разговорный и нормальный вариант?",
+              "format_type": "local",
+              "topic": "services",
+              "priority": 50
+            }
+          },
+          {
+            "step": 34,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "step": 35,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "step": 36,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "step": 37,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "step": 38,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "step": 39,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "step": 40,
+            "reason": "cooldown_blocked",
+            "picked": null
+          }
+        ]
+      },
+      "multichat": {
+        "config": {
+          "db": "/home/andrey/Projects/lingua_bot_v2/data/lingua_staging.db",
+          "ticks": 40,
+          "cooldown_ticks": 3,
+          "log_table": "community_delivery_log_smoke_v2",
+          "chat_ids": [
+            -1001690275466,
+            -1001656765898,
+            -1001719116315,
+            -1001227461571
+          ]
+        },
+        "global_summary": {
+          "reason_counts": {
+            "candidate_selected_fresh": 56,
+            "cooldown_blocked": 104
+          },
+          "total_events": 160
+        },
+        "chat_summaries": {
+          "-1001690275466": {
+            "reason_counts": {
+              "candidate_selected_fresh": 14,
+              "cooldown_blocked": 26
+            },
+            "picked_count": 14,
+            "topics": {
+              "shopping": 1,
+              "documents": 3,
+              "transport": 2,
+              "bureaucracy": 2,
+              "services": 1,
+              "financas": 1,
+              "culture": 1,
+              "work": 1,
+              "food": 1,
+              "housing": 1
+            },
+            "formats": {
+              "nuance": 5,
+              "local": 6,
+              "dialogue": 3
+            },
+            "first1": {
+              "какими": 4,
+              "как": 2,
+              "чем": 1,
+              "что": 2,
+              "в": 2,
+              "о": 1,
+              "какой": 1,
+              "какая": 1
+            },
+            "first2": {
+              "какими словами": 4,
+              "как мягко": 1,
+              "чем люди": 1,
+              "что обычно": 2,
+              "в какой": 2,
+              "о чём": 1,
+              "какой оборот": 1,
+              "как здесь": 1,
+              "какая фраза": 1
+            },
+            "first3": {
+              "какими словами лучше": 3,
+              "как мягко сказать": 1,
+              "чем люди обычно": 1,
+              "какими словами аккуратно": 1,
+              "что обычно спрашивают": 2,
+              "в какой форме": 2,
+              "о чём обычно": 1,
+              "какой оборот здесь": 1,
+              "как здесь правильно": 1,
+              "какая фраза здесь": 1
+            },
+            "length_min": 71,
+            "length_max": 182,
+            "length_avg": 133.64
+          },
+          "-1001656765898": {
+            "reason_counts": {
+              "candidate_selected_fresh": 14,
+              "cooldown_blocked": 26
+            },
+            "picked_count": 14,
+            "topics": {
+              "shopping": 1,
+              "documents": 3,
+              "transport": 2,
+              "bureaucracy": 2,
+              "services": 1,
+              "financas": 1,
+              "culture": 1,
+              "work": 1,
+              "food": 1,
+              "housing": 1
+            },
+            "formats": {
+              "nuance": 5,
+              "local": 6,
+              "dialogue": 3
+            },
+            "first1": {
+              "какими": 4,
+              "как": 2,
+              "чем": 1,
+              "что": 2,
+              "в": 2,
+              "о": 1,
+              "какой": 1,
+              "какая": 1
+            },
+            "first2": {
+              "какими словами": 4,
+              "как мягко": 1,
+              "чем люди": 1,
+              "что обычно": 2,
+              "в какой": 2,
+              "о чём": 1,
+              "какой оборот": 1,
+              "как здесь": 1,
+              "какая фраза": 1
+            },
+            "first3": {
+              "какими словами лучше": 3,
+              "как мягко сказать": 1,
+              "чем люди обычно": 1,
+              "какими словами аккуратно": 1,
+              "что обычно спрашивают": 2,
+              "в какой форме": 2,
+              "о чём обычно": 1,
+              "какой оборот здесь": 1,
+              "как здесь правильно": 1,
+              "какая фраза здесь": 1
+            },
+            "length_min": 71,
+            "length_max": 182,
+            "length_avg": 133.64
+          },
+          "-1001719116315": {
+            "reason_counts": {
+              "candidate_selected_fresh": 14,
+              "cooldown_blocked": 26
+            },
+            "picked_count": 14,
+            "topics": {
+              "shopping": 1,
+              "documents": 3,
+              "transport": 2,
+              "bureaucracy": 2,
+              "services": 1,
+              "financas": 1,
+              "culture": 1,
+              "work": 1,
+              "food": 1,
+              "housing": 1
+            },
+            "formats": {
+              "nuance": 5,
+              "local": 6,
+              "dialogue": 3
+            },
+            "first1": {
+              "какими": 4,
+              "как": 2,
+              "чем": 1,
+              "что": 2,
+              "в": 2,
+              "о": 1,
+              "какой": 1,
+              "какая": 1
+            },
+            "first2": {
+              "какими словами": 4,
+              "как мягко": 1,
+              "чем люди": 1,
+              "что обычно": 2,
+              "в какой": 2,
+              "о чём": 1,
+              "какой оборот": 1,
+              "как здесь": 1,
+              "какая фраза": 1
+            },
+            "first3": {
+              "какими словами лучше": 3,
+              "как мягко сказать": 1,
+              "чем люди обычно": 1,
+              "какими словами аккуратно": 1,
+              "что обычно спрашивают": 2,
+              "в какой форме": 2,
+              "о чём обычно": 1,
+              "какой оборот здесь": 1,
+              "как здесь правильно": 1,
+              "какая фраза здесь": 1
+            },
+            "length_min": 71,
+            "length_max": 182,
+            "length_avg": 133.64
+          },
+          "-1001227461571": {
+            "reason_counts": {
+              "candidate_selected_fresh": 14,
+              "cooldown_blocked": 26
+            },
+            "picked_count": 14,
+            "topics": {
+              "shopping": 1,
+              "documents": 3,
+              "transport": 2,
+              "bureaucracy": 2,
+              "services": 1,
+              "financas": 1,
+              "culture": 1,
+              "work": 1,
+              "food": 1,
+              "housing": 1
+            },
+            "formats": {
+              "nuance": 5,
+              "local": 6,
+              "dialogue": 3
+            },
+            "first1": {
+              "какими": 4,
+              "как": 2,
+              "чем": 1,
+              "что": 2,
+              "в": 2,
+              "о": 1,
+              "какой": 1,
+              "какая": 1
+            },
+            "first2": {
+              "какими словами": 4,
+              "как мягко": 1,
+              "чем люди": 1,
+              "что обычно": 2,
+              "в какой": 2,
+              "о чём": 1,
+              "какой оборот": 1,
+              "как здесь": 1,
+              "какая фраза": 1
+            },
+            "first3": {
+              "какими словами лучше": 3,
+              "как мягко сказать": 1,
+              "чем люди обычно": 1,
+              "какими словами аккуратно": 1,
+              "что обычно спрашивают": 2,
+              "в какой форме": 2,
+              "о чём обычно": 1,
+              "какой оборот здесь": 1,
+              "как здесь правильно": 1,
+              "какая фраза здесь": 1
+            },
+            "length_min": 71,
+            "length_max": 182,
+            "length_avg": 133.64
+          }
+        },
+        "results_head": [
+          {
+            "tick": 1,
+            "chat_id": -1001690275466,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 10,
+              "text": "Какими словами лучше намекнуть продавцу, что preço fixo звучит смело, но рынок видит это иначе?",
+              "format_type": "nuance",
+              "topic": "shopping",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 1,
+            "chat_id": -1001656765898,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 10,
+              "text": "Какими словами лучше намекнуть продавцу, что preço fixo звучит смело, но рынок видит это иначе?",
+              "format_type": "nuance",
+              "topic": "shopping",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 1,
+            "chat_id": -1001719116315,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 10,
+              "text": "Какими словами лучше намекнуть продавцу, что preço fixo звучит смело, но рынок видит это иначе?",
+              "format_type": "nuance",
+              "topic": "shopping",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 1,
+            "chat_id": -1001227461571,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 10,
+              "text": "Какими словами лучше намекнуть продавцу, что preço fixo звучит смело, но рынок видит это иначе?",
+              "format_type": "nuance",
+              "topic": "shopping",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 2,
+            "chat_id": -1001690275466,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 2,
+            "chat_id": -1001656765898,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 2,
+            "chat_id": -1001719116315,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 2,
+            "chat_id": -1001227461571,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 3,
+            "chat_id": -1001690275466,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 3,
+            "chat_id": -1001656765898,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 3,
+            "chat_id": -1001719116315,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 3,
+            "chat_id": -1001227461571,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 4,
+            "chat_id": -1001690275466,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 23,
+              "text": "Как мягко сказать в AIMA, что вам бы update по делу, а не очередное depois vemos?",
+              "format_type": "nuance",
+              "topic": "documents",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 4,
+            "chat_id": -1001656765898,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 23,
+              "text": "Как мягко сказать в AIMA, что вам бы update по делу, а не очередное depois vemos?",
+              "format_type": "nuance",
+              "topic": "documents",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 4,
+            "chat_id": -1001719116315,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 23,
+              "text": "Как мягко сказать в AIMA, что вам бы update по делу, а не очередное depois vemos?",
+              "format_type": "nuance",
+              "topic": "documents",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 4,
+            "chat_id": -1001227461571,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 23,
+              "text": "Как мягко сказать в AIMA, что вам бы update по делу, а не очередное depois vemos?",
+              "format_type": "nuance",
+              "topic": "documents",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 5,
+            "chat_id": -1001690275466,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 5,
+            "chat_id": -1001656765898,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 5,
+            "chat_id": -1001719116315,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 5,
+            "chat_id": -1001227461571,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 6,
+            "chat_id": -1001690275466,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 6,
+            "chat_id": -1001656765898,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 6,
+            "chat_id": -1001719116315,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 6,
+            "chat_id": -1001227461571,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 7,
+            "chat_id": -1001690275466,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 33,
+              "text": "Чем люди обычно заменяют deslocação, когда говорят про обычную поездку?",
+              "format_type": "local",
+              "topic": "transport",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 7,
+            "chat_id": -1001656765898,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 33,
+              "text": "Чем люди обычно заменяют deslocação, когда говорят про обычную поездку?",
+              "format_type": "local",
+              "topic": "transport",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 7,
+            "chat_id": -1001719116315,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 33,
+              "text": "Чем люди обычно заменяют deslocação, когда говорят про обычную поездку?",
+              "format_type": "local",
+              "topic": "transport",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 7,
+            "chat_id": -1001227461571,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 33,
+              "text": "Чем люди обычно заменяют deslocação, когда говорят про обычную поездку?",
+              "format_type": "local",
+              "topic": "transport",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 8,
+            "chat_id": -1001690275466,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 8,
+            "chat_id": -1001656765898,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 8,
+            "chat_id": -1001719116315,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 8,
+            "chat_id": -1001227461571,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 9,
+            "chat_id": -1001690275466,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 9,
+            "chat_id": -1001656765898,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 9,
+            "chat_id": -1001719116315,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 9,
+            "chat_id": -1001227461571,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 10,
+            "chat_id": -1001690275466,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 255,
+              "text": "Какими словами аккуратно спросили, что senha, fila и promessa de rapidez плохо дружат между собой, без канцелярита?",
+              "format_type": "nuance",
+              "topic": "bureaucracy",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 10,
+            "chat_id": -1001656765898,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 255,
+              "text": "Какими словами аккуратно спросили, что senha, fila и promessa de rapidez плохо дружат между собой, без канцелярита?",
+              "format_type": "nuance",
+              "topic": "bureaucracy",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 10,
+            "chat_id": -1001719116315,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 255,
+              "text": "Какими словами аккуратно спросили, что senha, fila и promessa de rapidez плохо дружат между собой, без канцелярита?",
+              "format_type": "nuance",
+              "topic": "bureaucracy",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 10,
+            "chat_id": -1001227461571,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 255,
+              "text": "Какими словами аккуратно спросили, что senha, fila и promessa de rapidez плохо дружат между собой, без канцелярита?",
+              "format_type": "nuance",
+              "topic": "bureaucracy",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 11,
+            "chat_id": -1001690275466,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 11,
+            "chat_id": -1001656765898,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 11,
+            "chat_id": -1001719116315,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 11,
+            "chat_id": -1001227461571,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 12,
+            "chat_id": -1001690275466,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 12,
+            "chat_id": -1001656765898,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 12,
+            "chat_id": -1001719116315,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 12,
+            "chat_id": -1001227461571,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 13,
+            "chat_id": -1001690275466,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 335,
+              "text": "Какими словами лучше сказать, когда нужно мягко пожаловаться на шум, не начиная войну с соседями, если нужен разговорный и нормальный вариант?",
+              "format_type": "local",
+              "topic": "services",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 13,
+            "chat_id": -1001656765898,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 335,
+              "text": "Какими словами лучше сказать, когда нужно мягко пожаловаться на шум, не начиная войну с соседями, если нужен разговорный и нормальный вариант?",
+              "format_type": "local",
+              "topic": "services",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 13,
+            "chat_id": -1001719116315,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 335,
+              "text": "Какими словами лучше сказать, когда нужно мягко пожаловаться на шум, не начиная войну с соседями, если нужен разговорный и нормальный вариант?",
+              "format_type": "local",
+              "topic": "services",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 13,
+            "chat_id": -1001227461571,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 335,
+              "text": "Какими словами лучше сказать, когда нужно мягко пожаловаться на шум, не начиная войну с соседями, если нужен разговорный и нормальный вариант?",
+              "format_type": "local",
+              "topic": "services",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 14,
+            "chat_id": -1001690275466,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 14,
+            "chat_id": -1001656765898,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 14,
+            "chat_id": -1001719116315,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 14,
+            "chat_id": -1001227461571,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 15,
+            "chat_id": -1001690275466,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 15,
+            "chat_id": -1001656765898,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 15,
+            "chat_id": -1001719116315,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 15,
+            "chat_id": -1001227461571,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 16,
+            "chat_id": -1001690275466,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 336,
+              "text": "Что обычно спрашивают здесь, когда сотрудник намекает, что чего-то не хватает, и нужно быстро понять, какого документа не достаёт, чтобы это звучало естественно и по-живому?",
+              "format_type": "dialogue",
+              "topic": "documents",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 16,
+            "chat_id": -1001656765898,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 336,
+              "text": "Что обычно спрашивают здесь, когда сотрудник намекает, что чего-то не хватает, и нужно быстро понять, какого документа не достаёт, чтобы это звучало естественно и по-живому?",
+              "format_type": "dialogue",
+              "topic": "documents",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 16,
+            "chat_id": -1001719116315,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 336,
+              "text": "Что обычно спрашивают здесь, когда сотрудник намекает, что чего-то не хватает, и нужно быстро понять, какого документа не достаёт, чтобы это звучало естественно и по-живому?",
+              "format_type": "dialogue",
+              "topic": "documents",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 16,
+            "chat_id": -1001227461571,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 336,
+              "text": "Что обычно спрашивают здесь, когда сотрудник намекает, что чего-то не хватает, и нужно быстро понять, какого документа не достаёт, чтобы это звучало естественно и по-живому?",
+              "format_type": "dialogue",
+              "topic": "documents",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 17,
+            "chat_id": -1001690275466,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 17,
+            "chat_id": -1001656765898,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 17,
+            "chat_id": -1001719116315,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 17,
+            "chat_id": -1001227461571,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 18,
+            "chat_id": -1001690275466,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 18,
+            "chat_id": -1001656765898,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 18,
+            "chat_id": -1001719116315,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 18,
+            "chat_id": -1001227461571,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 19,
+            "chat_id": -1001690275466,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 337,
+              "text": "В какой форме лучше спросить, если нужно уточнить дедлайн или следующий шаг после подачи бумаги, когда ответ чиновника не до конца понятен, чтобы это звучало естественно и по-живому?",
+              "format_type": "nuance",
+              "topic": "financas",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 19,
+            "chat_id": -1001656765898,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 337,
+              "text": "В какой форме лучше спросить, если нужно уточнить дедлайн или следующий шаг после подачи бумаги, когда ответ чиновника не до конца понятен, чтобы это звучало естественно и по-живому?",
+              "format_type": "nuance",
+              "topic": "financas",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 19,
+            "chat_id": -1001719116315,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 337,
+              "text": "В какой форме лучше спросить, если нужно уточнить дедлайн или следующий шаг после подачи бумаги, когда ответ чиновника не до конца понятен, чтобы это звучало естественно и по-живому?",
+              "format_type": "nuance",
+              "topic": "financas",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 19,
+            "chat_id": -1001227461571,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 337,
+              "text": "В какой форме лучше спросить, если нужно уточнить дедлайн или следующий шаг после подачи бумаги, когда ответ чиновника не до конца понятен, чтобы это звучало естественно и по-живому?",
+              "format_type": "nuance",
+              "topic": "financas",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 20,
+            "chat_id": -1001690275466,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 20,
+            "chat_id": -1001656765898,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 20,
+            "chat_id": -1001719116315,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 20,
+            "chat_id": -1001227461571,
+            "reason": "cooldown_blocked",
+            "picked": null
+          }
+        ]
+      },
+      "global_antidup": {
+        "config": {
+          "db": "/home/andrey/Projects/lingua_bot_v2/data/lingua_staging.db",
+          "ticks": 40,
+          "per_chat_cooldown_ticks": 3,
+          "global_item_cooldown_ticks": 3,
+          "log_table": "community_delivery_log_smoke_v3",
+          "chat_ids": [
+            -1001690275466,
+            -1001656765898,
+            -1001719116315,
+            -1001227461571
+          ]
+        },
+        "global_summary": {
+          "reason_counts": {
+            "candidate_selected_fresh": 56,
+            "cooldown_blocked": 104
+          },
+          "total_events": 160
+        },
+        "chat_summaries": {
+          "-1001690275466": {
+            "reason_counts": {
+              "candidate_selected_fresh": 14,
+              "cooldown_blocked": 26
+            },
+            "picked_count": 14,
+            "topics": {
+              "shopping": 1,
+              "documents": 3,
+              "transport": 2,
+              "bureaucracy": 2,
+              "services": 1,
+              "financas": 1,
+              "culture": 1,
+              "work": 1,
+              "food": 1,
+              "housing": 1
+            },
+            "formats": {
+              "nuance": 5,
+              "local": 6,
+              "dialogue": 3
+            },
+            "first1": {
+              "какими": 4,
+              "как": 2,
+              "чем": 1,
+              "что": 2,
+              "в": 2,
+              "о": 1,
+              "какой": 1,
+              "какая": 1
+            },
+            "first2": {
+              "какими словами": 4,
+              "как мягко": 1,
+              "чем люди": 1,
+              "что обычно": 2,
+              "в какой": 2,
+              "о чём": 1,
+              "какой оборот": 1,
+              "как здесь": 1,
+              "какая фраза": 1
+            },
+            "first3": {
+              "какими словами лучше": 3,
+              "как мягко сказать": 1,
+              "чем люди обычно": 1,
+              "какими словами аккуратно": 1,
+              "что обычно спрашивают": 2,
+              "в какой форме": 2,
+              "о чём обычно": 1,
+              "какой оборот здесь": 1,
+              "как здесь правильно": 1,
+              "какая фраза здесь": 1
+            },
+            "length_min": 71,
+            "length_max": 182,
+            "length_avg": 133.64
+          },
+          "-1001656765898": {
+            "reason_counts": {
+              "candidate_selected_fresh": 14,
+              "cooldown_blocked": 26
+            },
+            "picked_count": 14,
+            "topics": {
+              "documents": 3,
+              "shopping": 1,
+              "bureaucracy": 2,
+              "transport": 2,
+              "services": 1,
+              "financas": 1,
+              "culture": 1,
+              "work": 1,
+              "housing": 1,
+              "food": 1
+            },
+            "formats": {
+              "nuance": 5,
+              "local": 6,
+              "dialogue": 3
+            },
+            "first1": {
+              "как": 2,
+              "какими": 4,
+              "чем": 1,
+              "что": 2,
+              "о": 1,
+              "в": 2,
+              "какой": 1,
+              "какая": 1
+            },
+            "first2": {
+              "как мягко": 1,
+              "какими словами": 4,
+              "чем люди": 1,
+              "что обычно": 2,
+              "о чём": 1,
+              "в какой": 2,
+              "какой оборот": 1,
+              "как здесь": 1,
+              "какая фраза": 1
+            },
+            "first3": {
+              "как мягко сказать": 1,
+              "какими словами лучше": 3,
+              "какими словами аккуратно": 1,
+              "чем люди обычно": 1,
+              "что обычно спрашивают": 2,
+              "о чём обычно": 1,
+              "в какой форме": 2,
+              "какой оборот здесь": 1,
+              "как здесь правильно": 1,
+              "какая фраза здесь": 1
+            },
+            "length_min": 71,
+            "length_max": 182,
+            "length_avg": 133.64
+          },
+          "-1001719116315": {
+            "reason_counts": {
+              "candidate_selected_fresh": 14,
+              "cooldown_blocked": 26
+            },
+            "picked_count": 14,
+            "topics": {
+              "transport": 2,
+              "bureaucracy": 2,
+              "shopping": 2,
+              "documents": 3,
+              "financas": 1,
+              "services": 2,
+              "work": 1,
+              "culture": 1
+            },
+            "formats": {
+              "local": 4,
+              "nuance": 5,
+              "dialogue": 5
+            },
+            "first1": {
+              "чем": 1,
+              "какими": 3,
+              "как": 4,
+              "в": 2,
+              "о": 1,
+              "что": 2,
+              "какой": 1
+            },
+            "first2": {
+              "чем люди": 1,
+              "какими словами": 3,
+              "как мягко": 1,
+              "в какой": 2,
+              "о чём": 1,
+              "что обычно": 2,
+              "как здесь": 2,
+              "какой оборот": 1,
+              "как в": 1
+            },
+            "first3": {
+              "чем люди обычно": 1,
+              "какими словами аккуратно": 1,
+              "какими словами лучше": 2,
+              "как мягко сказать": 1,
+              "в какой форме": 2,
+              "о чём обычно": 1,
+              "что обычно спрашивают": 2,
+              "как здесь правильно": 2,
+              "какой оборот здесь": 1,
+              "как в разговоре": 1
+            },
+            "length_min": 71,
+            "length_max": 182,
+            "length_avg": 134.79
+          },
+          "-1001227461571": {
+            "reason_counts": {
+              "candidate_selected_fresh": 14,
+              "cooldown_blocked": 26
+            },
+            "picked_count": 14,
+            "topics": {
+              "bureaucracy": 2,
+              "transport": 2,
+              "documents": 3,
+              "shopping": 2,
+              "financas": 1,
+              "services": 2,
+              "work": 1,
+              "culture": 1
+            },
+            "formats": {
+              "nuance": 5,
+              "local": 4,
+              "dialogue": 5
+            },
+            "first1": {
+              "какими": 3,
+              "чем": 1,
+              "как": 4,
+              "о": 1,
+              "в": 2,
+              "что": 2,
+              "какой": 1
+            },
+            "first2": {
+              "какими словами": 3,
+              "чем люди": 1,
+              "как мягко": 1,
+              "о чём": 1,
+              "в какой": 2,
+              "что обычно": 2,
+              "как здесь": 2,
+              "какой оборот": 1,
+              "как в": 1
+            },
+            "first3": {
+              "какими словами аккуратно": 1,
+              "чем люди обычно": 1,
+              "как мягко сказать": 1,
+              "какими словами лучше": 2,
+              "о чём обычно": 1,
+              "в какой форме": 2,
+              "что обычно спрашивают": 2,
+              "как здесь правильно": 2,
+              "какой оборот здесь": 1,
+              "как в разговоре": 1
+            },
+            "length_min": 71,
+            "length_max": 182,
+            "length_avg": 134.79
+          }
+        },
+        "results_head": [
+          {
+            "tick": 1,
+            "chat_id": -1001690275466,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 10,
+              "text": "Какими словами лучше намекнуть продавцу, что preço fixo звучит смело, но рынок видит это иначе?",
+              "format_type": "nuance",
+              "topic": "shopping",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 1,
+            "chat_id": -1001656765898,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 23,
+              "text": "Как мягко сказать в AIMA, что вам бы update по делу, а не очередное depois vemos?",
+              "format_type": "nuance",
+              "topic": "documents",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 1,
+            "chat_id": -1001719116315,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 33,
+              "text": "Чем люди обычно заменяют deslocação, когда говорят про обычную поездку?",
+              "format_type": "local",
+              "topic": "transport",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 1,
+            "chat_id": -1001227461571,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 255,
+              "text": "Какими словами аккуратно спросили, что senha, fila и promessa de rapidez плохо дружат между собой, без канцелярита?",
+              "format_type": "nuance",
+              "topic": "bureaucracy",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 2,
+            "chat_id": -1001690275466,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 2,
+            "chat_id": -1001656765898,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 2,
+            "chat_id": -1001719116315,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 2,
+            "chat_id": -1001227461571,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 3,
+            "chat_id": -1001690275466,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 3,
+            "chat_id": -1001656765898,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 3,
+            "chat_id": -1001719116315,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 3,
+            "chat_id": -1001227461571,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 4,
+            "chat_id": -1001690275466,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 23,
+              "text": "Как мягко сказать в AIMA, что вам бы update по делу, а не очередное depois vemos?",
+              "format_type": "nuance",
+              "topic": "documents",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 4,
+            "chat_id": -1001656765898,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 10,
+              "text": "Какими словами лучше намекнуть продавцу, что preço fixo звучит смело, но рынок видит это иначе?",
+              "format_type": "nuance",
+              "topic": "shopping",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 4,
+            "chat_id": -1001719116315,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 255,
+              "text": "Какими словами аккуратно спросили, что senha, fila и promessa de rapidez плохо дружат между собой, без канцелярита?",
+              "format_type": "nuance",
+              "topic": "bureaucracy",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 4,
+            "chat_id": -1001227461571,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 33,
+              "text": "Чем люди обычно заменяют deslocação, когда говорят про обычную поездку?",
+              "format_type": "local",
+              "topic": "transport",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 5,
+            "chat_id": -1001690275466,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 5,
+            "chat_id": -1001656765898,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 5,
+            "chat_id": -1001719116315,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 5,
+            "chat_id": -1001227461571,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 6,
+            "chat_id": -1001690275466,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 6,
+            "chat_id": -1001656765898,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 6,
+            "chat_id": -1001719116315,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 6,
+            "chat_id": -1001227461571,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 7,
+            "chat_id": -1001690275466,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 33,
+              "text": "Чем люди обычно заменяют deslocação, когда говорят про обычную поездку?",
+              "format_type": "local",
+              "topic": "transport",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 7,
+            "chat_id": -1001656765898,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 255,
+              "text": "Какими словами аккуратно спросили, что senha, fila и promessa de rapidez плохо дружат между собой, без канцелярита?",
+              "format_type": "nuance",
+              "topic": "bureaucracy",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 7,
+            "chat_id": -1001719116315,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 10,
+              "text": "Какими словами лучше намекнуть продавцу, что preço fixo звучит смело, но рынок видит это иначе?",
+              "format_type": "nuance",
+              "topic": "shopping",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 7,
+            "chat_id": -1001227461571,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 23,
+              "text": "Как мягко сказать в AIMA, что вам бы update по делу, а не очередное depois vemos?",
+              "format_type": "nuance",
+              "topic": "documents",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 8,
+            "chat_id": -1001690275466,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 8,
+            "chat_id": -1001656765898,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 8,
+            "chat_id": -1001719116315,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 8,
+            "chat_id": -1001227461571,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 9,
+            "chat_id": -1001690275466,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 9,
+            "chat_id": -1001656765898,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 9,
+            "chat_id": -1001719116315,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 9,
+            "chat_id": -1001227461571,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 10,
+            "chat_id": -1001690275466,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 255,
+              "text": "Какими словами аккуратно спросили, что senha, fila и promessa de rapidez плохо дружат между собой, без канцелярита?",
+              "format_type": "nuance",
+              "topic": "bureaucracy",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 10,
+            "chat_id": -1001656765898,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 33,
+              "text": "Чем люди обычно заменяют deslocação, когда говорят про обычную поездку?",
+              "format_type": "local",
+              "topic": "transport",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 10,
+            "chat_id": -1001719116315,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 23,
+              "text": "Как мягко сказать в AIMA, что вам бы update по делу, а не очередное depois vemos?",
+              "format_type": "nuance",
+              "topic": "documents",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 10,
+            "chat_id": -1001227461571,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 10,
+              "text": "Какими словами лучше намекнуть продавцу, что preço fixo звучит смело, но рынок видит это иначе?",
+              "format_type": "nuance",
+              "topic": "shopping",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 11,
+            "chat_id": -1001690275466,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 11,
+            "chat_id": -1001656765898,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 11,
+            "chat_id": -1001719116315,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 11,
+            "chat_id": -1001227461571,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 12,
+            "chat_id": -1001690275466,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 12,
+            "chat_id": -1001656765898,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 12,
+            "chat_id": -1001719116315,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 12,
+            "chat_id": -1001227461571,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 13,
+            "chat_id": -1001690275466,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 335,
+              "text": "Какими словами лучше сказать, когда нужно мягко пожаловаться на шум, не начиная войну с соседями, если нужен разговорный и нормальный вариант?",
+              "format_type": "local",
+              "topic": "services",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 13,
+            "chat_id": -1001656765898,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 336,
+              "text": "Что обычно спрашивают здесь, когда сотрудник намекает, что чего-то не хватает, и нужно быстро понять, какого документа не достаёт, чтобы это звучало естественно и по-живому?",
+              "format_type": "dialogue",
+              "topic": "documents",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 13,
+            "chat_id": -1001719116315,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 337,
+              "text": "В какой форме лучше спросить, если нужно уточнить дедлайн или следующий шаг после подачи бумаги, когда ответ чиновника не до конца понятен, чтобы это звучало естественно и по-живому?",
+              "format_type": "nuance",
+              "topic": "financas",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 13,
+            "chat_id": -1001227461571,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 339,
+              "text": "О чём обычно уточняют, если нужно понять, можно ли забрать отправление сегодня и чего для этого не хватает, чтобы это звучало естественно и по-живому?",
+              "format_type": "local",
+              "topic": "documents",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 14,
+            "chat_id": -1001690275466,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 14,
+            "chat_id": -1001656765898,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 14,
+            "chat_id": -1001719116315,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 14,
+            "chat_id": -1001227461571,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 15,
+            "chat_id": -1001690275466,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 15,
+            "chat_id": -1001656765898,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 15,
+            "chat_id": -1001719116315,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 15,
+            "chat_id": -1001227461571,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 16,
+            "chat_id": -1001690275466,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 336,
+              "text": "Что обычно спрашивают здесь, когда сотрудник намекает, что чего-то не хватает, и нужно быстро понять, какого документа не достаёт, чтобы это звучало естественно и по-живому?",
+              "format_type": "dialogue",
+              "topic": "documents",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 16,
+            "chat_id": -1001656765898,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 335,
+              "text": "Какими словами лучше сказать, когда нужно мягко пожаловаться на шум, не начиная войну с соседями, если нужен разговорный и нормальный вариант?",
+              "format_type": "local",
+              "topic": "services",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 16,
+            "chat_id": -1001719116315,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 339,
+              "text": "О чём обычно уточняют, если нужно понять, можно ли забрать отправление сегодня и чего для этого не хватает, чтобы это звучало естественно и по-живому?",
+              "format_type": "local",
+              "topic": "documents",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 16,
+            "chat_id": -1001227461571,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 337,
+              "text": "В какой форме лучше спросить, если нужно уточнить дедлайн или следующий шаг после подачи бумаги, когда ответ чиновника не до конца понятен, чтобы это звучало естественно и по-живому?",
+              "format_type": "nuance",
+              "topic": "financas",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 17,
+            "chat_id": -1001690275466,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 17,
+            "chat_id": -1001656765898,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 17,
+            "chat_id": -1001719116315,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 17,
+            "chat_id": -1001227461571,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 18,
+            "chat_id": -1001690275466,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 18,
+            "chat_id": -1001656765898,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 18,
+            "chat_id": -1001719116315,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 18,
+            "chat_id": -1001227461571,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 19,
+            "chat_id": -1001690275466,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 337,
+              "text": "В какой форме лучше спросить, если нужно уточнить дедлайн или следующий шаг после подачи бумаги, когда ответ чиновника не до конца понятен, чтобы это звучало естественно и по-живому?",
+              "format_type": "nuance",
+              "topic": "financas",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 19,
+            "chat_id": -1001656765898,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 339,
+              "text": "О чём обычно уточняют, если нужно понять, можно ли забрать отправление сегодня и чего для этого не хватает, чтобы это звучало естественно и по-живому?",
+              "format_type": "local",
+              "topic": "documents",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 19,
+            "chat_id": -1001719116315,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 335,
+              "text": "Какими словами лучше сказать, когда нужно мягко пожаловаться на шум, не начиная войну с соседями, если нужен разговорный и нормальный вариант?",
+              "format_type": "local",
+              "topic": "services",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 19,
+            "chat_id": -1001227461571,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 336,
+              "text": "Что обычно спрашивают здесь, когда сотрудник намекает, что чего-то не хватает, и нужно быстро понять, какого документа не достаёт, чтобы это звучало естественно и по-живому?",
+              "format_type": "dialogue",
+              "topic": "documents",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 20,
+            "chat_id": -1001690275466,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 20,
+            "chat_id": -1001656765898,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 20,
+            "chat_id": -1001719116315,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 20,
+            "chat_id": -1001227461571,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 21,
+            "chat_id": -1001690275466,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 21,
+            "chat_id": -1001656765898,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 21,
+            "chat_id": -1001719116315,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 21,
+            "chat_id": -1001227461571,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 22,
+            "chat_id": -1001690275466,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 339,
+              "text": "О чём обычно уточняют, если нужно понять, можно ли забрать отправление сегодня и чего для этого не хватает, чтобы это звучало естественно и по-живому?",
+              "format_type": "local",
+              "topic": "documents",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 22,
+            "chat_id": -1001656765898,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 337,
+              "text": "В какой форме лучше спросить, если нужно уточнить дедлайн или следующий шаг после подачи бумаги, когда ответ чиновника не до конца понятен, чтобы это звучало естественно и по-живому?",
+              "format_type": "nuance",
+              "topic": "financas",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 22,
+            "chat_id": -1001719116315,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 336,
+              "text": "Что обычно спрашивают здесь, когда сотрудник намекает, что чего-то не хватает, и нужно быстро понять, какого документа не достаёт, чтобы это звучало естественно и по-живому?",
+              "format_type": "dialogue",
+              "topic": "documents",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 22,
+            "chat_id": -1001227461571,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 335,
+              "text": "Какими словами лучше сказать, когда нужно мягко пожаловаться на шум, не начиная войну с соседями, если нужен разговорный и нормальный вариант?",
+              "format_type": "local",
+              "topic": "services",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 23,
+            "chat_id": -1001690275466,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 23,
+            "chat_id": -1001656765898,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 23,
+            "chat_id": -1001719116315,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 23,
+            "chat_id": -1001227461571,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 24,
+            "chat_id": -1001690275466,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 24,
+            "chat_id": -1001656765898,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 24,
+            "chat_id": -1001719116315,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 24,
+            "chat_id": -1001227461571,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 25,
+            "chat_id": -1001690275466,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 340,
+              "text": "Какой оборот здесь звучит естественно, если нужно перенести запись и одновременно проверить, останутся ли те же документы, чтобы это звучало естественно и по-живому?",
+              "format_type": "nuance",
+              "topic": "bureaucracy",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 25,
+            "chat_id": -1001656765898,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 343,
+              "text": "В какой форме лучше спросить, если нужно уточнить, переносится ли встреча с учителем и правильно ли вы поняли новую дату, чтобы это звучало естественно и по-живому?",
+              "format_type": "dialogue",
+              "topic": "culture",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 25,
+            "chat_id": -1001719116315,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 344,
+              "text": "Как здесь правильно спросить, если заказ задерживается, и нужно без скандала уточнить срок и статус, чтобы не звучать слишком прямолинейно?",
+              "format_type": "dialogue",
+              "topic": "work",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 25,
+            "chat_id": -1001227461571,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 345,
+              "text": "Что обычно спрашивают, когда из-за сбоя непонятно, куда идти дальше, и нужно быстро переспросить следующий шаг?",
+              "format_type": "local",
+              "topic": "transport",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 26,
+            "chat_id": -1001690275466,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 26,
+            "chat_id": -1001656765898,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 26,
+            "chat_id": -1001719116315,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 26,
+            "chat_id": -1001227461571,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 27,
+            "chat_id": -1001690275466,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 27,
+            "chat_id": -1001656765898,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 27,
+            "chat_id": -1001719116315,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 27,
+            "chat_id": -1001227461571,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 28,
+            "chat_id": -1001690275466,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 343,
+              "text": "В какой форме лучше спросить, если нужно уточнить, переносится ли встреча с учителем и правильно ли вы поняли новую дату, чтобы это звучало естественно и по-живому?",
+              "format_type": "dialogue",
+              "topic": "culture",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 28,
+            "chat_id": -1001656765898,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 340,
+              "text": "Какой оборот здесь звучит естественно, если нужно перенести запись и одновременно проверить, останутся ли те же документы, чтобы это звучало естественно и по-живому?",
+              "format_type": "nuance",
+              "topic": "bureaucracy",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 28,
+            "chat_id": -1001719116315,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 345,
+              "text": "Что обычно спрашивают, когда из-за сбоя непонятно, куда идти дальше, и нужно быстро переспросить следующий шаг?",
+              "format_type": "local",
+              "topic": "transport",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 28,
+            "chat_id": -1001227461571,
+            "reason": "candidate_selected_fresh",
+            "picked": {
+              "id": 344,
+              "text": "Как здесь правильно спросить, если заказ задерживается, и нужно без скандала уточнить срок и статус, чтобы не звучать слишком прямолинейно?",
+              "format_type": "dialogue",
+              "topic": "work",
+              "priority": 50
+            }
+          },
+          {
+            "tick": 29,
+            "chat_id": -1001690275466,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 29,
+            "chat_id": -1001656765898,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 29,
+            "chat_id": -1001719116315,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 29,
+            "chat_id": -1001227461571,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 30,
+            "chat_id": -1001690275466,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 30,
+            "chat_id": -1001656765898,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 30,
+            "chat_id": -1001719116315,
+            "reason": "cooldown_blocked",
+            "picked": null
+          },
+          {
+            "tick": 30,
+            "chat_id": -1001227461571,
+            "reason": "cooldown_blocked",
+            "picked": null
+          }
+        ]
+      },
+      "status": "green"
+    },
+    "gates": {
+      "pipeline_no_candidates": true,
+      "adjacent_has_fresh": true,
+      "multichat_has_fresh": true,
+      "global_antidup_has_fresh": true,
+      "global_antidup_diversifies_tick1": true
+    },
+    "gate_details": {
+      "first_tick_unique_ids": [
+        10,
+        23,
+        33,
+        255
+      ],
+      "adjacent_reason_counts": {
+        "candidate_selected_fresh": 5,
+        "cooldown_blocked": 35
+      },
+      "multichat_reason_counts": {
+        "candidate_selected_fresh": 56,
+        "cooldown_blocked": 104
+      },
+      "global_antidup_reason_counts": {
+        "candidate_selected_fresh": 56,
+        "cooldown_blocked": 104
+      },
+      "applied": false
+    },
+    "status": "green",
+    "staging_restarted": false
+  },
+  "steps": {
+    "pipeline": {
+      "cmd": [
+        "python3",
+        "tools/community_cleanup_pipeline_v1.py",
+        "--db",
+        "/home/andrey/Projects/lingua_bot_v2/data/lingua_staging.db"
+      ],
+      "returncode": 0,
+      "stdout": "{\n  \"db\": \"/home/andrey/Projects/lingua_bot_v2/data/lingua_staging.db\",\n  \"run_dir\": \"/home/andrey/Projects/lingua_bot_v2/data/community_quality/community_cleanup_pipeline_v1_20260319_214120\",\n  \"mode\": \"dry_run\",\n  \"before\": {\n    \"active_count\": 31,\n    \"topics\": {\n      \"shopping\": 2,\n      \"documents\": 4,\n      \"transport\": 3,\n      \"bureaucracy\": 3,\n      \"services\": 3,\n      \"financas\": 3,\n      \"culture\": 3,\n      \"work\": 3,\n      \"food\": 3,\n      \"housing\": 2,\n      \"health\": 2\n    },\n    \"formats\": {\n      \"nuance\": 9,\n      \"local\": 9,\n      \"dialogue\": 13\n    },\n    \"head_ids\": [\n      10,\n      23,\n      33,\n      255,\n      335,\n      336,\n      337,\n      339,\n      340,\n      343,\n      344,\n      345,\n      346,\n      347,\n      351,\n      353,\n      359,\n      361,\n      365,\n      372\n    ]\n  },\n  \"duplicate_family_count\": 0,\n  \"theme_group_count\": 0,\n  \"candidate_count\": 0,\n  \"candidate_ids\": [],\n  \"candidate_topics\": {},\n  \"candidate_formats\": {},\n  \"decisions\": []\n}\n",
+      "stderr": ""
+    },
+    "autorun": {
+      "cmd": [
+        "python3",
+        "tools/community_cleanup_autorun_v1.py",
+        "--db",
+        "/home/andrey/Projects/lingua_bot_v2/data/lingua_staging.db"
+      ],
+      "returncode": 0,
+      "stdout": "{\n  \"db\": \"/home/andrey/Projects/lingua_bot_v2/data/lingua_staging.db\",\n  \"run_dir\": \"/home/andrey/Projects/lingua_bot_v2/data/community_quality/community_cleanup_autorun_v1_20260319_214121\",\n  \"mode\": \"dry_run\",\n  \"steps\": [\n    {\n      \"step\": \"pipeline_dry_run\",\n      \"candidate_count\": 0,\n      \"run_dir\": \"/home/andrey/Projects/lingua_bot_v2/data/community_quality/community_cleanup_pipeline_v1_20260319_214121\"\n    },\n    {\n      \"step\": \"orchestrator_dry_run\",\n      \"run_dir\": \"/home/andrey/Projects/lingua_bot_v2/data/community_quality/community_cleanup_orchestrator_v1_20260319_214121\"\n    }\n  ],\n  \"pipeline_dry_run\": {\n    \"db\": \"/home/andrey/Projects/lingua_bot_v2/data/lingua_staging.db\",\n    \"run_dir\": \"/home/andrey/Projects/lingua_bot_v2/data/community_quality/community_cleanup_pipeline_v1_20260319_214121\",\n    \"mode\": \"dry_run\",\n    \"before\": {\n      \"active_count\": 31,\n      \"topics\": {\n        \"shopping\": 2,\n        \"documents\": 4,\n        \"transport\": 3,\n        \"bureaucracy\": 3,\n        \"services\": 3,\n        \"financas\": 3,\n        \"culture\": 3,\n        \"work\": 3,\n        \"food\": 3,\n        \"housing\": 2,\n        \"health\": 2\n      },\n      \"formats\": {\n        \"nuance\": 9,\n        \"local\": 9,\n        \"dialogue\": 13\n      },\n      \"head_ids\": [\n        10,\n        23,\n        33,\n        255,\n        335,\n        336,\n        337,\n        339,\n        340,\n        343,\n        344,\n        345,\n        346,\n        347,\n        351,\n        353,\n        359,\n        361,\n        365,\n        372\n      ]\n    },\n    \"duplicate_family_count\": 0,\n    \"theme_group_count\": 0,\n    \"candidate_count\": 0,\n    \"candidate_ids\": [],\n    \"candidate_topics\": {},\n    \"candidate_formats\": {},\n    \"decisions\": []\n  },\n  \"orchestrator\": {\n    \"db\": \"/home/andrey/Projects/lingua_bot_v2/data/lingua_staging.db\",\n    \"run_dir\": \"/home/andrey/Projects/lingua_bot_v2/data/community_quality/community_cleanup_orchestrator_v1_20260319_214121\",\n    \"mode\": \"dry_run\",\n    \"before\": {\n      \"active_count\": 31,\n      \"topics\": {\n        \"shopping\": 2,\n        \"documents\": 4,\n        \"transport\": 3,\n        \"bureaucracy\": 3,\n        \"services\": 3,\n        \"financas\": 3,\n        \"culture\": 3,\n        \"work\": 3,\n        \"food\": 3,\n        \"housing\": 2,\n        \"health\": 2\n      },\n      \"formats\": {\n        \"nuance\": 9,\n        \"local\": 9,\n        \"dialogue\": 13\n      },\n      \"head_ids\": [\n        10,\n        23,\n        33,\n        255,\n        335,\n        336,\n        337,\n        339,\n        340,\n        343,\n        344,\n        345,\n        346,\n        347,\n        351,\n        353,\n        359,\n        361,\n        365,\n        372\n      ]\n    },\n    \"pipeline\": {\n      \"db\": \"/home/andrey/Projects/lingua_bot_v2/data/lingua_staging.db\",\n      \"run_dir\": \"/home/andrey/Projects/lingua_bot_v2/data/community_quality/community_cleanup_pipeline_v1_20260319_214121\",\n      \"mode\": \"dry_run\",\n      \"before\": {\n        \"active_count\": 31,\n        \"topics\": {\n          \"shopping\": 2,\n          \"documents\": 4,\n          \"transport\": 3,\n          \"bureaucracy\": 3,\n          \"services\": 3,\n          \"financas\": 3,\n          \"culture\": 3,\n          \"work\": 3,\n          \"food\": 3,\n          \"housing\": 2,\n          \"health\": 2\n        },\n        \"formats\": {\n          \"nuance\": 9,\n          \"local\": 9,\n          \"dialogue\": 13\n        },\n        \"head_ids\": [\n          10,\n          23,\n          33,\n          255,\n          335,\n          336,\n          337,\n          339,\n          340,\n          343,\n          344,\n          345,\n          346,\n          347,\n          351,\n          353,\n          359,\n          361,\n          365,\n          372\n        ]\n      },\n      \"duplicate_family_count\": 0,\n      \"theme_group_count\": 0,\n      \"candidate_count\": 0,\n      \"candidate_ids\": [],\n      \"candidate_topics\": {},\n      \"candidate_formats\": {},\n      \"decisions\": []\n    },\n    \"after\": {\n      \"active_count\": 31,\n      \"topics\": {\n        \"shopping\": 2,\n        \"documents\": 4,\n        \"transport\": 3,\n        \"bureaucracy\": 3,\n        \"services\": 3,\n        \"financas\": 3,\n        \"culture\": 3,\n        \"work\": 3,\n        \"food\": 3,\n        \"housing\": 2,\n        \"health\": 2\n      },\n      \"formats\": {\n        \"nuance\": 9,\n        \"local\": 9,\n        \"dialogue\": 13\n      },\n      \"head_ids\": [\n        10,\n        23,\n        33,\n        255,\n        335,\n        336,\n        337,\n        339,\n        340,\n        343,\n        344,\n        345,\n        346,\n        347,\n        351,\n        353,\n        359,\n        361,\n        365,\n        372\n      ]\n    },\n    \"resolved_tools\": {\n      \"runtime_adjacent_tool\": \"/home/andrey/Projects/lingua_bot_v2/tools/run_community_runtime_adjacent_smoke_v1.py\",\n      \"multichat_tool\": \"/home/andrey/Projects/lingua_bot_v2/tools/run_community_multichat_cooldown_smoke_v2.py\",\n      \"global_antidup_tool\": \"/home/andrey/Projects/lingua_bot_v2/tools/run_community_global_antidup_smoke_v3.py\"\n    },\n    \"runtime_adjacent\": {\n      \"config\": {\n        \"db\": \"/home/andrey/Projects/lingua_bot_v2/data/lingua_staging.db\",\n        \"chat_id\": -1001690275466,\n        \"steps\": 40,\n        \"cooldown_steps\": 8,\n        \"log_table\": \"community_delivery_log_smoke_v1\"\n      },\n      \"summary\": {\n        \"reason_counts\": {\n          \"candidate_selected_fresh\": 5,\n          \"cooldown_blocked\": 35\n        },\n        \"picked_count\": 5,\n        \"topics\": {\n          \"shopping\": 1,\n          \"documents\": 1,\n          \"transport\": 1,\n          \"bureaucracy\": 1,\n          \"services\": 1\n        },\n        \"formats\": {\n          \"nuance\": 3,\n          \"local\": 2\n        },\n        \"first1\": {\n          \"какими\": 3,\n          \"как\": 1,\n          \"чем\": 1\n        },\n        \"first2\": {\n          \"какими словами\": 3,\n          \"как мягко\": 1,\n          \"чем люди\": 1\n        },\n        \"first3\": {\n          \"какими словами лучше\": 2,\n          \"как мягко сказать\": 1,\n          \"чем люди обычно\": 1,\n          \"какими словами аккуратно\": 1\n        },\n        \"length_min\": 71,\n        \"length_max\": 142,\n        \"length_avg\": 100.8\n      },\n      \"results\": [\n        {\n          \"step\": 1,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 10,\n            \"text\": \"Какими словами лучше намекнуть продавцу, что preço fixo звучит смело, но рынок видит это иначе?\",\n            \"format_type\": \"nuance\",\n            \"topic\": \"shopping\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"step\": 2,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"step\": 3,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"step\": 4,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"step\": 5,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"step\": 6,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"step\": 7,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"step\": 8,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"step\": 9,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 23,\n            \"text\": \"Как мягко сказать в AIMA, что вам бы update по делу, а не очередное depois vemos?\",\n            \"format_type\": \"nuance\",\n            \"topic\": \"documents\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"step\": 10,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"step\": 11,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"step\": 12,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"step\": 13,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"step\": 14,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"step\": 15,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"step\": 16,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"step\": 17,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 33,\n            \"text\": \"Чем люди обычно заменяют deslocação, когда говорят про обычную поездку?\",\n            \"format_type\": \"local\",\n            \"topic\": \"transport\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"step\": 18,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"step\": 19,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"step\": 20,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"step\": 21,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"step\": 22,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"step\": 23,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"step\": 24,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"step\": 25,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 255,\n            \"text\": \"Какими словами аккуратно спросили, что senha, fila и promessa de rapidez плохо дружат между собой, без канцелярита?\",\n            \"format_type\": \"nuance\",\n            \"topic\": \"bureaucracy\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"step\": 26,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"step\": 27,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"step\": 28,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"step\": 29,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"step\": 30,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"step\": 31,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"step\": 32,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"step\": 33,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 335,\n            \"text\": \"Какими словами лучше сказать, когда нужно мягко пожаловаться на шум, не начиная войну с соседями, если нужен разговорный и нормальный вариант?\",\n            \"format_type\": \"local\",\n            \"topic\": \"services\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"step\": 34,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"step\": 35,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"step\": 36,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"step\": 37,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"step\": 38,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"step\": 39,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"step\": 40,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        }\n      ]\n    },\n    \"multichat\": {\n      \"config\": {\n        \"db\": \"/home/andrey/Projects/lingua_bot_v2/data/lingua_staging.db\",\n        \"ticks\": 40,\n        \"cooldown_ticks\": 3,\n        \"log_table\": \"community_delivery_log_smoke_v2\",\n        \"chat_ids\": [\n          -1001690275466,\n          -1001656765898,\n          -1001719116315,\n          -1001227461571\n        ]\n      },\n      \"global_summary\": {\n        \"reason_counts\": {\n          \"candidate_selected_fresh\": 56,\n          \"cooldown_blocked\": 104\n        },\n        \"total_events\": 160\n      },\n      \"chat_summaries\": {\n        \"-1001690275466\": {\n          \"reason_counts\": {\n            \"candidate_selected_fresh\": 14,\n            \"cooldown_blocked\": 26\n          },\n          \"picked_count\": 14,\n          \"topics\": {\n            \"shopping\": 1,\n            \"documents\": 3,\n            \"transport\": 2,\n            \"bureaucracy\": 2,\n            \"services\": 1,\n            \"financas\": 1,\n            \"culture\": 1,\n            \"work\": 1,\n            \"food\": 1,\n            \"housing\": 1\n          },\n          \"formats\": {\n            \"nuance\": 5,\n            \"local\": 6,\n            \"dialogue\": 3\n          },\n          \"first1\": {\n            \"какими\": 4,\n            \"как\": 2,\n            \"чем\": 1,\n            \"что\": 2,\n            \"в\": 2,\n            \"о\": 1,\n            \"какой\": 1,\n            \"какая\": 1\n          },\n          \"first2\": {\n            \"какими словами\": 4,\n            \"как мягко\": 1,\n            \"чем люди\": 1,\n            \"что обычно\": 2,\n            \"в какой\": 2,\n            \"о чём\": 1,\n            \"какой оборот\": 1,\n            \"как здесь\": 1,\n            \"какая фраза\": 1\n          },\n          \"first3\": {\n            \"какими словами лучше\": 3,\n            \"как мягко сказать\": 1,\n            \"чем люди обычно\": 1,\n            \"какими словами аккуратно\": 1,\n            \"что обычно спрашивают\": 2,\n            \"в какой форме\": 2,\n            \"о чём обычно\": 1,\n            \"какой оборот здесь\": 1,\n            \"как здесь правильно\": 1,\n            \"какая фраза здесь\": 1\n          },\n          \"length_min\": 71,\n          \"length_max\": 182,\n          \"length_avg\": 133.64\n        },\n        \"-1001656765898\": {\n          \"reason_counts\": {\n            \"candidate_selected_fresh\": 14,\n            \"cooldown_blocked\": 26\n          },\n          \"picked_count\": 14,\n          \"topics\": {\n            \"shopping\": 1,\n            \"documents\": 3,\n            \"transport\": 2,\n            \"bureaucracy\": 2,\n            \"services\": 1,\n            \"financas\": 1,\n            \"culture\": 1,\n            \"work\": 1,\n            \"food\": 1,\n            \"housing\": 1\n          },\n          \"formats\": {\n            \"nuance\": 5,\n            \"local\": 6,\n            \"dialogue\": 3\n          },\n          \"first1\": {\n            \"какими\": 4,\n            \"как\": 2,\n            \"чем\": 1,\n            \"что\": 2,\n            \"в\": 2,\n            \"о\": 1,\n            \"какой\": 1,\n            \"какая\": 1\n          },\n          \"first2\": {\n            \"какими словами\": 4,\n            \"как мягко\": 1,\n            \"чем люди\": 1,\n            \"что обычно\": 2,\n            \"в какой\": 2,\n            \"о чём\": 1,\n            \"какой оборот\": 1,\n            \"как здесь\": 1,\n            \"какая фраза\": 1\n          },\n          \"first3\": {\n            \"какими словами лучше\": 3,\n            \"как мягко сказать\": 1,\n            \"чем люди обычно\": 1,\n            \"какими словами аккуратно\": 1,\n            \"что обычно спрашивают\": 2,\n            \"в какой форме\": 2,\n            \"о чём обычно\": 1,\n            \"какой оборот здесь\": 1,\n            \"как здесь правильно\": 1,\n            \"какая фраза здесь\": 1\n          },\n          \"length_min\": 71,\n          \"length_max\": 182,\n          \"length_avg\": 133.64\n        },\n        \"-1001719116315\": {\n          \"reason_counts\": {\n            \"candidate_selected_fresh\": 14,\n            \"cooldown_blocked\": 26\n          },\n          \"picked_count\": 14,\n          \"topics\": {\n            \"shopping\": 1,\n            \"documents\": 3,\n            \"transport\": 2,\n            \"bureaucracy\": 2,\n            \"services\": 1,\n            \"financas\": 1,\n            \"culture\": 1,\n            \"work\": 1,\n            \"food\": 1,\n            \"housing\": 1\n          },\n          \"formats\": {\n            \"nuance\": 5,\n            \"local\": 6,\n            \"dialogue\": 3\n          },\n          \"first1\": {\n            \"какими\": 4,\n            \"как\": 2,\n            \"чем\": 1,\n            \"что\": 2,\n            \"в\": 2,\n            \"о\": 1,\n            \"какой\": 1,\n            \"какая\": 1\n          },\n          \"first2\": {\n            \"какими словами\": 4,\n            \"как мягко\": 1,\n            \"чем люди\": 1,\n            \"что обычно\": 2,\n            \"в какой\": 2,\n            \"о чём\": 1,\n            \"какой оборот\": 1,\n            \"как здесь\": 1,\n            \"какая фраза\": 1\n          },\n          \"first3\": {\n            \"какими словами лучше\": 3,\n            \"как мягко сказать\": 1,\n            \"чем люди обычно\": 1,\n            \"какими словами аккуратно\": 1,\n            \"что обычно спрашивают\": 2,\n            \"в какой форме\": 2,\n            \"о чём обычно\": 1,\n            \"какой оборот здесь\": 1,\n            \"как здесь правильно\": 1,\n            \"какая фраза здесь\": 1\n          },\n          \"length_min\": 71,\n          \"length_max\": 182,\n          \"length_avg\": 133.64\n        },\n        \"-1001227461571\": {\n          \"reason_counts\": {\n            \"candidate_selected_fresh\": 14,\n            \"cooldown_blocked\": 26\n          },\n          \"picked_count\": 14,\n          \"topics\": {\n            \"shopping\": 1,\n            \"documents\": 3,\n            \"transport\": 2,\n            \"bureaucracy\": 2,\n            \"services\": 1,\n            \"financas\": 1,\n            \"culture\": 1,\n            \"work\": 1,\n            \"food\": 1,\n            \"housing\": 1\n          },\n          \"formats\": {\n            \"nuance\": 5,\n            \"local\": 6,\n            \"dialogue\": 3\n          },\n          \"first1\": {\n            \"какими\": 4,\n            \"как\": 2,\n            \"чем\": 1,\n            \"что\": 2,\n            \"в\": 2,\n            \"о\": 1,\n            \"какой\": 1,\n            \"какая\": 1\n          },\n          \"first2\": {\n            \"какими словами\": 4,\n            \"как мягко\": 1,\n            \"чем люди\": 1,\n            \"что обычно\": 2,\n            \"в какой\": 2,\n            \"о чём\": 1,\n            \"какой оборот\": 1,\n            \"как здесь\": 1,\n            \"какая фраза\": 1\n          },\n          \"first3\": {\n            \"какими словами лучше\": 3,\n            \"как мягко сказать\": 1,\n            \"чем люди обычно\": 1,\n            \"какими словами аккуратно\": 1,\n            \"что обычно спрашивают\": 2,\n            \"в какой форме\": 2,\n            \"о чём обычно\": 1,\n            \"какой оборот здесь\": 1,\n            \"как здесь правильно\": 1,\n            \"какая фраза здесь\": 1\n          },\n          \"length_min\": 71,\n          \"length_max\": 182,\n          \"length_avg\": 133.64\n        }\n      },\n      \"results_head\": [\n        {\n          \"tick\": 1,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 10,\n            \"text\": \"Какими словами лучше намекнуть продавцу, что preço fixo звучит смело, но рынок видит это иначе?\",\n            \"format_type\": \"nuance\",\n            \"topic\": \"shopping\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 1,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 10,\n            \"text\": \"Какими словами лучше намекнуть продавцу, что preço fixo звучит смело, но рынок видит это иначе?\",\n            \"format_type\": \"nuance\",\n            \"topic\": \"shopping\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 1,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 10,\n            \"text\": \"Какими словами лучше намекнуть продавцу, что preço fixo звучит смело, но рынок видит это иначе?\",\n            \"format_type\": \"nuance\",\n            \"topic\": \"shopping\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 1,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 10,\n            \"text\": \"Какими словами лучше намекнуть продавцу, что preço fixo звучит смело, но рынок видит это иначе?\",\n            \"format_type\": \"nuance\",\n            \"topic\": \"shopping\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 2,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 2,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 2,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 2,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 3,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 3,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 3,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 3,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 4,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 23,\n            \"text\": \"Как мягко сказать в AIMA, что вам бы update по делу, а не очередное depois vemos?\",\n            \"format_type\": \"nuance\",\n            \"topic\": \"documents\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 4,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 23,\n            \"text\": \"Как мягко сказать в AIMA, что вам бы update по делу, а не очередное depois vemos?\",\n            \"format_type\": \"nuance\",\n            \"topic\": \"documents\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 4,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 23,\n            \"text\": \"Как мягко сказать в AIMA, что вам бы update по делу, а не очередное depois vemos?\",\n            \"format_type\": \"nuance\",\n            \"topic\": \"documents\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 4,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 23,\n            \"text\": \"Как мягко сказать в AIMA, что вам бы update по делу, а не очередное depois vemos?\",\n            \"format_type\": \"nuance\",\n            \"topic\": \"documents\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 5,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 5,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 5,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 5,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 6,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 6,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 6,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 6,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 7,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 33,\n            \"text\": \"Чем люди обычно заменяют deslocação, когда говорят про обычную поездку?\",\n            \"format_type\": \"local\",\n            \"topic\": \"transport\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 7,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 33,\n            \"text\": \"Чем люди обычно заменяют deslocação, когда говорят про обычную поездку?\",\n            \"format_type\": \"local\",\n            \"topic\": \"transport\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 7,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 33,\n            \"text\": \"Чем люди обычно заменяют deslocação, когда говорят про обычную поездку?\",\n            \"format_type\": \"local\",\n            \"topic\": \"transport\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 7,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 33,\n            \"text\": \"Чем люди обычно заменяют deslocação, когда говорят про обычную поездку?\",\n            \"format_type\": \"local\",\n            \"topic\": \"transport\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 8,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 8,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 8,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 8,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 9,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 9,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 9,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 9,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 10,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 255,\n            \"text\": \"Какими словами аккуратно спросили, что senha, fila и promessa de rapidez плохо дружат между собой, без канцелярита?\",\n            \"format_type\": \"nuance\",\n            \"topic\": \"bureaucracy\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 10,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 255,\n            \"text\": \"Какими словами аккуратно спросили, что senha, fila и promessa de rapidez плохо дружат между собой, без канцелярита?\",\n            \"format_type\": \"nuance\",\n            \"topic\": \"bureaucracy\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 10,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 255,\n            \"text\": \"Какими словами аккуратно спросили, что senha, fila и promessa de rapidez плохо дружат между собой, без канцелярита?\",\n            \"format_type\": \"nuance\",\n            \"topic\": \"bureaucracy\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 10,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 255,\n            \"text\": \"Какими словами аккуратно спросили, что senha, fila и promessa de rapidez плохо дружат между собой, без канцелярита?\",\n            \"format_type\": \"nuance\",\n            \"topic\": \"bureaucracy\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 11,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 11,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 11,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 11,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 12,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 12,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 12,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 12,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 13,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 335,\n            \"text\": \"Какими словами лучше сказать, когда нужно мягко пожаловаться на шум, не начиная войну с соседями, если нужен разговорный и нормальный вариант?\",\n            \"format_type\": \"local\",\n            \"topic\": \"services\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 13,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 335,\n            \"text\": \"Какими словами лучше сказать, когда нужно мягко пожаловаться на шум, не начиная войну с соседями, если нужен разговорный и нормальный вариант?\",\n            \"format_type\": \"local\",\n            \"topic\": \"services\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 13,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 335,\n            \"text\": \"Какими словами лучше сказать, когда нужно мягко пожаловаться на шум, не начиная войну с соседями, если нужен разговорный и нормальный вариант?\",\n            \"format_type\": \"local\",\n            \"topic\": \"services\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 13,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 335,\n            \"text\": \"Какими словами лучше сказать, когда нужно мягко пожаловаться на шум, не начиная войну с соседями, если нужен разговорный и нормальный вариант?\",\n            \"format_type\": \"local\",\n            \"topic\": \"services\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 14,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 14,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 14,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 14,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 15,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 15,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 15,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 15,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 16,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 336,\n            \"text\": \"Что обычно спрашивают здесь, когда сотрудник намекает, что чего-то не хватает, и нужно быстро понять, какого документа не достаёт, чтобы это звучало естественно и по-живому?\",\n            \"format_type\": \"dialogue\",\n            \"topic\": \"documents\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 16,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 336,\n            \"text\": \"Что обычно спрашивают здесь, когда сотрудник намекает, что чего-то не хватает, и нужно быстро понять, какого документа не достаёт, чтобы это звучало естественно и по-живому?\",\n            \"format_type\": \"dialogue\",\n            \"topic\": \"documents\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 16,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 336,\n            \"text\": \"Что обычно спрашивают здесь, когда сотрудник намекает, что чего-то не хватает, и нужно быстро понять, какого документа не достаёт, чтобы это звучало естественно и по-живому?\",\n            \"format_type\": \"dialogue\",\n            \"topic\": \"documents\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 16,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 336,\n            \"text\": \"Что обычно спрашивают здесь, когда сотрудник намекает, что чего-то не хватает, и нужно быстро понять, какого документа не достаёт, чтобы это звучало естественно и по-живому?\",\n            \"format_type\": \"dialogue\",\n            \"topic\": \"documents\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 17,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 17,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 17,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 17,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 18,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 18,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 18,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 18,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 19,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 337,\n            \"text\": \"В какой форме лучше спросить, если нужно уточнить дедлайн или следующий шаг после подачи бумаги, когда ответ чиновника не до конца понятен, чтобы это звучало естественно и по-живому?\",\n            \"format_type\": \"nuance\",\n            \"topic\": \"financas\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 19,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 337,\n            \"text\": \"В какой форме лучше спросить, если нужно уточнить дедлайн или следующий шаг после подачи бумаги, когда ответ чиновника не до конца понятен, чтобы это звучало естественно и по-живому?\",\n            \"format_type\": \"nuance\",\n            \"topic\": \"financas\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 19,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 337,\n            \"text\": \"В какой форме лучше спросить, если нужно уточнить дедлайн или следующий шаг после подачи бумаги, когда ответ чиновника не до конца понятен, чтобы это звучало естественно и по-живому?\",\n            \"format_type\": \"nuance\",\n            \"topic\": \"financas\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 19,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 337,\n            \"text\": \"В какой форме лучше спросить, если нужно уточнить дедлайн или следующий шаг после подачи бумаги, когда ответ чиновника не до конца понятен, чтобы это звучало естественно и по-живому?\",\n            \"format_type\": \"nuance\",\n            \"topic\": \"financas\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 20,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 20,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 20,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 20,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        }\n      ]\n    },\n    \"global_antidup\": {\n      \"config\": {\n        \"db\": \"/home/andrey/Projects/lingua_bot_v2/data/lingua_staging.db\",\n        \"ticks\": 40,\n        \"per_chat_cooldown_ticks\": 3,\n        \"global_item_cooldown_ticks\": 3,\n        \"log_table\": \"community_delivery_log_smoke_v3\",\n        \"chat_ids\": [\n          -1001690275466,\n          -1001656765898,\n          -1001719116315,\n          -1001227461571\n        ]\n      },\n      \"global_summary\": {\n        \"reason_counts\": {\n          \"candidate_selected_fresh\": 56,\n          \"cooldown_blocked\": 104\n        },\n        \"total_events\": 160\n      },\n      \"chat_summaries\": {\n        \"-1001690275466\": {\n          \"reason_counts\": {\n            \"candidate_selected_fresh\": 14,\n            \"cooldown_blocked\": 26\n          },\n          \"picked_count\": 14,\n          \"topics\": {\n            \"shopping\": 1,\n            \"documents\": 3,\n            \"transport\": 2,\n            \"bureaucracy\": 2,\n            \"services\": 1,\n            \"financas\": 1,\n            \"culture\": 1,\n            \"work\": 1,\n            \"food\": 1,\n            \"housing\": 1\n          },\n          \"formats\": {\n            \"nuance\": 5,\n            \"local\": 6,\n            \"dialogue\": 3\n          },\n          \"first1\": {\n            \"какими\": 4,\n            \"как\": 2,\n            \"чем\": 1,\n            \"что\": 2,\n            \"в\": 2,\n            \"о\": 1,\n            \"какой\": 1,\n            \"какая\": 1\n          },\n          \"first2\": {\n            \"какими словами\": 4,\n            \"как мягко\": 1,\n            \"чем люди\": 1,\n            \"что обычно\": 2,\n            \"в какой\": 2,\n            \"о чём\": 1,\n            \"какой оборот\": 1,\n            \"как здесь\": 1,\n            \"какая фраза\": 1\n          },\n          \"first3\": {\n            \"какими словами лучше\": 3,\n            \"как мягко сказать\": 1,\n            \"чем люди обычно\": 1,\n            \"какими словами аккуратно\": 1,\n            \"что обычно спрашивают\": 2,\n            \"в какой форме\": 2,\n            \"о чём обычно\": 1,\n            \"какой оборот здесь\": 1,\n            \"как здесь правильно\": 1,\n            \"какая фраза здесь\": 1\n          },\n          \"length_min\": 71,\n          \"length_max\": 182,\n          \"length_avg\": 133.64\n        },\n        \"-1001656765898\": {\n          \"reason_counts\": {\n            \"candidate_selected_fresh\": 14,\n            \"cooldown_blocked\": 26\n          },\n          \"picked_count\": 14,\n          \"topics\": {\n            \"documents\": 3,\n            \"shopping\": 1,\n            \"bureaucracy\": 2,\n            \"transport\": 2,\n            \"services\": 1,\n            \"financas\": 1,\n            \"culture\": 1,\n            \"work\": 1,\n            \"housing\": 1,\n            \"food\": 1\n          },\n          \"formats\": {\n            \"nuance\": 5,\n            \"local\": 6,\n            \"dialogue\": 3\n          },\n          \"first1\": {\n            \"как\": 2,\n            \"какими\": 4,\n            \"чем\": 1,\n            \"что\": 2,\n            \"о\": 1,\n            \"в\": 2,\n            \"какой\": 1,\n            \"какая\": 1\n          },\n          \"first2\": {\n            \"как мягко\": 1,\n            \"какими словами\": 4,\n            \"чем люди\": 1,\n            \"что обычно\": 2,\n            \"о чём\": 1,\n            \"в какой\": 2,\n            \"какой оборот\": 1,\n            \"как здесь\": 1,\n            \"какая фраза\": 1\n          },\n          \"first3\": {\n            \"как мягко сказать\": 1,\n            \"какими словами лучше\": 3,\n            \"какими словами аккуратно\": 1,\n            \"чем люди обычно\": 1,\n            \"что обычно спрашивают\": 2,\n            \"о чём обычно\": 1,\n            \"в какой форме\": 2,\n            \"какой оборот здесь\": 1,\n            \"как здесь правильно\": 1,\n            \"какая фраза здесь\": 1\n          },\n          \"length_min\": 71,\n          \"length_max\": 182,\n          \"length_avg\": 133.64\n        },\n        \"-1001719116315\": {\n          \"reason_counts\": {\n            \"candidate_selected_fresh\": 14,\n            \"cooldown_blocked\": 26\n          },\n          \"picked_count\": 14,\n          \"topics\": {\n            \"transport\": 2,\n            \"bureaucracy\": 2,\n            \"shopping\": 2,\n            \"documents\": 3,\n            \"financas\": 1,\n            \"services\": 2,\n            \"work\": 1,\n            \"culture\": 1\n          },\n          \"formats\": {\n            \"local\": 4,\n            \"nuance\": 5,\n            \"dialogue\": 5\n          },\n          \"first1\": {\n            \"чем\": 1,\n            \"какими\": 3,\n            \"как\": 4,\n            \"в\": 2,\n            \"о\": 1,\n            \"что\": 2,\n            \"какой\": 1\n          },\n          \"first2\": {\n            \"чем люди\": 1,\n            \"какими словами\": 3,\n            \"как мягко\": 1,\n            \"в какой\": 2,\n            \"о чём\": 1,\n            \"что обычно\": 2,\n            \"как здесь\": 2,\n            \"какой оборот\": 1,\n            \"как в\": 1\n          },\n          \"first3\": {\n            \"чем люди обычно\": 1,\n            \"какими словами аккуратно\": 1,\n            \"какими словами лучше\": 2,\n            \"как мягко сказать\": 1,\n            \"в какой форме\": 2,\n            \"о чём обычно\": 1,\n            \"что обычно спрашивают\": 2,\n            \"как здесь правильно\": 2,\n            \"какой оборот здесь\": 1,\n            \"как в разговоре\": 1\n          },\n          \"length_min\": 71,\n          \"length_max\": 182,\n          \"length_avg\": 134.79\n        },\n        \"-1001227461571\": {\n          \"reason_counts\": {\n            \"candidate_selected_fresh\": 14,\n            \"cooldown_blocked\": 26\n          },\n          \"picked_count\": 14,\n          \"topics\": {\n            \"bureaucracy\": 2,\n            \"transport\": 2,\n            \"documents\": 3,\n            \"shopping\": 2,\n            \"financas\": 1,\n            \"services\": 2,\n            \"work\": 1,\n            \"culture\": 1\n          },\n          \"formats\": {\n            \"nuance\": 5,\n            \"local\": 4,\n            \"dialogue\": 5\n          },\n          \"first1\": {\n            \"какими\": 3,\n            \"чем\": 1,\n            \"как\": 4,\n            \"о\": 1,\n            \"в\": 2,\n            \"что\": 2,\n            \"какой\": 1\n          },\n          \"first2\": {\n            \"какими словами\": 3,\n            \"чем люди\": 1,\n            \"как мягко\": 1,\n            \"о чём\": 1,\n            \"в какой\": 2,\n            \"что обычно\": 2,\n            \"как здесь\": 2,\n            \"какой оборот\": 1,\n            \"как в\": 1\n          },\n          \"first3\": {\n            \"какими словами аккуратно\": 1,\n            \"чем люди обычно\": 1,\n            \"как мягко сказать\": 1,\n            \"какими словами лучше\": 2,\n            \"о чём обычно\": 1,\n            \"в какой форме\": 2,\n            \"что обычно спрашивают\": 2,\n            \"как здесь правильно\": 2,\n            \"какой оборот здесь\": 1,\n            \"как в разговоре\": 1\n          },\n          \"length_min\": 71,\n          \"length_max\": 182,\n          \"length_avg\": 134.79\n        }\n      },\n      \"results_head\": [\n        {\n          \"tick\": 1,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 10,\n            \"text\": \"Какими словами лучше намекнуть продавцу, что preço fixo звучит смело, но рынок видит это иначе?\",\n            \"format_type\": \"nuance\",\n            \"topic\": \"shopping\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 1,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 23,\n            \"text\": \"Как мягко сказать в AIMA, что вам бы update по делу, а не очередное depois vemos?\",\n            \"format_type\": \"nuance\",\n            \"topic\": \"documents\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 1,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 33,\n            \"text\": \"Чем люди обычно заменяют deslocação, когда говорят про обычную поездку?\",\n            \"format_type\": \"local\",\n            \"topic\": \"transport\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 1,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 255,\n            \"text\": \"Какими словами аккуратно спросили, что senha, fila и promessa de rapidez плохо дружат между собой, без канцелярита?\",\n            \"format_type\": \"nuance\",\n            \"topic\": \"bureaucracy\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 2,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 2,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 2,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 2,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 3,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 3,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 3,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 3,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 4,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 23,\n            \"text\": \"Как мягко сказать в AIMA, что вам бы update по делу, а не очередное depois vemos?\",\n            \"format_type\": \"nuance\",\n            \"topic\": \"documents\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 4,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 10,\n            \"text\": \"Какими словами лучше намекнуть продавцу, что preço fixo звучит смело, но рынок видит это иначе?\",\n            \"format_type\": \"nuance\",\n            \"topic\": \"shopping\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 4,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 255,\n            \"text\": \"Какими словами аккуратно спросили, что senha, fila и promessa de rapidez плохо дружат между собой, без канцелярита?\",\n            \"format_type\": \"nuance\",\n            \"topic\": \"bureaucracy\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 4,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 33,\n            \"text\": \"Чем люди обычно заменяют deslocação, когда говорят про обычную поездку?\",\n            \"format_type\": \"local\",\n            \"topic\": \"transport\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 5,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 5,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 5,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 5,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 6,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 6,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 6,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 6,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 7,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 33,\n            \"text\": \"Чем люди обычно заменяют deslocação, когда говорят про обычную поездку?\",\n            \"format_type\": \"local\",\n            \"topic\": \"transport\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 7,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 255,\n            \"text\": \"Какими словами аккуратно спросили, что senha, fila и promessa de rapidez плохо дружат между собой, без канцелярита?\",\n            \"format_type\": \"nuance\",\n            \"topic\": \"bureaucracy\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 7,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 10,\n            \"text\": \"Какими словами лучше намекнуть продавцу, что preço fixo звучит смело, но рынок видит это иначе?\",\n            \"format_type\": \"nuance\",\n            \"topic\": \"shopping\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 7,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 23,\n            \"text\": \"Как мягко сказать в AIMA, что вам бы update по делу, а не очередное depois vemos?\",\n            \"format_type\": \"nuance\",\n            \"topic\": \"documents\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 8,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 8,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 8,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 8,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 9,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 9,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 9,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 9,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 10,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 255,\n            \"text\": \"Какими словами аккуратно спросили, что senha, fila и promessa de rapidez плохо дружат между собой, без канцелярита?\",\n            \"format_type\": \"nuance\",\n            \"topic\": \"bureaucracy\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 10,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 33,\n            \"text\": \"Чем люди обычно заменяют deslocação, когда говорят про обычную поездку?\",\n            \"format_type\": \"local\",\n            \"topic\": \"transport\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 10,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 23,\n            \"text\": \"Как мягко сказать в AIMA, что вам бы update по делу, а не очередное depois vemos?\",\n            \"format_type\": \"nuance\",\n            \"topic\": \"documents\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 10,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 10,\n            \"text\": \"Какими словами лучше намекнуть продавцу, что preço fixo звучит смело, но рынок видит это иначе?\",\n            \"format_type\": \"nuance\",\n            \"topic\": \"shopping\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 11,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 11,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 11,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 11,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 12,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 12,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 12,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 12,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 13,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 335,\n            \"text\": \"Какими словами лучше сказать, когда нужно мягко пожаловаться на шум, не начиная войну с соседями, если нужен разговорный и нормальный вариант?\",\n            \"format_type\": \"local\",\n            \"topic\": \"services\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 13,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 336,\n            \"text\": \"Что обычно спрашивают здесь, когда сотрудник намекает, что чего-то не хватает, и нужно быстро понять, какого документа не достаёт, чтобы это звучало естественно и по-живому?\",\n            \"format_type\": \"dialogue\",\n            \"topic\": \"documents\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 13,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 337,\n            \"text\": \"В какой форме лучше спросить, если нужно уточнить дедлайн или следующий шаг после подачи бумаги, когда ответ чиновника не до конца понятен, чтобы это звучало естественно и по-живому?\",\n            \"format_type\": \"nuance\",\n            \"topic\": \"financas\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 13,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 339,\n            \"text\": \"О чём обычно уточняют, если нужно понять, можно ли забрать отправление сегодня и чего для этого не хватает, чтобы это звучало естественно и по-живому?\",\n            \"format_type\": \"local\",\n            \"topic\": \"documents\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 14,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 14,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 14,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 14,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 15,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 15,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 15,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 15,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 16,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 336,\n            \"text\": \"Что обычно спрашивают здесь, когда сотрудник намекает, что чего-то не хватает, и нужно быстро понять, какого документа не достаёт, чтобы это звучало естественно и по-живому?\",\n            \"format_type\": \"dialogue\",\n            \"topic\": \"documents\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 16,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 335,\n            \"text\": \"Какими словами лучше сказать, когда нужно мягко пожаловаться на шум, не начиная войну с соседями, если нужен разговорный и нормальный вариант?\",\n            \"format_type\": \"local\",\n            \"topic\": \"services\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 16,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 339,\n            \"text\": \"О чём обычно уточняют, если нужно понять, можно ли забрать отправление сегодня и чего для этого не хватает, чтобы это звучало естественно и по-живому?\",\n            \"format_type\": \"local\",\n            \"topic\": \"documents\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 16,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 337,\n            \"text\": \"В какой форме лучше спросить, если нужно уточнить дедлайн или следующий шаг после подачи бумаги, когда ответ чиновника не до конца понятен, чтобы это звучало естественно и по-живому?\",\n            \"format_type\": \"nuance\",\n            \"topic\": \"financas\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 17,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 17,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 17,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 17,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 18,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 18,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 18,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 18,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 19,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 337,\n            \"text\": \"В какой форме лучше спросить, если нужно уточнить дедлайн или следующий шаг после подачи бумаги, когда ответ чиновника не до конца понятен, чтобы это звучало естественно и по-живому?\",\n            \"format_type\": \"nuance\",\n            \"topic\": \"financas\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 19,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 339,\n            \"text\": \"О чём обычно уточняют, если нужно понять, можно ли забрать отправление сегодня и чего для этого не хватает, чтобы это звучало естественно и по-живому?\",\n            \"format_type\": \"local\",\n            \"topic\": \"documents\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 19,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 335,\n            \"text\": \"Какими словами лучше сказать, когда нужно мягко пожаловаться на шум, не начиная войну с соседями, если нужен разговорный и нормальный вариант?\",\n            \"format_type\": \"local\",\n            \"topic\": \"services\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 19,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 336,\n            \"text\": \"Что обычно спрашивают здесь, когда сотрудник намекает, что чего-то не хватает, и нужно быстро понять, какого документа не достаёт, чтобы это звучало естественно и по-живому?\",\n            \"format_type\": \"dialogue\",\n            \"topic\": \"documents\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 20,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 20,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 20,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 20,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 21,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 21,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 21,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 21,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 22,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 339,\n            \"text\": \"О чём обычно уточняют, если нужно понять, можно ли забрать отправление сегодня и чего для этого не хватает, чтобы это звучало естественно и по-живому?\",\n            \"format_type\": \"local\",\n            \"topic\": \"documents\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 22,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 337,\n            \"text\": \"В какой форме лучше спросить, если нужно уточнить дедлайн или следующий шаг после подачи бумаги, когда ответ чиновника не до конца понятен, чтобы это звучало естественно и по-живому?\",\n            \"format_type\": \"nuance\",\n            \"topic\": \"financas\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 22,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 336,\n            \"text\": \"Что обычно спрашивают здесь, когда сотрудник намекает, что чего-то не хватает, и нужно быстро понять, какого документа не достаёт, чтобы это звучало естественно и по-живому?\",\n            \"format_type\": \"dialogue\",\n            \"topic\": \"documents\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 22,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 335,\n            \"text\": \"Какими словами лучше сказать, когда нужно мягко пожаловаться на шум, не начиная войну с соседями, если нужен разговорный и нормальный вариант?\",\n            \"format_type\": \"local\",\n            \"topic\": \"services\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 23,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 23,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 23,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 23,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 24,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 24,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 24,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 24,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 25,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 340,\n            \"text\": \"Какой оборот здесь звучит естественно, если нужно перенести запись и одновременно проверить, останутся ли те же документы, чтобы это звучало естественно и по-живому?\",\n            \"format_type\": \"nuance\",\n            \"topic\": \"bureaucracy\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 25,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 343,\n            \"text\": \"В какой форме лучше спросить, если нужно уточнить, переносится ли встреча с учителем и правильно ли вы поняли новую дату, чтобы это звучало естественно и по-живому?\",\n            \"format_type\": \"dialogue\",\n            \"topic\": \"culture\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 25,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 344,\n            \"text\": \"Как здесь правильно спросить, если заказ задерживается, и нужно без скандала уточнить срок и статус, чтобы не звучать слишком прямолинейно?\",\n            \"format_type\": \"dialogue\",\n            \"topic\": \"work\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 25,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 345,\n            \"text\": \"Что обычно спрашивают, когда из-за сбоя непонятно, куда идти дальше, и нужно быстро переспросить следующий шаг?\",\n            \"format_type\": \"local\",\n            \"topic\": \"transport\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 26,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 26,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 26,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 26,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 27,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 27,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 27,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 27,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 28,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 343,\n            \"text\": \"В какой форме лучше спросить, если нужно уточнить, переносится ли встреча с учителем и правильно ли вы поняли новую дату, чтобы это звучало естественно и по-живому?\",\n            \"format_type\": \"dialogue\",\n            \"topic\": \"culture\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 28,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 340,\n            \"text\": \"Какой оборот здесь звучит естественно, если нужно перенести запись и одновременно проверить, останутся ли те же документы, чтобы это звучало естественно и по-живому?\",\n            \"format_type\": \"nuance\",\n            \"topic\": \"bureaucracy\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 28,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 345,\n            \"text\": \"Что обычно спрашивают, когда из-за сбоя непонятно, куда идти дальше, и нужно быстро переспросить следующий шаг?\",\n            \"format_type\": \"local\",\n            \"topic\": \"transport\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 28,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"candidate_selected_fresh\",\n          \"picked\": {\n            \"id\": 344,\n            \"text\": \"Как здесь правильно спросить, если заказ задерживается, и нужно без скандала уточнить срок и статус, чтобы не звучать слишком прямолинейно?\",\n            \"format_type\": \"dialogue\",\n            \"topic\": \"work\",\n            \"priority\": 50\n          }\n        },\n        {\n          \"tick\": 29,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 29,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 29,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 29,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 30,\n          \"chat_id\": -1001690275466,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 30,\n          \"chat_id\": -1001656765898,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 30,\n          \"chat_id\": -1001719116315,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        },\n        {\n          \"tick\": 30,\n          \"chat_id\": -1001227461571,\n          \"reason\": \"cooldown_blocked\",\n          \"picked\": null\n        }\n      ]\n    },\n    \"status\": \"green\"\n  },\n  \"gates\": {\n    \"pipeline_no_candidates\": true,\n    \"adjacent_has_fresh\": true,\n    \"multichat_has_fresh\": true,\n    \"global_antidup_has_fresh\": true,\n    \"global_antidup_diversifies_tick1\": true\n  },\n  \"gate_details\": {\n    \"first_tick_unique_ids\": [\n      10,\n      23,\n      33,\n      255\n    ],\n    \"adjacent_reason_counts\": {\n      \"candidate_selected_fresh\": 5,\n      \"cooldown_blocked\": 35\n    },\n    \"multichat_reason_counts\": {\n      \"candidate_selected_fresh\": 56,\n      \"cooldown_blocked\": 104\n    },\n    \"global_antidup_reason_counts\": {\n      \"candidate_selected_fresh\": 56,\n      \"cooldown_blocked\": 104\n    },\n    \"applied\": false\n  },\n  \"status\": \"green\",\n  \"staging_restarted\": false\n}\n",
+      "stderr": ""
+    }
+  }
+}

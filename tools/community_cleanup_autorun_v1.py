@@ -8,7 +8,21 @@ from pathlib import Path
 
 
 def run(cmd: list[str], cwd: Path) -> None:
-    subprocess.run(cmd, cwd=cwd, check=True)
+    cp = subprocess.run(
+        cmd,
+        cwd=cwd,
+        text=True,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+    if cp.returncode != 0:
+        raise subprocess.CalledProcessError(
+            cp.returncode,
+            cmd,
+            output="",
+            stderr=cp.stderr,
+        )
 
 
 def read_json(path: Path):
@@ -85,6 +99,7 @@ def main() -> None:
             "python3", "tools/community_cleanup_pipeline_v1.py",
             "--db", str(db_path),
             "--apply",
+            "--yes",
         ], cwd=root)
         pipeline_apply_dir = latest_dir(quality_dir, "community_cleanup_pipeline_v1_*")
         pipeline_apply_summary = read_json(pipeline_apply_dir / "summary.json")
