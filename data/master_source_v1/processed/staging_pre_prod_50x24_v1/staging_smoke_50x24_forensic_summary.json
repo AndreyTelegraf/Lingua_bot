@@ -1,0 +1,10 @@
+{
+  "input_json": "data/master_source_v1/processed/staging_pre_prod_50x24_v1/staging_selector_smoke_50x24_v1.json",
+  "items_total": 1200,
+  "flagged_total": 0,
+  "unique_flagged_item_ids": [],
+  "flag_breakdown": {},
+  "detail_csv": "data/master_source_v1/processed/staging_pre_prod_50x24_v1/staging_smoke_50x24_forensic_details.csv",
+  "flagged_csv": "data/master_source_v1/processed/staging_pre_prod_50x24_v1/staging_smoke_50x24_forensic_flagged.csv",
+  "sample_flagged": []
+}
