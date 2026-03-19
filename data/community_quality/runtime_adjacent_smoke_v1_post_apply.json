@@ -1,0 +1,411 @@
+{
+  "config": {
+    "db": "data/lingua_staging.db",
+    "chat_id": -1001690275466,
+    "steps": 30,
+    "cooldown_steps": 1,
+    "log_table": "community_delivery_log_smoke_v1"
+  },
+  "summary": {
+    "reason_counts": {
+      "candidate_selected_fresh": 30
+    },
+    "picked_count": 30,
+    "topics": {
+      "housing": 5,
+      "shopping": 4,
+      "bureaucracy": 4,
+      "health": 3,
+      "documents": 4,
+      "transport": 3,
+      "services": 1,
+      "financas": 2,
+      "culture": 1,
+      "work": 1,
+      "food": 2
+    },
+    "formats": {
+      "nuance": 11,
+      "local": 12,
+      "dialogue": 7
+    },
+    "first1": {
+      "что": 7,
+      "какими": 4,
+      "как": 7,
+      "чем": 4,
+      "в": 4,
+      "о": 1,
+      "какой": 2,
+      "какая": 1
+    },
+    "first2": {
+      "что обычно": 7,
+      "какими словами": 4,
+      "как в": 3,
+      "как мягко": 3,
+      "чем в": 3,
+      "чем люди": 1,
+      "в какой": 4,
+      "о чём": 1,
+      "какой оборот": 1,
+      "какой вариант": 1,
+      "как здесь": 1,
+      "какая фраза": 1
+    },
+    "first3": {
+      "что обычно говорят": 4,
+      "какими словами лучше": 3,
+      "как в португалии": 1,
+      "как мягко уточнить": 2,
+      "чем в обычной": 3,
+      "как мягко сказать": 1,
+      "чем люди обычно": 1,
+      "какими словами аккуратно": 1,
+      "что обычно спрашивают": 2,
+      "в какой форме": 4,
+      "о чём обычно": 1,
+      "какой оборот здесь": 1,
+      "какой вариант здесь": 1,
+      "как здесь правильно": 1,
+      "какая фраза здесь": 1,
+      "как в разговоре": 2,
+      "что обычно уточняют": 1
+    },
+    "length_min": 70,
+    "length_max": 182,
+    "length_avg": 122.93
+  },
+  "results": [
+    {
+      "step": 1,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 7,
+        "text": "Что обычно говорят, когда нужно уточнить у senhorio, входит ли internet или это опять квест на выживание?",
+        "format_type": "nuance",
+        "topic": "housing",
+        "priority": 50
+      }
+    },
+    {
+      "step": 2,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 10,
+        "text": "Какими словами лучше намекнуть продавцу, что preço fixo звучит смело, но рынок видит это иначе?",
+        "format_type": "nuance",
+        "topic": "shopping",
+        "priority": 50
+      }
+    },
+    {
+      "step": 3,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 12,
+        "text": "Как в Португалии обычно спрашивают, работает ли это сегодня или уже amanhã, logo se vê?",
+        "format_type": "local",
+        "topic": "bureaucracy",
+        "priority": 50
+      }
+    },
+    {
+      "step": 4,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 13,
+        "text": "Что обычно говорят в аптеке, когда нужно что-то от горла, но без ощущения, что читаешь диссертацию?",
+        "format_type": "dialogue",
+        "topic": "health",
+        "priority": 50
+      }
+    },
+    {
+      "step": 5,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 17,
+        "text": "Как мягко уточнить у агента, что comissão уже немного fica complicado?",
+        "format_type": "nuance",
+        "topic": "housing",
+        "priority": 50
+      }
+    },
+    {
+      "step": 6,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 21,
+        "text": "Чем в обычной речи заменяют residência permanente, когда говорят про ПМЖ?",
+        "format_type": "local",
+        "topic": "documents",
+        "priority": 50
+      }
+    },
+    {
+      "step": 7,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 23,
+        "text": "Как мягко сказать в AIMA, что вам бы update по делу, а не очередное depois vemos?",
+        "format_type": "nuance",
+        "topic": "documents",
+        "priority": 50
+      }
+    },
+    {
+      "step": 8,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 27,
+        "text": "Чем в обычной речи заменяют estabelecimento comercial, когда говорят про магазин?",
+        "format_type": "local",
+        "topic": "shopping",
+        "priority": 50
+      }
+    },
+    {
+      "step": 9,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 33,
+        "text": "Чем люди обычно заменяют deslocação, когда говорят про обычную поездку?",
+        "format_type": "local",
+        "topic": "transport",
+        "priority": 50
+      }
+    },
+    {
+      "step": 10,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 35,
+        "text": "Как мягко уточнить, включает ли renda despesas, или это сюрприз в последней серии?",
+        "format_type": "nuance",
+        "topic": "housing",
+        "priority": 50
+      }
+    },
+    {
+      "step": 11,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 39,
+        "text": "Чем в обычной речи заменяют viatura, когда имеют в виду просто машину?",
+        "format_type": "local",
+        "topic": "transport",
+        "priority": 50
+      }
+    },
+    {
+      "step": 12,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 255,
+        "text": "Какими словами аккуратно спросили, что senha, fila и promessa de rapidez плохо дружат между собой, без канцелярита?",
+        "format_type": "nuance",
+        "topic": "bureaucracy",
+        "priority": 50
+      }
+    },
+    {
+      "step": 13,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 335,
+        "text": "Какими словами лучше сказать, когда нужно мягко пожаловаться на шум, не начиная войну с соседями, если нужен разговорный и нормальный вариант?",
+        "format_type": "local",
+        "topic": "services",
+        "priority": 50
+      }
+    },
+    {
+      "step": 14,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 336,
+        "text": "Что обычно спрашивают здесь, когда сотрудник намекает, что чего-то не хватает, и нужно быстро понять, какого документа не достаёт, чтобы это звучало естественно и по-живому?",
+        "format_type": "dialogue",
+        "topic": "documents",
+        "priority": 50
+      }
+    },
+    {
+      "step": 15,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 337,
+        "text": "В какой форме лучше спросить, если нужно уточнить дедлайн или следующий шаг после подачи бумаги, когда ответ чиновника не до конца понятен, чтобы это звучало естественно и по-живому?",
+        "format_type": "nuance",
+        "topic": "financas",
+        "priority": 50
+      }
+    },
+    {
+      "step": 16,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 338,
+        "text": "Что обычно говорят, когда после жалобы на поломку нужно вежливо напомнить хозяину квартиры и уточнить, когда ждать мастера?",
+        "format_type": "dialogue",
+        "topic": "housing",
+        "priority": 50
+      }
+    },
+    {
+      "step": 17,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 339,
+        "text": "О чём обычно уточняют, если нужно понять, можно ли забрать отправление сегодня и чего для этого не хватает, чтобы это звучало естественно и по-живому?",
+        "format_type": "local",
+        "topic": "documents",
+        "priority": 50
+      }
+    },
+    {
+      "step": 18,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 340,
+        "text": "Какой оборот здесь звучит естественно, если нужно перенести запись и одновременно проверить, останутся ли те же документы, чтобы это звучало естественно и по-живому?",
+        "format_type": "nuance",
+        "topic": "bureaucracy",
+        "priority": 50
+      }
+    },
+    {
+      "step": 19,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 341,
+        "text": "Какой вариант здесь звучит естественно, если врач говорит слишком быстро, и нужно попросить повторить проще и без неловкости, чтобы это звучало живо и по-местному?",
+        "format_type": "nuance",
+        "topic": "health",
+        "priority": 50
+      }
+    },
+    {
+      "step": 20,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 342,
+        "text": "Что обычно говорят в такой ситуации, когда цена на кассе не совпала с ценником, и нужно спокойно это уточнить, чтобы это звучало естественно и по-живому?",
+        "format_type": "dialogue",
+        "topic": "shopping",
+        "priority": 50
+      }
+    },
+    {
+      "step": 21,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 343,
+        "text": "В какой форме лучше спросить, если нужно уточнить, переносится ли встреча с учителем и правильно ли вы поняли новую дату, чтобы это звучало естественно и по-живому?",
+        "format_type": "dialogue",
+        "topic": "culture",
+        "priority": 50
+      }
+    },
+    {
+      "step": 22,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 344,
+        "text": "Как здесь правильно спросить, если заказ задерживается, и нужно без скандала уточнить срок и статус, чтобы не звучать слишком прямолинейно?",
+        "format_type": "dialogue",
+        "topic": "work",
+        "priority": 50
+      }
+    },
+    {
+      "step": 23,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 345,
+        "text": "Что обычно спрашивают, когда из-за сбоя непонятно, куда идти дальше, и нужно быстро переспросить следующий шаг?",
+        "format_type": "local",
+        "topic": "transport",
+        "priority": 50
+      }
+    },
+    {
+      "step": 24,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 346,
+        "text": "Какая фраза здесь звучит живо, когда заказ принесли не тот, и нужно спокойно указать на ошибку без наезда, чтобы это звучало естественно и по-живому?",
+        "format_type": "local",
+        "topic": "food",
+        "priority": 50
+      }
+    },
+    {
+      "step": 25,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 347,
+        "text": "Какими словами лучше сказать, когда после первой вежливой просьбы шум продолжается, и нужно написать уже чуть твёрже, но без скандала?",
+        "format_type": "local",
+        "topic": "housing",
+        "priority": 50
+      }
+    },
+    {
+      "step": 26,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 348,
+        "text": "Как в разговоре обычно скажут, если нужно без неловкости спросить, можно ли разделить счёт на нескольких людей, если хочется сказать это по-человечески?",
+        "format_type": "local",
+        "topic": "food",
+        "priority": 50
+      }
+    },
+    {
+      "step": 27,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 349,
+        "text": "В какой форме лучше спросить, если нужно уточнить, есть ли более дешёвый аналог, не звуча так, будто вы торгуетесь за картошку, чтобы это звучало естественно и без канцелярита?",
+        "format_type": "local",
+        "topic": "health",
+        "priority": 50
+      }
+    },
+    {
+      "step": 28,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 350,
+        "text": "В какой форме лучше спросить, если после объяснения всё равно непонятно, какой именно следующий шаг нужен прямо сейчас?",
+        "format_type": "nuance",
+        "topic": "financas",
+        "priority": 50
+      }
+    },
+    {
+      "step": 29,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 351,
+        "text": "Как в разговоре обычно скажут, если нужно спокойно спросить, можно ли вернуть товар или хотя бы обменять его без лишней драмы, если хочется сказать это по-человечески?",
+        "format_type": "dialogue",
+        "topic": "shopping",
+        "priority": 50
+      }
+    },
+    {
+      "step": 30,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 352,
+        "text": "Что обычно уточняют, когда нужно уточнить, подойдёт ли копия документа или нужен именно оригинал?",
+        "format_type": "nuance",
+        "topic": "bureaucracy",
+        "priority": 50
+      }
+    }
+  ]
+}
