@@ -1,0 +1,379 @@
+{
+  "db": "/home/andrey/Projects/lingua_bot_v2/data/lingua_staging.db",
+  "source_csv": "/home/andrey/Projects/lingua_bot_v2/data/master_source_v1/processed/staging_build_hard_deactivate_candidates_wave2/hard_deactivate_candidates_wave2.csv",
+  "backup": "/home/andrey/Projects/lingua_bot_v2/data/master_source_v1/processed/staging_apply_hard_deactivate_wave2_safe_only/lingua_staging.before_apply_hard_deactivate_wave2_safe_only.20260319T164123Z.db",
+  "safe_reasons": [
+    "awkward_ru_gloss",
+    "functionish_surface",
+    "proper_name_like"
+  ],
+  "targets_count": 20,
+  "target_ids": [
+    31,
+    278,
+    696,
+    703,
+    738,
+    1630,
+    3354,
+    3362,
+    3367,
+    3372,
+    3375,
+    3376,
+    3377,
+    3378,
+    3386,
+    3387,
+    3392,
+    3393,
+    10007,
+    10008
+  ],
+  "before": [
+    {
+      "item_id": 31,
+      "lemma": "ontem",
+      "correct_answer": "вчера",
+      "pos": "adverb",
+      "topic_tag": "build:seed",
+      "bin_name": "2K",
+      "freq_rank": 1500,
+      "active_value": 1
+    },
+    {
+      "item_id": 278,
+      "lemma": "fernando",
+      "correct_answer": "фердинанд",
+      "pos": "noun",
+      "topic_tag": "build:pilot_ptpt_001_pilot_safe",
+      "bin_name": "2K",
+      "freq_rank": 1046,
+      "active_value": 1
+    },
+    {
+      "item_id": 696,
+      "lemma": "luís",
+      "correct_answer": "людвиг",
+      "pos": "noun",
+      "topic_tag": "build:pilot_ptpt_001_pilot_safe",
+      "bin_name": "5K",
+      "freq_rank": 2689,
+      "active_value": 1
+    },
+    {
+      "item_id": 703,
+      "lemma": "existir",
+      "correct_answer": "бывать",
+      "pos": "verb",
+      "topic_tag": "build:pilot_ptpt_001_pilot_safe",
+      "bin_name": "5K",
+      "freq_rank": 2723,
+      "active_value": 1
+    },
+    {
+      "item_id": 738,
+      "lemma": "manuel",
+      "correct_answer": "мануил",
+      "pos": "noun",
+      "topic_tag": "build:pilot_ptpt_001_pilot_safe",
+      "bin_name": "5K",
+      "freq_rank": 2893,
+      "active_value": 1
+    },
+    {
+      "item_id": 1630,
+      "lemma": "galinha",
+      "correct_answer": "курка",
+      "pos": "noun",
+      "topic_tag": "build:pilot_ptpt_001_enriched_qc",
+      "bin_name": "10K",
+      "freq_rank": 5011,
+      "active_value": 1
+    },
+    {
+      "item_id": 3354,
+      "lemma": "nunca",
+      "correct_answer": "никогда",
+      "pos": "adverb",
+      "topic_tag": "build:pilot_ptpt_003_kaikki_adjadv",
+      "bin_name": "1K",
+      "freq_rank": 110,
+      "active_value": 1
+    },
+    {
+      "item_id": 3362,
+      "lemma": "amanhã",
+      "correct_answer": "завтра",
+      "pos": "adverb",
+      "topic_tag": "build:pilot_ptpt_003_kaikki_adjadv",
+      "bin_name": "1K",
+      "freq_rank": 548,
+      "active_value": 1
+    },
+    {
+      "item_id": 3367,
+      "lemma": "ainda",
+      "correct_answer": "ещё",
+      "pos": "adverb",
+      "topic_tag": "build:pilot_ptpt_004_adverb_curated",
+      "bin_name": "1K",
+      "freq_rank": 120,
+      "active_value": 1
+    },
+    {
+      "item_id": 3372,
+      "lemma": "hoje",
+      "correct_answer": "сегодня",
+      "pos": "adverb",
+      "topic_tag": "build:pilot_ptpt_004_adverb_curated",
+      "bin_name": "1K",
+      "freq_rank": 117,
+      "active_value": 1
+    },
+    {
+      "item_id": 3375,
+      "lemma": "agora",
+      "correct_answer": "сейчас",
+      "pos": "adverb",
+      "topic_tag": "build:pilot_ptpt_004_adverb_curated",
+      "bin_name": "1K",
+      "freq_rank": 70,
+      "active_value": 1
+    },
+    {
+      "item_id": 3376,
+      "lemma": "depois",
+      "correct_answer": "потом",
+      "pos": "adverb",
+      "topic_tag": "build:pilot_ptpt_004_adverb_curated",
+      "bin_name": "1K",
+      "freq_rank": 76,
+      "active_value": 1
+    },
+    {
+      "item_id": 3377,
+      "lemma": "antes",
+      "correct_answer": "раньше",
+      "pos": "adverb",
+      "topic_tag": "build:pilot_ptpt_004_adverb_curated",
+      "bin_name": "1K",
+      "freq_rank": 151,
+      "active_value": 1
+    },
+    {
+      "item_id": 3378,
+      "lemma": "sempre",
+      "correct_answer": "всегда",
+      "pos": "adverb",
+      "topic_tag": "build:pilot_ptpt_004_adverb_curated",
+      "bin_name": "1K",
+      "freq_rank": 98,
+      "active_value": 1
+    },
+    {
+      "item_id": 3386,
+      "lemma": "aqui",
+      "correct_answer": "здесь",
+      "pos": "adverb",
+      "topic_tag": "build:pilot_ptpt_004_adverb_curated",
+      "bin_name": "1K",
+      "freq_rank": 63,
+      "active_value": 1
+    },
+    {
+      "item_id": 3387,
+      "lemma": "ali",
+      "correct_answer": "там",
+      "pos": "adverb",
+      "topic_tag": "build:pilot_ptpt_004_adverb_curated",
+      "bin_name": "1K",
+      "freq_rank": 820,
+      "active_value": 1
+    },
+    {
+      "item_id": 3392,
+      "lemma": "assim",
+      "correct_answer": "так",
+      "pos": "adverb",
+      "topic_tag": "build:pilot_ptpt_004_adverb_curated",
+      "bin_name": "1K",
+      "freq_rank": 75,
+      "active_value": 1
+    },
+    {
+      "item_id": 3393,
+      "lemma": "bem",
+      "correct_answer": "хорошо",
+      "pos": "adverb",
+      "topic_tag": "build:pilot_ptpt_004_adverb_curated",
+      "bin_name": "1K",
+      "freq_rank": 54,
+      "active_value": 1
+    },
+    {
+      "item_id": 10007,
+      "lemma": "também",
+      "correct_answer": "тоже",
+      "pos": "adverb",
+      "topic_tag": null,
+      "bin_name": "2k",
+      "freq_rank": 1690,
+      "active_value": 1
+    },
+    {
+      "item_id": 10008,
+      "lemma": "então",
+      "correct_answer": "тогда",
+      "pos": "adverb",
+      "topic_tag": null,
+      "bin_name": "3k",
+      "freq_rank": 2130,
+      "active_value": 1
+    }
+  ],
+  "after": [
+    {
+      "item_id": 31,
+      "lemma": "ontem",
+      "correct_answer": "вчера",
+      "pos": "adverb",
+      "active_value": 0
+    },
+    {
+      "item_id": 278,
+      "lemma": "fernando",
+      "correct_answer": "фердинанд",
+      "pos": "noun",
+      "active_value": 0
+    },
+    {
+      "item_id": 696,
+      "lemma": "luís",
+      "correct_answer": "людвиг",
+      "pos": "noun",
+      "active_value": 0
+    },
+    {
+      "item_id": 703,
+      "lemma": "existir",
+      "correct_answer": "бывать",
+      "pos": "verb",
+      "active_value": 0
+    },
+    {
+      "item_id": 738,
+      "lemma": "manuel",
+      "correct_answer": "мануил",
+      "pos": "noun",
+      "active_value": 0
+    },
+    {
+      "item_id": 1630,
+      "lemma": "galinha",
+      "correct_answer": "курка",
+      "pos": "noun",
+      "active_value": 0
+    },
+    {
+      "item_id": 3354,
+      "lemma": "nunca",
+      "correct_answer": "никогда",
+      "pos": "adverb",
+      "active_value": 0
+    },
+    {
+      "item_id": 3362,
+      "lemma": "amanhã",
+      "correct_answer": "завтра",
+      "pos": "adverb",
+      "active_value": 0
+    },
+    {
+      "item_id": 3367,
+      "lemma": "ainda",
+      "correct_answer": "ещё",
+      "pos": "adverb",
+      "active_value": 0
+    },
+    {
+      "item_id": 3372,
+      "lemma": "hoje",
+      "correct_answer": "сегодня",
+      "pos": "adverb",
+      "active_value": 0
+    },
+    {
+      "item_id": 3375,
+      "lemma": "agora",
+      "correct_answer": "сейчас",
+      "pos": "adverb",
+      "active_value": 0
+    },
+    {
+      "item_id": 3376,
+      "lemma": "depois",
+      "correct_answer": "потом",
+      "pos": "adverb",
+      "active_value": 0
+    },
+    {
+      "item_id": 3377,
+      "lemma": "antes",
+      "correct_answer": "раньше",
+      "pos": "adverb",
+      "active_value": 0
+    },
+    {
+      "item_id": 3378,
+      "lemma": "sempre",
+      "correct_answer": "всегда",
+      "pos": "adverb",
+      "active_value": 0
+    },
+    {
+      "item_id": 3386,
+      "lemma": "aqui",
+      "correct_answer": "здесь",
+      "pos": "adverb",
+      "active_value": 0
+    },
+    {
+      "item_id": 3387,
+      "lemma": "ali",
+      "correct_answer": "там",
+      "pos": "adverb",
+      "active_value": 0
+    },
+    {
+      "item_id": 3392,
+      "lemma": "assim",
+      "correct_answer": "так",
+      "pos": "adverb",
+      "active_value": 0
+    },
+    {
+      "item_id": 3393,
+      "lemma": "bem",
+      "correct_answer": "хорошо",
+      "pos": "adverb",
+      "active_value": 0
+    },
+    {
+      "item_id": 10007,
+      "lemma": "também",
+      "correct_answer": "тоже",
+      "pos": "adverb",
+      "active_value": 0
+    },
+    {
+      "item_id": 10008,
+      "lemma": "então",
+      "correct_answer": "тогда",
+      "pos": "adverb",
+      "active_value": 0
+    }
+  ],
+  "active_total_after": 2131,
+  "utc_timestamp": "2026-03-19T16:41:23.952008+00:00"
+}

@@ -1,0 +1,13 @@
+{
+  "db": "/home/andrey/Projects/lingua_bot_v2/data/lingua_staging.db",
+  "active_total": 2151,
+  "candidate_count": 116,
+  "reason_counts": {
+    "short_choice_pack": 96,
+    "awkward_ru_gloss": 2,
+    "functionish_surface": 15,
+    "proper_name_like": 3
+  },
+  "csv": "/home/andrey/Projects/lingua_bot_v2/data/master_source_v1/processed/staging_build_hard_deactivate_candidates_wave2/hard_deactivate_candidates_wave2.csv",
+  "utc_timestamp": "2026-03-19T16:37:23.698525+00:00"
+}
