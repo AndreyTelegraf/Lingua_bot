@@ -1,0 +1,264 @@
+{
+  "status": "ok",
+  "raw_source": "/home/andrey/Projects/lingua_bot_v2/data/community_waves/wave_v5_raw/community_replenishment_wave_v5_raw.jsonl",
+  "active_count_before": 45,
+  "candidate_count": 28,
+  "selected_count": 16,
+  "selected_topics": {
+    "culture": 2,
+    "work": 1,
+    "health": 3,
+    "food": 3,
+    "services": 1,
+    "transport": 1,
+    "bureaucracy": 2,
+    "documents": 2,
+    "financas": 1
+  },
+  "selected_formats": {
+    "nuance": 5,
+    "dialogue": 6,
+    "local": 5
+  },
+  "selected_first1": {
+    "какими": 2,
+    "какой": 4,
+    "в": 5,
+    "о": 1,
+    "как": 2,
+    "какая": 2
+  },
+  "projected_first1_after_apply": {
+    "в": 12,
+    "как": 12,
+    "какая": 5,
+    "какими": 7,
+    "какой": 9,
+    "о": 3,
+    "чем": 4,
+    "что": 9
+  },
+  "rejection_reason_counts": {
+    "merged_first1_cap": 2
+  },
+  "rejection_examples": {
+    "merged_first1_cap": [
+      {
+        "scenario_id": "mechanic_budget_cap",
+        "text": "Какой вариант здесь звучит естественно, если заранее обозначить предел бюджета на ремонт и попросить согласовывать все сверх этой суммы, чтобы это звучало нормально, по-человечески, без войны?",
+        "first1": "какой"
+      },
+      {
+        "scenario_id": "work_deadline_shift",
+        "text": "Какой вариант здесь звучит естественно, если попросить сдвинуть дедлайн, не выглядя человеком, который просто слился, чтобы это звучало рабоче, внятно, без нытья?",
+        "first1": "какой"
+      }
+    ]
+  },
+  "targets_v5": {
+    "target_new_items": 16,
+    "hard_block_first3": [
+      "что обычно говорят",
+      "что обычно спрашивают"
+    ],
+    "soft_block_first2": [
+      "как здесь",
+      "как мягко",
+      "что обычно"
+    ]
+  },
+  "head": [
+    {
+      "scenario_id": "school_late_reply",
+      "topic": "culture",
+      "format_type": "nuance",
+      "opening_family": "Какими словами лучше сказать, когда",
+      "context": "в чате школы",
+      "intent": "дожать до конкретики",
+      "review_action": "",
+      "review_note": "",
+      "text": "Какими словами лучше сказать, когда школа ответила расплывчато, и нужно вежливо дожать до конкретного ответа по времени и формату встречи, чтобы это звучало вежливо, но не ватно?",
+      "first1": "какими"
+    },
+    {
+      "scenario_id": "school_late_reply",
+      "topic": "culture",
+      "format_type": "nuance",
+      "opening_family": "Какой оборот здесь звучит естественно, если",
+      "context": "в чате школы",
+      "intent": "дожать до конкретики",
+      "review_action": "",
+      "review_note": "",
+      "text": "Какой оборот здесь звучит естественно, если школа ответила расплывчато, и нужно вежливо дожать до конкретного ответа по времени и формату встречи, чтобы это звучало вежливо, но не ватно?",
+      "first1": "какой"
+    },
+    {
+      "scenario_id": "work_deadline_shift",
+      "topic": "work",
+      "format_type": "dialogue",
+      "opening_family": "Какими словами лучше сказать, когда",
+      "context": "в рабочем чате",
+      "intent": "мягко попросить перенос срока",
+      "review_action": "",
+      "review_note": "",
+      "text": "Какими словами лучше сказать, когда попросить сдвинуть дедлайн, не выглядя человеком, который просто слился, чтобы это звучало рабоче, внятно, без нытья?",
+      "first1": "какими"
+    },
+    {
+      "scenario_id": "pharmacy_generic_ask",
+      "topic": "health",
+      "format_type": "local",
+      "opening_family": "В какой форме лучше спросить, если",
+      "context": "в аптеке",
+      "intent": "спросить про более дешевый аналог",
+      "review_action": "",
+      "review_note": "",
+      "text": "В какой форме лучше спросить, если нужно уточнить, есть ли более дешевый аналог, не звуча так, будто вы торгуетесь за картошку, чтобы это звучало спокойно, бытово, без кринжа?",
+      "first1": "в"
+    },
+    {
+      "scenario_id": "pharmacy_generic_ask",
+      "topic": "health",
+      "format_type": "local",
+      "opening_family": "Какой оборот здесь звучит естественно, если",
+      "context": "в аптеке",
+      "intent": "спросить про более дешевый аналог",
+      "review_action": "",
+      "review_note": "",
+      "text": "Какой оборот здесь звучит естественно, если нужно уточнить, есть ли более дешевый аналог, не звуча так, будто вы торгуетесь за картошку, чтобы это звучало спокойно, бытово, без кринжа?",
+      "first1": "какой"
+    },
+    {
+      "scenario_id": "health_center_registration",
+      "topic": "health",
+      "format_type": "dialogue",
+      "opening_family": "О чем обычно уточняют, если",
+      "context": "в centro de saúde",
+      "intent": "уточнить запись и список нужных документов",
+      "review_action": "",
+      "review_note": "",
+      "text": "О чем обычно уточняют, если нужно понять, можно ли записаться без лишнего круга ада и что для этого нужно принести, чтобы это звучало по делу, без канцелярщины?",
+      "first1": "о"
+    },
+    {
+      "scenario_id": "restaurant_split_bill",
+      "topic": "food",
+      "format_type": "local",
+      "opening_family": "Как в разговоре обычно скажут, если",
+      "context": "в ресторане",
+      "intent": "уточнить split bill",
+      "review_action": "",
+      "review_note": "",
+      "text": "Как в разговоре обычно скажут, если нужно без неловкости спросить, можно ли разделить счет на нескольких людей, чтобы это звучало просто и естественно?",
+      "first1": "как"
+    },
+    {
+      "scenario_id": "restaurant_split_bill",
+      "topic": "food",
+      "format_type": "local",
+      "opening_family": "Какая фраза здесь звучит живо, когда",
+      "context": "в ресторане",
+      "intent": "уточнить split bill",
+      "review_action": "",
+      "review_note": "",
+      "text": "Какая фраза здесь звучит живо, когда нужно без неловкости спросить, можно ли разделить счет на нескольких людей, чтобы это звучало просто и естественно?",
+      "first1": "какая"
+    },
+    {
+      "scenario_id": "cafe_wifi_password",
+      "topic": "food",
+      "format_type": "dialogue",
+      "opening_family": "Как в разговоре обычно скажут, если",
+      "context": "в кафе",
+      "intent": "спросить пароль от wi-fi",
+      "review_action": "",
+      "review_note": "",
+      "text": "Как в разговоре обычно скажут, если быстро и нормально спросить пароль от wi-fi, не устраивая мини-церемонию, чтобы это звучало коротко, просто, живо?",
+      "first1": "как"
+    },
+    {
+      "scenario_id": "package_redelivery",
+      "topic": "services",
+      "format_type": "dialogue",
+      "opening_family": "В какой форме лучше спросить, если",
+      "context": "в сервисе доставки",
+      "intent": "перенести доставку",
+      "review_action": "",
+      "review_note": "",
+      "text": "В какой форме лучше спросить, если курьер не застал дома, и нужно спросить, можно ли быстро перенести доставку на другой день, чтобы это звучало нормально, коротко, без беспомощности?",
+      "first1": "в"
+    },
+    {
+      "scenario_id": "bus_ticket_confusion",
+      "topic": "transport",
+      "format_type": "local",
+      "opening_family": "Какая фраза здесь звучит живо, когда",
+      "context": "на автовокзале",
+      "intent": "уточнить валидность билета",
+      "review_action": "",
+      "review_note": "",
+      "text": "Какая фраза здесь звучит живо, когда нужно быстро переспросить, подходит ли этот билет на ближайший автобус или нужен другой, чтобы это звучало коротко и без тормозов?",
+      "first1": "какая"
+    },
+    {
+      "scenario_id": "municipality_doc_copy",
+      "topic": "bureaucracy",
+      "format_type": "nuance",
+      "opening_family": "В какой форме лучше спросить, если",
+      "context": "в Câmara",
+      "intent": "уточнить копия или оригинал",
+      "review_action": "",
+      "review_note": "",
+      "text": "В какой форме лучше спросить, если нужно уточнить, подойдет ли копия документа или нужен именно оригинал, чтобы это звучало по делу, без канцелярского припадка?",
+      "first1": "в"
+    },
+    {
+      "scenario_id": "municipality_doc_copy",
+      "topic": "bureaucracy",
+      "format_type": "nuance",
+      "opening_family": "Какой оборот здесь звучит естественно, если",
+      "context": "в Câmara",
+      "intent": "уточнить копия или оригинал",
+      "review_action": "",
+      "review_note": "",
+      "text": "Какой оборот здесь звучит естественно, если нужно уточнить, подойдет ли копия документа или нужен именно оригинал, чтобы это звучало по делу, без канцелярского припадка?",
+      "first1": "какой"
+    },
+    {
+      "scenario_id": "document_pickup_delay",
+      "topic": "documents",
+      "format_type": "dialogue",
+      "opening_family": "В какой форме лучше спросить, если",
+      "context": "в AIMA",
+      "intent": "попросить внятный статус по документу",
+      "review_action": "",
+      "review_note": "",
+      "text": "В какой форме лучше спросить, если срок уже вышел, а документ так и не готов, и нужно вежливо, но ясно попросить статус, чтобы это звучало спокойно, настойчиво, по сути?",
+      "first1": "в"
+    },
+    {
+      "scenario_id": "document_pickup_delay",
+      "topic": "documents",
+      "format_type": "dialogue",
+      "opening_family": "Какой вариант здесь звучит естественно, если",
+      "context": "в AIMA",
+      "intent": "попросить внятный статус по документу",
+      "review_action": "",
+      "review_note": "",
+      "text": "Какой вариант здесь звучит естественно, если срок уже вышел, а документ так и не готов, и нужно вежливо, но ясно попросить статус, чтобы это звучало спокойно, настойчиво, по сути?",
+      "first1": "какой"
+    },
+    {
+      "scenario_id": "financas_missing_step",
+      "topic": "financas",
+      "format_type": "nuance",
+      "opening_family": "В какой форме лучше спросить, если",
+      "context": "в Finanças",
+      "intent": "уточнить следующий конкретный шаг",
+      "review_action": "",
+      "review_note": "",
+      "text": "В какой форме лучше спросить, если после объяснения все равно непонятно, какой именно следующий шаг нужен прямо сейчас, чтобы это звучало ясно и без бюрократического тумана?",
+      "first1": "в"
+    }
+  ]
+}
