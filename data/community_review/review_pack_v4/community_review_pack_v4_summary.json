@@ -1,0 +1,142 @@
+{
+  "status": "ok",
+  "raw_source": "/home/andrey/Projects/lingua_bot_v2/data/community_waves/wave_v4_raw/community_replenishment_wave_v3.jsonl",
+  "raw_count": 16,
+  "selected_count": 13,
+  "merged_first1_cap": 13,
+  "selected_first1": {
+    "какими": 1,
+    "в": 3,
+    "о": 1,
+    "какая": 1,
+    "какой": 2,
+    "как": 1,
+    "что": 4
+  },
+  "selected_topics": {
+    "work": 1,
+    "services": 2,
+    "financas": 2,
+    "shopping": 1,
+    "documents": 1,
+    "bureaucracy": 1,
+    "housing": 1,
+    "food": 2,
+    "culture": 1,
+    "transport": 1
+  },
+  "selected_formats": {
+    "dialogue": 8,
+    "nuance": 3,
+    "local": 2
+  },
+  "merged_projection_first1": {
+    "что": 13,
+    "какими": 5,
+    "как": 10,
+    "чем": 4,
+    "в": 7,
+    "о": 2,
+    "какой": 5,
+    "какая": 3
+  },
+  "rejected_by_cap_head": [],
+  "paths": {
+    "jsonl": "/home/andrey/Projects/lingua_bot_v2/data/community_waves/wave_v4/community_replenishment_wave_v4_constrained.jsonl",
+    "tsv": "/home/andrey/Projects/lingua_bot_v2/data/community_waves/wave_v4/community_replenishment_wave_v4_constrained.tsv",
+    "review_tsv": "/home/andrey/Projects/lingua_bot_v2/data/community_review/review_pack_v4/community_review_pack_v4.tsv"
+  },
+  "head": [
+    {
+      "scenario_id": "work_deadline_shift",
+      "topic": "work",
+      "format_type": "dialogue",
+      "opening_family": "Какими словами лучше сказать, когда",
+      "text": "Какими словами лучше сказать, когда нужно попросить сдвинуть дедлайн, не выглядя человеком, который просто слился?"
+    },
+    {
+      "scenario_id": "package_redelivery",
+      "topic": "services",
+      "format_type": "dialogue",
+      "opening_family": "В какой форме лучше спросить, если",
+      "text": "В какой форме лучше спросить, если курьер не застал дома, и нужно спросить, можно ли быстро перенести доставку на другой день?"
+    },
+    {
+      "scenario_id": "bank_fee_clarify",
+      "topic": "financas",
+      "format_type": "dialogue",
+      "opening_family": "О чём обычно уточняют, если",
+      "text": "О чём обычно уточняют, если выплыла непонятная комиссия, и нужно спокойно попросить объяснить, за что именно её взяли, если хочется сказать это по-человечески?"
+    },
+    {
+      "scenario_id": "supermarket_refund",
+      "topic": "shopping",
+      "format_type": "dialogue",
+      "opening_family": "Какая фраза здесь звучит естественно, когда",
+      "text": "Какая фраза здесь звучит естественно, когда нужно спокойно спросить, можно ли вернуть товар или хотя бы обменять его без лишней драмы, если хочется сказать это по-человечески?"
+    },
+    {
+      "scenario_id": "document_pickup_delay",
+      "topic": "documents",
+      "format_type": "dialogue",
+      "opening_family": "Какой вариант здесь звучит естественно, если",
+      "text": "Какой вариант здесь звучит естественно, если срок уже вышел, а документ так и не готов, и нужно вежливо, но ясно попросить статус?"
+    },
+    {
+      "scenario_id": "municipality_doc_copy",
+      "topic": "bureaucracy",
+      "format_type": "nuance",
+      "opening_family": "В какой форме лучше спросить, если",
+      "text": "В какой форме лучше спросить, если нужно уточнить, подойдёт ли копия документа или нужен именно оригинал, чтобы это звучало естественно и без канцелярита?"
+    },
+    {
+      "scenario_id": "rent_raise_pushback_soft",
+      "topic": "housing",
+      "format_type": "dialogue",
+      "opening_family": "В какой форме лучше спросить, если",
+      "text": "В какой форме лучше спросить, если хозяин поднимает аренду, и нужно мягко уточнить, на чём основана новая сумма и можно ли это обсудить, чтобы это звучало естественно и без канцелярита?"
+    },
+    {
+      "scenario_id": "financas_missing_step",
+      "topic": "financas",
+      "format_type": "nuance",
+      "opening_family": "Какой оборот здесь звучит естественно, если",
+      "text": "Какой оборот здесь звучит естественно, если после объяснения всё равно непонятно, какой именно следующий шаг нужен прямо сейчас?"
+    },
+    {
+      "scenario_id": "cafe_wifi_password",
+      "topic": "food",
+      "format_type": "dialogue",
+      "opening_family": "Как в разговоре обычно скажут, если",
+      "text": "Как в разговоре обычно скажут, если нужно быстро и нормально спросить пароль от wi-fi, не устраивая мини-церемонию, чтобы это звучало естественно и без канцелярита?"
+    },
+    {
+      "scenario_id": "school_late_reply",
+      "topic": "culture",
+      "format_type": "nuance",
+      "opening_family": "Что обычно говорят, если",
+      "text": "Что обычно говорят, если школа ответила расплывчато, и нужно вежливо дожать до конкретного ответа по времени и формату встречи, если хочется сказать это по-человечески?"
+    },
+    {
+      "scenario_id": "mechanic_budget_cap",
+      "topic": "services",
+      "format_type": "dialogue",
+      "opening_family": "Что обычно говорят, когда",
+      "text": "Что обычно говорят, когда нужно заранее обозначить предел бюджета на ремонт и попросить согласовывать всё сверх этой суммы?"
+    },
+    {
+      "scenario_id": "restaurant_split_bill",
+      "topic": "food",
+      "format_type": "local",
+      "opening_family": "Что обычно спрашивают, когда",
+      "text": "Что обычно спрашивают, когда нужно без неловкости спросить, можно ли разделить счёт на нескольких людей, если хочется сказать это по-человечески?"
+    },
+    {
+      "scenario_id": "bus_ticket_confusion",
+      "topic": "transport",
+      "format_type": "local",
+      "opening_family": "Что обычно спрашивают, когда",
+      "text": "Что обычно спрашивают, когда нужно быстро переспросить, подходит ли этот билет на ближайший автобус или нужен другой, если хочется сказать это по-человечески?"
+    }
+  ]
+}

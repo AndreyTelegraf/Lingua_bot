@@ -1,0 +1,265 @@
+{
+  "status": "ok",
+  "active_count": 36,
+  "current": {
+    "formats": {
+      "nuance": 11,
+      "local": 13,
+      "dialogue": 12
+    },
+    "topics": {
+      "housing": 6,
+      "shopping": 4,
+      "bureaucracy": 4,
+      "health": 3,
+      "documents": 4,
+      "transport": 4,
+      "services": 3,
+      "financas": 3,
+      "culture": 1,
+      "work": 1,
+      "food": 3
+    },
+    "first1": [
+      {
+        "key": "что",
+        "count": 9,
+        "share": 0.25
+      },
+      {
+        "key": "как",
+        "count": 9,
+        "share": 0.25
+      },
+      {
+        "key": "какими",
+        "count": 4,
+        "share": 0.1111
+      },
+      {
+        "key": "чем",
+        "count": 4,
+        "share": 0.1111
+      },
+      {
+        "key": "в",
+        "count": 4,
+        "share": 0.1111
+      },
+      {
+        "key": "какой",
+        "count": 3,
+        "share": 0.0833
+      },
+      {
+        "key": "какая",
+        "count": 2,
+        "share": 0.0556
+      },
+      {
+        "key": "о",
+        "count": 1,
+        "share": 0.0278
+      }
+    ],
+    "first2": [
+      {
+        "key": "что обычно",
+        "count": 9,
+        "share": 0.25
+      },
+      {
+        "key": "какими словами",
+        "count": 4,
+        "share": 0.1111
+      },
+      {
+        "key": "в какой",
+        "count": 4,
+        "share": 0.1111
+      },
+      {
+        "key": "как в",
+        "count": 3,
+        "share": 0.0833
+      },
+      {
+        "key": "как мягко",
+        "count": 3,
+        "share": 0.0833
+      },
+      {
+        "key": "чем в",
+        "count": 3,
+        "share": 0.0833
+      },
+      {
+        "key": "как здесь",
+        "count": 3,
+        "share": 0.0833
+      },
+      {
+        "key": "какой вариант",
+        "count": 2,
+        "share": 0.0556
+      },
+      {
+        "key": "какая фраза",
+        "count": 2,
+        "share": 0.0556
+      },
+      {
+        "key": "чем люди",
+        "count": 1,
+        "share": 0.0278
+      },
+      {
+        "key": "о чём",
+        "count": 1,
+        "share": 0.0278
+      },
+      {
+        "key": "какой оборот",
+        "count": 1,
+        "share": 0.0278
+      }
+    ],
+    "first3": [
+      {
+        "key": "что обычно говорят",
+        "count": 6,
+        "share": 0.1667
+      },
+      {
+        "key": "в какой форме",
+        "count": 4,
+        "share": 0.1111
+      },
+      {
+        "key": "какими словами лучше",
+        "count": 3,
+        "share": 0.0833
+      },
+      {
+        "key": "чем в обычной",
+        "count": 3,
+        "share": 0.0833
+      },
+      {
+        "key": "как здесь правильно",
+        "count": 3,
+        "share": 0.0833
+      },
+      {
+        "key": "как мягко уточнить",
+        "count": 2,
+        "share": 0.0556
+      },
+      {
+        "key": "что обычно спрашивают",
+        "count": 2,
+        "share": 0.0556
+      },
+      {
+        "key": "какой вариант здесь",
+        "count": 2,
+        "share": 0.0556
+      },
+      {
+        "key": "какая фраза здесь",
+        "count": 2,
+        "share": 0.0556
+      },
+      {
+        "key": "как в разговоре",
+        "count": 2,
+        "share": 0.0556
+      },
+      {
+        "key": "как в португалии",
+        "count": 1,
+        "share": 0.0278
+      },
+      {
+        "key": "как мягко сказать",
+        "count": 1,
+        "share": 0.0278
+      },
+      {
+        "key": "чем люди обычно",
+        "count": 1,
+        "share": 0.0278
+      },
+      {
+        "key": "какими словами аккуратно",
+        "count": 1,
+        "share": 0.0278
+      },
+      {
+        "key": "о чём обычно",
+        "count": 1,
+        "share": 0.0278
+      },
+      {
+        "key": "какой оборот здесь",
+        "count": 1,
+        "share": 0.0278
+      },
+      {
+        "key": "что обычно уточняют",
+        "count": 1,
+        "share": 0.0278
+      }
+    ]
+  },
+  "targets_v4": {
+    "active_count_min": 60,
+    "active_count_target": 72,
+    "active_count_max_soft": 80,
+    "max_first1_share": 0.25,
+    "priority_surface_families": [
+      "в какой",
+      "чем",
+      "какими словами",
+      "какой вариант",
+      "какая фраза",
+      "о чём"
+    ],
+    "deprioritized_surface_families": [
+      "как",
+      "что обычно"
+    ],
+    "format_growth_targets": {
+      "local": {
+        "current": 13,
+        "target_min": 20
+      },
+      "dialogue": {
+        "current": 12,
+        "target_min": 20
+      },
+      "nuance": {
+        "current": 11,
+        "target_min": 20
+      }
+    },
+    "topic_growth_priority": [
+      "culture",
+      "work",
+      "services",
+      "health",
+      "financas",
+      "food",
+      "shopping",
+      "transport",
+      "documents",
+      "bureaucracy",
+      "housing"
+    ],
+    "notes": [
+      "do not touch runtime or selector",
+      "wave v4 should be reviewed/imported separately",
+      "avoid converting bank into a new 'что обычно' monoculture"
+    ]
+  }
+}
