@@ -1,0 +1,55 @@
+{
+  "smoke_time": "23:19",
+  "target_chats": [
+    {
+      "chat_key": "chatalgarve",
+      "chat_id": -1001690275466,
+      "is_enabled": 1,
+      "daily_post_time": "23:19",
+      "last_posted_at": null
+    },
+    {
+      "chat_key": "chatleiria",
+      "chat_id": -1001227461571,
+      "is_enabled": 1,
+      "daily_post_time": "23:19",
+      "last_posted_at": null
+    },
+    {
+      "chat_key": "chatlisboa",
+      "chat_id": -1001656765898,
+      "is_enabled": 1,
+      "daily_post_time": "23:19",
+      "last_posted_at": null
+    },
+    {
+      "chat_key": "chatporto",
+      "chat_id": -1001719116315,
+      "is_enabled": 1,
+      "daily_post_time": "23:19",
+      "last_posted_at": null
+    }
+  ],
+  "flags": [
+    {
+      "key": "default_mode",
+      "value_text": "A",
+      "updated_at": "2026-03-19 23:19:23"
+    },
+    {
+      "key": "dry_run_override",
+      "value_text": "1",
+      "updated_at": "2026-03-19 23:19:23"
+    },
+    {
+      "key": "followups_enabled",
+      "value_text": "0",
+      "updated_at": "2026-03-19 23:19:23"
+    },
+    {
+      "key": "global_enabled",
+      "value_text": "1",
+      "updated_at": "2026-03-19 23:19:23"
+    }
+  ]
+}

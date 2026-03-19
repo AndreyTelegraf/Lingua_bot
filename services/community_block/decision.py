@@ -36,6 +36,7 @@ def choose_post_candidate(
     chat: dict,
     recent_messages_count: int = 0,
     dry_run: bool = True,
+    exclude_content_ids: set[int] | None = None,
 ) -> CommunityDecision:
     chat_id = int(chat["chat_id"])
 
@@ -91,6 +92,7 @@ def choose_post_candidate(
         conn,
         chat_id=chat_id,
     )
+    excluded_content_ids = exclude_content_ids or set()
 
     def _format_allowed(format_type: str) -> bool:
         return repo.count_recent_format_type_usage(
@@ -104,6 +106,7 @@ def choose_post_candidate(
         candidate
         for candidate in candidates
         if int(candidate["id"]) not in used_content_ids
+        and int(candidate["id"]) not in excluded_content_ids
         and _format_allowed(str(candidate["format_type"]))
     ]
     if never_used_candidates:
@@ -120,7 +123,8 @@ def choose_post_candidate(
     reusable_candidates = [
         candidate
         for candidate in candidates
-        if _format_allowed(str(candidate["format_type"]))
+        if int(candidate["id"]) not in excluded_content_ids
+        and _format_allowed(str(candidate["format_type"]))
     ]
     if reusable_candidates:
         candidate = reusable_candidates[0]
@@ -140,7 +144,8 @@ def choose_post_candidate(
             region=chat.get("region"),
             excluded_format_type=None,
         )
-        if _format_allowed(str(candidate["format_type"]))
+        if int(candidate["id"]) not in excluded_content_ids
+        and _format_allowed(str(candidate["format_type"]))
     ]
     if fallback_candidates:
         candidate = fallback_candidates[0]

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+import os
 import sqlite3
 import sys
 from pathlib import Path
@@ -19,15 +20,37 @@ from services.community_block import repo
 from services.community_block.sender import send_post
 
 
+def load_env_file(path: str | None) -> None:
+    if not path:
+        return
+    env_path = Path(path)
+    if not env_path.exists():
+        raise RuntimeError(f"env file not found: {env_path}")
+    for line in env_path.read_text(encoding="utf-8").splitlines():
+        s = line.strip()
+        if not s or s.startswith("#") or "=" not in s:
+            continue
+        k, v = s.split("=", 1)
+        os.environ[k.strip()] = v.strip()
+
+
+def resolve_db_path(explicit_db: str | None, settings) -> str:
+    return explicit_db or str(settings.db_path)
+
+
 async def amain() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--chat-key", required=True)
     parser.add_argument("--content-id", type=int, default=None)
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--db", default=None)
+    parser.add_argument("--env-file", default=None)
     args = parser.parse_args()
 
+    load_env_file(args.env_file)
     settings = get_settings()
-    conn = sqlite3.connect(settings.db_path)
+    db_path = resolve_db_path(args.db, settings)
+    conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
 
     try:

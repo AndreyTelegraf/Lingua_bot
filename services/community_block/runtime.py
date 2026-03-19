@@ -73,6 +73,7 @@ async def _maybe_send_scheduled_posts(*, dry_run_default: bool) -> None:
             return
 
         bot: Bot | None = None
+        selected_content_ids_for_tick: set[int] = set()
         try:
             for chat in all_chats:
                 gate = should_post_now(
@@ -111,6 +112,7 @@ async def _maybe_send_scheduled_posts(*, dry_run_default: bool) -> None:
                     chat=chat,
                     recent_messages_count=0,
                     dry_run=effective_dry_run,
+                    exclude_content_ids=selected_content_ids_for_tick,
                 )
                 log.info(
                     "community_decision",
@@ -137,6 +139,8 @@ async def _maybe_send_scheduled_posts(*, dry_run_default: bool) -> None:
                         content_id=decision.content_id,
                     )
                     continue
+
+                selected_content_ids_for_tick.add(int(content["id"]))
 
                 if effective_dry_run:
                     log.info(
