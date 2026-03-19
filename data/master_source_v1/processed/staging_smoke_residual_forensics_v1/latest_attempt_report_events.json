@@ -1,0 +1,24 @@
+[
+  {
+    "id": 80,
+    "attempt_id": 2,
+    "user_id": 1,
+    "event_type": "item_reported",
+    "step_index": 25,
+    "item_id": 3393,
+    "reason_code": "user_reported_item",
+    "payload_json": "{\"callback_token\": \"v2:25:3393\"}",
+    "created_at": "2026-03-19 13:54:35"
+  },
+  {
+    "id": 35,
+    "attempt_id": 2,
+    "user_id": 1,
+    "event_type": "item_reported",
+    "step_index": 10,
+    "item_id": 3366,
+    "reason_code": "user_reported_item",
+    "payload_json": "{\"callback_token\": \"v2:10:3366\"}",
+    "created_at": "2026-03-19 13:53:48"
+  }
+]

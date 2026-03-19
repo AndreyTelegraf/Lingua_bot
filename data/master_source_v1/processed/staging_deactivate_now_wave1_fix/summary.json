@@ -1,0 +1,75 @@
+{
+  "db": "/home/andrey/Projects/lingua_bot_v2/data/lingua_staging.db",
+  "backup": "/home/andrey/Projects/lingua_bot_v2/data/master_source_v1/processed/staging_deactivate_now_wave1_fix/lingua_staging.before_deactivate_now_wave1_fix.20260319T112358Z.db",
+  "pk_col": "id",
+  "active_col": "is_active",
+  "lemma_col": "lemma",
+  "correct_col": "correct_answer",
+  "choices_col": null,
+  "columns": [
+    "id",
+    "lemma",
+    "question_text",
+    "correct_answer",
+    "difficulty_band",
+    "lexical_band",
+    "pos",
+    "topic_tag",
+    "is_active",
+    "created_at",
+    "updated_at",
+    "freq_rank",
+    "level",
+    "bin_name",
+    "cefr_estimate",
+    "concept_group"
+  ],
+  "before": [
+    {
+      "pk": 973,
+      "lemma": "armamento",
+      "correct_answer": "вооружения",
+      "active_before": 1,
+      "choices": null,
+      "reason": "correct_not_in_choices"
+    },
+    {
+      "pk": 2027,
+      "lemma": "músculo",
+      "correct_answer": "мышцы",
+      "active_before": 1,
+      "choices": null,
+      "reason": "correct_not_in_choices"
+    },
+    {
+      "pk": 3479,
+      "lemma": "bangladesh",
+      "correct_answer": "бангладеш",
+      "active_before": 1,
+      "choices": null,
+      "reason": "proper_name_like"
+    }
+  ],
+  "after": [
+    {
+      "pk": 973,
+      "active_value": 0,
+      "lemma": "armamento",
+      "correct_answer": "вооружения"
+    },
+    {
+      "pk": 2027,
+      "active_value": 0,
+      "lemma": "músculo",
+      "correct_answer": "мышцы"
+    },
+    {
+      "pk": 3479,
+      "active_value": 0,
+      "lemma": "bangladesh",
+      "correct_answer": "бангладеш"
+    }
+  ],
+  "active_total_after": 2205,
+  "utc_timestamp": "2026-03-19T11:23:59.294633+00:00"
+}

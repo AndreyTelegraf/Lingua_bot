@@ -1,0 +1,25 @@
+{
+  "db": "/home/andrey/Projects/lingua_bot_v2/data/lingua_staging.db",
+  "input_csv": "/home/andrey/Projects/lingua_bot_v2/data/master_source_v1/processed/staging_review_autocluster_wave1/review_autocluster_high.csv",
+  "rows_total": 42,
+  "choice_table_candidates": [
+    "vocab_choices"
+  ],
+  "meta_table_candidates": [],
+  "auto_bucket_counts": {
+    "needs_human": 24,
+    "repair_first": 17,
+    "semantic_review": 1
+  },
+  "suggested_action_counts": {
+    "manual_review": 24,
+    "candidate_repair_or_deactivate": 17,
+    "candidate_manual_semantic_review": 1
+  },
+  "reason_code_counts": {
+    "suspicious_pos_or_surface": 18,
+    "multiword_answer": 17,
+    "functionish_lemma": 11
+  },
+  "utc_timestamp": "2026-03-19T12:34:52.515819+00:00"
+}

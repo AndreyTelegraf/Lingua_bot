@@ -1,0 +1,24 @@
+{
+  "db": "/home/andrey/Projects/lingua_bot_v2/data/lingua_staging.db",
+  "input_csv": "/home/andrey/Projects/lingua_bot_v2/data/master_source_v1/processed/staging_review_autocluster_wave1/review_autocluster_uncategorized.csv",
+  "rows_total": 120,
+  "bucket_counts": {
+    "legacy_manual_review": 111,
+    "repair_or_deactivate_legacy_phrase": 9
+  },
+  "action_counts": {
+    "manual_review": 111,
+    "repair_or_deactivate": 9
+  },
+  "source_family_counts": {
+    "pilot_safe": 62,
+    "enriched_qc": 56,
+    "kaikki": 2
+  },
+  "reason_code_counts": {
+    "legacy_source_family": 120,
+    "short_correct": 72,
+    "multiword_answer": 9
+  },
+  "utc_timestamp": "2026-03-19T13:09:04.089050+00:00"
+}

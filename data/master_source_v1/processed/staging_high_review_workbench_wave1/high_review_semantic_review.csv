@@ -1,0 +1,2 @@
+item_pk,lemma,correct_answer,pos,topic_tag,bin_name,freq_rank,is_active,high_cluster,source_family,has_choices,choice_count_unique,correct_in_choices,functionish_lemma,multiword_answer,suspicious_pos_or_surface,auto_bucket,suggested_action,reason_codes,choices_preview,meta_tables_hit
+10456,senão,предостережение,noun,,,3530,1,review_length_outlier_long_correct,empty,True,6,True,True,False,True,semantic_review,candidate_manual_semantic_review,functionish_lemma|suspicious_pos_or_surface,предостережение || часть || форма || случай || вопрос || ответ,

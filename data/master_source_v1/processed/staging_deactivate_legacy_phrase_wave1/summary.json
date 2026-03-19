@@ -1,0 +1,212 @@
+{
+  "db": "/home/andrey/Projects/lingua_bot_v2/data/lingua_staging.db",
+  "backup": "/home/andrey/Projects/lingua_bot_v2/data/master_source_v1/processed/staging_deactivate_legacy_phrase_wave1/lingua_staging.before_deactivate_legacy_phrase_wave1.20260319T132628Z.db",
+  "pk_col": "id",
+  "active_col": "is_active",
+  "targets_count": 9,
+  "source_family_counts": {
+    "enriched_qc": 5,
+    "pilot_safe": 4
+  },
+  "reason_code_counts": {
+    "multiword_answer": 9,
+    "legacy_source_family": 9
+  },
+  "item_pks": [
+    267,
+    495,
+    540,
+    672,
+    2463,
+    2501,
+    1863,
+    2475,
+    1643
+  ],
+  "before": [
+    {
+      "item_pk": 267,
+      "lemma": "aniversário",
+      "correct_answer": "день рождения",
+      "pos": "noun",
+      "topic_tag": "build:pilot_ptpt_001_pilot_safe",
+      "bin_name": "2K",
+      "freq_rank": 1003,
+      "active_value": 1,
+      "source_family": "pilot_safe",
+      "reason_codes": "multiword_answer|legacy_source_family",
+      "choices_preview": "девочка || жена || день рождения || остров || левый || разговор"
+    },
+    {
+      "item_pk": 495,
+      "lemma": "mapa",
+      "correct_answer": "географическая карта",
+      "pos": "noun",
+      "topic_tag": "build:pilot_ptpt_001_pilot_safe",
+      "bin_name": "2K",
+      "freq_rank": 1853,
+      "active_value": 1,
+      "source_family": "pilot_safe",
+      "reason_codes": "multiword_answer|legacy_source_family",
+      "choices_preview": "географическая карта || продукция || медицина || почитание || мост || финиш"
+    },
+    {
+      "item_pk": 540,
+      "lemma": "transmissão",
+      "correct_answer": "коробка передач",
+      "pos": "noun",
+      "topic_tag": "build:pilot_ptpt_001_pilot_safe",
+      "bin_name": "2K",
+      "freq_rank": 1998,
+      "active_value": 1,
+      "source_family": "pilot_safe",
+      "reason_codes": "multiword_answer|legacy_source_family",
+      "choices_preview": "лев || молния || сенат || коробка передач || кадр || сенатор"
+    },
+    {
+      "item_pk": 672,
+      "lemma": "veículo",
+      "correct_answer": "транспортное средство",
+      "pos": "noun",
+      "topic_tag": "build:pilot_ptpt_001_pilot_safe",
+      "bin_name": "5K",
+      "freq_rank": 2546,
+      "active_value": 1,
+      "source_family": "pilot_safe",
+      "reason_codes": "multiword_answer|legacy_source_family",
+      "choices_preview": "ресторан || сахар || транспортное средство || раса || актёр || страдание"
+    },
+    {
+      "item_pk": 2463,
+      "lemma": "soja",
+      "correct_answer": "соевые бобы",
+      "pos": "noun",
+      "topic_tag": "build:pilot_ptpt_001_enriched_qc",
+      "bin_name": "10K",
+      "freq_rank": 6478,
+      "active_value": 1,
+      "source_family": "enriched_qc",
+      "reason_codes": "multiword_answer|legacy_source_family",
+      "choices_preview": "игрушка || ксаверий || соевые бобы || яд || шут || пенис"
+    },
+    {
+      "item_pk": 2501,
+      "lemma": "taiwan",
+      "correct_answer": "китайская республика",
+      "pos": "noun",
+      "topic_tag": "build:pilot_ptpt_001_enriched_qc:deactivated_safe_cleanup",
+      "bin_name": "10K",
+      "freq_rank": 7476,
+      "active_value": 1,
+      "source_family": "enriched_qc",
+      "reason_codes": "multiword_answer|legacy_source_family",
+      "choices_preview": "близнецы || обрезки || преданность || сустав || залив || китайская республика"
+    },
+    {
+      "item_pk": 1863,
+      "lemma": "livraria",
+      "correct_answer": "книшный магазин",
+      "pos": "noun",
+      "topic_tag": "build:pilot_ptpt_001_enriched_qc:deactivated_semantic_suspect_20260311_133552",
+      "bin_name": "10K",
+      "freq_rank": 8358,
+      "active_value": 1,
+      "source_family": "enriched_qc",
+      "reason_codes": "multiword_answer|legacy_source_family",
+      "choices_preview": "чередование || попечение || галактика || заказ || судан || книшный магазин"
+    },
+    {
+      "item_pk": 2475,
+      "lemma": "submarino",
+      "correct_answer": "подводная лодка",
+      "pos": "noun",
+      "topic_tag": "build:pilot_ptpt_001_enriched_qc",
+      "bin_name": "10K",
+      "freq_rank": 8965,
+      "active_value": 1,
+      "source_family": "enriched_qc",
+      "reason_codes": "multiword_answer|legacy_source_family",
+      "choices_preview": "шелк || прерия || сена || подводная лодка || треугольник || балкон"
+    },
+    {
+      "item_pk": 1643,
+      "lemma": "gaveta",
+      "correct_answer": "выдвижной ящик",
+      "pos": "noun",
+      "topic_tag": "build:pilot_ptpt_001_enriched_qc",
+      "bin_name": "20K",
+      "freq_rank": 11475,
+      "active_value": 1,
+      "source_family": "enriched_qc",
+      "reason_codes": "multiword_answer|legacy_source_family",
+      "choices_preview": "выдвижной ящик || снос || непал || директория || мученик || мали"
+    }
+  ],
+  "after": [
+    {
+      "item_pk": 267,
+      "lemma": "aniversário",
+      "correct_answer": "день рождения",
+      "pos": "noun",
+      "active_value": 0
+    },
+    {
+      "item_pk": 495,
+      "lemma": "mapa",
+      "correct_answer": "географическая карта",
+      "pos": "noun",
+      "active_value": 0
+    },
+    {
+      "item_pk": 540,
+      "lemma": "transmissão",
+      "correct_answer": "коробка передач",
+      "pos": "noun",
+      "active_value": 0
+    },
+    {
+      "item_pk": 672,
+      "lemma": "veículo",
+      "correct_answer": "транспортное средство",
+      "pos": "noun",
+      "active_value": 0
+    },
+    {
+      "item_pk": 2463,
+      "lemma": "soja",
+      "correct_answer": "соевые бобы",
+      "pos": "noun",
+      "active_value": 0
+    },
+    {
+      "item_pk": 2501,
+      "lemma": "taiwan",
+      "correct_answer": "китайская республика",
+      "pos": "noun",
+      "active_value": 0
+    },
+    {
+      "item_pk": 1863,
+      "lemma": "livraria",
+      "correct_answer": "книшный магазин",
+      "pos": "noun",
+      "active_value": 0
+    },
+    {
+      "item_pk": 2475,
+      "lemma": "submarino",
+      "correct_answer": "подводная лодка",
+      "pos": "noun",
+      "active_value": 0
+    },
+    {
+      "item_pk": 1643,
+      "lemma": "gaveta",
+      "correct_answer": "выдвижной ящик",
+      "pos": "noun",
+      "active_value": 0
+    }
+  ],
+  "active_total_after": 2178,
+  "utc_timestamp": "2026-03-19T13:26:28.943051+00:00"
+}

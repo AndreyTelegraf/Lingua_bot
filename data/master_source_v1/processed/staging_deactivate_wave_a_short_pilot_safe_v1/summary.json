@@ -1,0 +1,560 @@
+{
+  "db": "/home/andrey/Projects/lingua_bot_v2/data/lingua_staging.db",
+  "backup": "/home/andrey/Projects/lingua_bot_v2/data/master_source_v1/processed/staging_deactivate_wave_a_short_pilot_safe_v1/lingua_staging.before_deactivate_wave_a_short_pilot_safe_v1.20260319T133213Z.db",
+  "pk_col": "id",
+  "active_col": "is_active",
+  "targets_count": 24,
+  "source_family_counts": {
+    "pilot_safe": 24
+  },
+  "bin_counts": {
+    "2K": 13,
+    "1K": 11
+  },
+  "priority_reason_counts": {
+    "pilot_safe": 24,
+    "short_correct": 24,
+    "noun_short_answer": 24,
+    "hot_bin:2K": 13,
+    "freq<=2k": 13,
+    "hot_bin:1K": 11,
+    "freq<=1k": 11,
+    "odd_short_translation": 1
+  },
+  "item_pks": [
+    337,
+    58,
+    71,
+    81,
+    83,
+    95,
+    123,
+    125,
+    163,
+    178,
+    191,
+    265,
+    270,
+    285,
+    332,
+    361,
+    377,
+    385,
+    414,
+    434,
+    467,
+    491,
+    497,
+    535
+  ],
+  "before": [
+    {
+      "item_pk": 337,
+      "lemma": "olho",
+      "correct_answer": "око",
+      "pos": "noun",
+      "topic_tag": "build:pilot_ptpt_001_pilot_safe",
+      "bin_name": "2K",
+      "freq_rank": 1251,
+      "active_value": 1,
+      "source_family": "pilot_safe",
+      "priority_score": 160,
+      "priority_reasons": "pilot_safe|hot_bin:2K|short_correct|odd_short_translation|noun_short_answer|freq<=2k",
+      "choices_preview": "око || гостиница || обмен || память || отчёт || мусор"
+    },
+    {
+      "item_pk": 58,
+      "lemma": "mundo",
+      "correct_answer": "мир",
+      "pos": "noun",
+      "topic_tag": "build:pilot_ptpt_001_pilot_safe",
+      "bin_name": "1K",
+      "freq_rank": 81,
+      "active_value": 1,
+      "source_family": "pilot_safe",
+      "priority_score": 150,
+      "priority_reasons": "pilot_safe|hot_bin:1K|short_correct|noun_short_answer|freq<=1k",
+      "choices_preview": "мир || регион || континент || пространство || территория || район"
+    },
+    {
+      "item_pk": 71,
+      "lemma": "tipo",
+      "correct_answer": "тип",
+      "pos": "noun",
+      "topic_tag": "build:pilot_ptpt_001_pilot_safe",
+      "bin_name": "1K",
+      "freq_rank": 192,
+      "active_value": 1,
+      "source_family": "pilot_safe",
+      "priority_score": 150,
+      "priority_reasons": "pilot_safe|hot_bin:1K|short_correct|noun_short_answer|freq<=1k",
+      "choices_preview": "тип || страна || место || семья || президент || истина"
+    },
+    {
+      "item_pk": 81,
+      "lemma": "jogo",
+      "correct_answer": "игра",
+      "pos": "noun",
+      "topic_tag": "build:pilot_ptpt_001_pilot_safe",
+      "bin_name": "1K",
+      "freq_rank": 233,
+      "active_value": 1,
+      "source_family": "pilot_safe",
+      "priority_score": 150,
+      "priority_reasons": "pilot_safe|hot_bin:1K|short_correct|noun_short_answer|freq<=1k",
+      "choices_preview": "правительство || отец || музыка || мужчина || сделка || игра"
+    },
+    {
+      "item_pk": 83,
+      "lemma": "pai",
+      "correct_answer": "отец",
+      "pos": "noun",
+      "topic_tag": "build:pilot_ptpt_001_pilot_safe",
+      "bin_name": "1K",
+      "freq_rank": 240,
+      "active_value": 1,
+      "source_family": "pilot_safe",
+      "priority_score": 150,
+      "priority_reasons": "pilot_safe|hot_bin:1K|short_correct|noun_short_answer|freq<=1k",
+      "choices_preview": "правительство || мужчина || музыка || номер || вода || отец"
+    },
+    {
+      "item_pk": 95,
+      "lemma": "sul",
+      "correct_answer": "юг",
+      "pos": "noun",
+      "topic_tag": "build:pilot_ptpt_001_pilot_safe",
+      "bin_name": "1K",
+      "freq_rank": 291,
+      "active_value": 1,
+      "source_family": "pilot_safe",
+      "priority_score": 150,
+      "priority_reasons": "pilot_safe|hot_bin:1K|short_correct|noun_short_answer|freq<=1k",
+      "choices_preview": "закон || война || юг || зло || площадь || проект"
+    },
+    {
+      "item_pk": 123,
+      "lemma": "mão",
+      "correct_answer": "рука",
+      "pos": "noun",
+      "topic_tag": "build:pilot_ptpt_001_pilot_safe",
+      "bin_name": "1K",
+      "freq_rank": 451,
+      "active_value": 1,
+      "source_family": "pilot_safe",
+      "priority_score": 150,
+      "priority_reasons": "pilot_safe|hot_bin:1K|short_correct|noun_short_answer|freq<=1k",
+      "choices_preview": "производство || поле || общество || воспитание || рука || бумага"
+    },
+    {
+      "item_pk": 125,
+      "lemma": "paz",
+      "correct_answer": "мир",
+      "pos": "noun",
+      "topic_tag": "build:pilot_ptpt_001_pilot_safe",
+      "bin_name": "1K",
+      "freq_rank": 453,
+      "active_value": 1,
+      "source_family": "pilot_safe",
+      "priority_score": 150,
+      "priority_reasons": "pilot_safe|hot_bin:1K|short_correct|noun_short_answer|freq<=1k",
+      "choices_preview": "воспитание || мир || общество || перо || поле || господин"
+    },
+    {
+      "item_pk": 163,
+      "lemma": "visto",
+      "correct_answer": "виза",
+      "pos": "noun",
+      "topic_tag": "build:pilot_ptpt_001_pilot_safe",
+      "bin_name": "1K",
+      "freq_rank": 623,
+      "active_value": 1,
+      "source_family": "pilot_safe",
+      "priority_score": 150,
+      "priority_reasons": "pilot_safe|hot_bin:1K|short_correct|noun_short_answer|freq<=1k",
+      "choices_preview": "виза || игра || правительство || отец || мужчина || музыка"
+    },
+    {
+      "item_pk": 178,
+      "lemma": "sexo",
+      "correct_answer": "пол",
+      "pos": "noun",
+      "topic_tag": "build:pilot_ptpt_001_pilot_safe",
+      "bin_name": "1K",
+      "freq_rank": 678,
+      "active_value": 1,
+      "source_family": "pilot_safe",
+      "priority_score": 150,
+      "priority_reasons": "pilot_safe|hot_bin:1K|short_correct|noun_short_answer|freq<=1k",
+      "choices_preview": "воля || искусство || защита || испытание || пол || эпоха"
+    },
+    {
+      "item_pk": 191,
+      "lemma": "boca",
+      "correct_answer": "рот",
+      "pos": "noun",
+      "topic_tag": "build:pilot_ptpt_001_pilot_safe",
+      "bin_name": "1K",
+      "freq_rank": 735,
+      "active_value": 1,
+      "source_family": "pilot_safe",
+      "priority_score": 150,
+      "priority_reasons": "pilot_safe|hot_bin:1K|short_correct|noun_short_answer|freq<=1k",
+      "choices_preview": "рот || пламя || соль || ответ || республика || базар"
+    },
+    {
+      "item_pk": 265,
+      "lemma": "preço",
+      "correct_answer": "цена",
+      "pos": "noun",
+      "topic_tag": "build:pilot_ptpt_001_pilot_safe",
+      "bin_name": "1K",
+      "freq_rank": 996,
+      "active_value": 1,
+      "source_family": "pilot_safe",
+      "priority_score": 150,
+      "priority_reasons": "pilot_safe|hot_bin:1K|short_correct|noun_short_answer|freq<=1k",
+      "choices_preview": "кровать || качество || переезд || цена || муниципалитет || разрешение"
+    },
+    {
+      "item_pk": 270,
+      "lemma": "esposa",
+      "correct_answer": "жена",
+      "pos": "noun",
+      "topic_tag": "build:pilot_ptpt_001_pilot_safe",
+      "bin_name": "2K",
+      "freq_rank": 1010,
+      "active_value": 1,
+      "source_family": "pilot_safe",
+      "priority_score": 145,
+      "priority_reasons": "pilot_safe|hot_bin:2K|short_correct|noun_short_answer|freq<=2k",
+      "choices_preview": "разговор || жена || остров || день рождения || левый || девочка"
+    },
+    {
+      "item_pk": 285,
+      "lemma": "sonho",
+      "correct_answer": "сон",
+      "pos": "noun",
+      "topic_tag": "build:pilot_ptpt_001_pilot_safe",
+      "bin_name": "2K",
+      "freq_rank": 1058,
+      "active_value": 1,
+      "source_family": "pilot_safe",
+      "priority_score": 145,
+      "priority_reasons": "pilot_safe|hot_bin:2K|short_correct|noun_short_answer|freq<=2k",
+      "choices_preview": "восток || воссоединение || носок || парк || перевозка || сон"
+    },
+    {
+      "item_pk": 332,
+      "lemma": "bola",
+      "correct_answer": "мяч",
+      "pos": "noun",
+      "topic_tag": "build:pilot_ptpt_001_pilot_safe",
+      "bin_name": "2K",
+      "freq_rank": 1235,
+      "active_value": 1,
+      "source_family": "pilot_safe",
+      "priority_score": 145,
+      "priority_reasons": "pilot_safe|hot_bin:2K|short_correct|noun_short_answer|freq<=2k",
+      "choices_preview": "площадь || память || гостиница || мяч || королева || мусор"
+    },
+    {
+      "item_pk": 361,
+      "lemma": "espécie",
+      "correct_answer": "вид",
+      "pos": "noun",
+      "topic_tag": "build:pilot_ptpt_001_pilot_safe",
+      "bin_name": "2K",
+      "freq_rank": 1334,
+      "active_value": 1,
+      "source_family": "pilot_safe",
+      "priority_score": 145,
+      "priority_reasons": "pilot_safe|hot_bin:2K|short_correct|noun_short_answer|freq<=2k",
+      "choices_preview": "ключ || компьютер || эпизод || категория || вид || расстояние"
+    },
+    {
+      "item_pk": 377,
+      "lemma": "batalha",
+      "correct_answer": "бой",
+      "pos": "noun",
+      "topic_tag": "build:pilot_ptpt_001_pilot_safe",
+      "bin_name": "2K",
+      "freq_rank": 1382,
+      "active_value": 1,
+      "source_family": "pilot_safe",
+      "priority_score": 145,
+      "priority_reasons": "pilot_safe|hot_bin:2K|short_correct|noun_short_answer|freq<=2k",
+      "choices_preview": "бой || количество || торговля || раствор || адвокат || костюм"
+    },
+    {
+      "item_pk": 385,
+      "lemma": "teste",
+      "correct_answer": "тест",
+      "pos": "noun",
+      "topic_tag": "build:pilot_ptpt_001_pilot_safe",
+      "bin_name": "2K",
+      "freq_rank": 1412,
+      "active_value": 1,
+      "source_family": "pilot_safe",
+      "priority_score": 145,
+      "priority_reasons": "pilot_safe|hot_bin:2K|short_correct|noun_short_answer|freq<=2k",
+      "choices_preview": "страхование || брутальность || физика || помилование || тишина || тест"
+    },
+    {
+      "item_pk": 414,
+      "lemma": "peso",
+      "correct_answer": "вес",
+      "pos": "noun",
+      "topic_tag": "build:pilot_ptpt_001_pilot_safe",
+      "bin_name": "2K",
+      "freq_rank": 1549,
+      "active_value": 1,
+      "source_family": "pilot_safe",
+      "priority_score": 145,
+      "priority_reasons": "pilot_safe|hot_bin:2K|short_correct|noun_short_answer|freq<=2k",
+      "choices_preview": "вес || участник || роза || концепт || журналист || дождь"
+    },
+    {
+      "item_pk": 434,
+      "lemma": "lua",
+      "correct_answer": "луна",
+      "pos": "noun",
+      "topic_tag": "build:pilot_ptpt_001_pilot_safe",
+      "bin_name": "2K",
+      "freq_rank": 1619,
+      "active_value": 1,
+      "source_family": "pilot_safe",
+      "priority_score": 145,
+      "priority_reasons": "pilot_safe|hot_bin:2K|short_correct|noun_short_answer|freq<=2k",
+      "choices_preview": "луна || падение || переворот || крест || сопротивление || сектор"
+    },
+    {
+      "item_pk": 467,
+      "lemma": "posto",
+      "correct_answer": "азс",
+      "pos": "noun",
+      "topic_tag": "build:pilot_ptpt_001_pilot_safe",
+      "bin_name": "2K",
+      "freq_rank": 1722,
+      "active_value": 1,
+      "source_family": "pilot_safe",
+      "priority_score": 145,
+      "priority_reasons": "pilot_safe|hot_bin:2K|short_correct|noun_short_answer|freq<=2k",
+      "choices_preview": "мышление || спина || pаспределение || набла || молоко || азс"
+    },
+    {
+      "item_pk": 491,
+      "lemma": "cadeia",
+      "correct_answer": "цепь",
+      "pos": "noun",
+      "topic_tag": "build:pilot_ptpt_001_pilot_safe",
+      "bin_name": "2K",
+      "freq_rank": 1838,
+      "active_value": 1,
+      "source_family": "pilot_safe",
+      "priority_score": 145,
+      "priority_reasons": "pilot_safe|hot_bin:2K|short_correct|noun_short_answer|freq<=2k",
+      "choices_preview": "финиш || почитание || жара || цепь || обед || географическая карта"
+    },
+    {
+      "item_pk": 497,
+      "lemma": "ponte",
+      "correct_answer": "мост",
+      "pos": "noun",
+      "topic_tag": "build:pilot_ptpt_001_pilot_safe",
+      "bin_name": "2K",
+      "freq_rank": 1859,
+      "active_value": 1,
+      "source_family": "pilot_safe",
+      "priority_score": 145,
+      "priority_reasons": "pilot_safe|hot_bin:2K|short_correct|noun_short_answer|freq<=2k",
+      "choices_preview": "почитание || продукция || географическая карта || мост || медицина || финиш"
+    },
+    {
+      "item_pk": 535,
+      "lemma": "leão",
+      "correct_answer": "лев",
+      "pos": "noun",
+      "topic_tag": "build:pilot_ptpt_001_pilot_safe",
+      "bin_name": "2K",
+      "freq_rank": 1981,
+      "active_value": 1,
+      "source_family": "pilot_safe",
+      "priority_score": 145,
+      "priority_reasons": "pilot_safe|hot_bin:2K|short_correct|noun_short_answer|freq<=2k",
+      "choices_preview": "кадр || звезда || обсуждение || лев || независимость || молния"
+    }
+  ],
+  "after": [
+    {
+      "item_pk": 337,
+      "lemma": "olho",
+      "correct_answer": "око",
+      "pos": "noun",
+      "active_value": 0
+    },
+    {
+      "item_pk": 58,
+      "lemma": "mundo",
+      "correct_answer": "мир",
+      "pos": "noun",
+      "active_value": 0
+    },
+    {
+      "item_pk": 71,
+      "lemma": "tipo",
+      "correct_answer": "тип",
+      "pos": "noun",
+      "active_value": 0
+    },
+    {
+      "item_pk": 81,
+      "lemma": "jogo",
+      "correct_answer": "игра",
+      "pos": "noun",
+      "active_value": 0
+    },
+    {
+      "item_pk": 83,
+      "lemma": "pai",
+      "correct_answer": "отец",
+      "pos": "noun",
+      "active_value": 0
+    },
+    {
+      "item_pk": 95,
+      "lemma": "sul",
+      "correct_answer": "юг",
+      "pos": "noun",
+      "active_value": 0
+    },
+    {
+      "item_pk": 123,
+      "lemma": "mão",
+      "correct_answer": "рука",
+      "pos": "noun",
+      "active_value": 0
+    },
+    {
+      "item_pk": 125,
+      "lemma": "paz",
+      "correct_answer": "мир",
+      "pos": "noun",
+      "active_value": 0
+    },
+    {
+      "item_pk": 163,
+      "lemma": "visto",
+      "correct_answer": "виза",
+      "pos": "noun",
+      "active_value": 0
+    },
+    {
+      "item_pk": 178,
+      "lemma": "sexo",
+      "correct_answer": "пол",
+      "pos": "noun",
+      "active_value": 0
+    },
+    {
+      "item_pk": 191,
+      "lemma": "boca",
+      "correct_answer": "рот",
+      "pos": "noun",
+      "active_value": 0
+    },
+    {
+      "item_pk": 265,
+      "lemma": "preço",
+      "correct_answer": "цена",
+      "pos": "noun",
+      "active_value": 0
+    },
+    {
+      "item_pk": 270,
+      "lemma": "esposa",
+      "correct_answer": "жена",
+      "pos": "noun",
+      "active_value": 0
+    },
+    {
+      "item_pk": 285,
+      "lemma": "sonho",
+      "correct_answer": "сон",
+      "pos": "noun",
+      "active_value": 0
+    },
+    {
+      "item_pk": 332,
+      "lemma": "bola",
+      "correct_answer": "мяч",
+      "pos": "noun",
+      "active_value": 0
+    },
+    {
+      "item_pk": 361,
+      "lemma": "espécie",
+      "correct_answer": "вид",
+      "pos": "noun",
+      "active_value": 0
+    },
+    {
+      "item_pk": 377,
+      "lemma": "batalha",
+      "correct_answer": "бой",
+      "pos": "noun",
+      "active_value": 0
+    },
+    {
+      "item_pk": 385,
+      "lemma": "teste",
+      "correct_answer": "тест",
+      "pos": "noun",
+      "active_value": 0
+    },
+    {
+      "item_pk": 414,
+      "lemma": "peso",
+      "correct_answer": "вес",
+      "pos": "noun",
+      "active_value": 0
+    },
+    {
+      "item_pk": 434,
+      "lemma": "lua",
+      "correct_answer": "луна",
+      "pos": "noun",
+      "active_value": 0
+    },
+    {
+      "item_pk": 467,
+      "lemma": "posto",
+      "correct_answer": "азс",
+      "pos": "noun",
+      "active_value": 0
+    },
+    {
+      "item_pk": 491,
+      "lemma": "cadeia",
+      "correct_answer": "цепь",
+      "pos": "noun",
+      "active_value": 0
+    },
+    {
+      "item_pk": 497,
+      "lemma": "ponte",
+      "correct_answer": "мост",
+      "pos": "noun",
+      "active_value": 0
+    },
+    {
+      "item_pk": 535,
+      "lemma": "leão",
+      "correct_answer": "лев",
+      "pos": "noun",
+      "active_value": 0
+    }
+  ],
+  "active_total_after": 2154,
+  "utc_timestamp": "2026-03-19T13:32:13.701317+00:00"
+}

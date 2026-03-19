@@ -1,0 +1,25 @@
+item_pk,lemma,correct_answer,pos,topic_tag,bin_name,freq_rank,source_family,priority_score,priority_reasons,choices_preview
+337,olho,око,noun,build:pilot_ptpt_001_pilot_safe,2K,1251,pilot_safe,160,pilot_safe|hot_bin:2K|short_correct|odd_short_translation|noun_short_answer|freq<=2k,око || гостиница || обмен || память || отчёт || мусор
+58,mundo,мир,noun,build:pilot_ptpt_001_pilot_safe,1K,81,pilot_safe,150,pilot_safe|hot_bin:1K|short_correct|noun_short_answer|freq<=1k,мир || регион || континент || пространство || территория || район
+71,tipo,тип,noun,build:pilot_ptpt_001_pilot_safe,1K,192,pilot_safe,150,pilot_safe|hot_bin:1K|short_correct|noun_short_answer|freq<=1k,тип || страна || место || семья || президент || истина
+81,jogo,игра,noun,build:pilot_ptpt_001_pilot_safe,1K,233,pilot_safe,150,pilot_safe|hot_bin:1K|short_correct|noun_short_answer|freq<=1k,правительство || отец || музыка || мужчина || сделка || игра
+83,pai,отец,noun,build:pilot_ptpt_001_pilot_safe,1K,240,pilot_safe,150,pilot_safe|hot_bin:1K|short_correct|noun_short_answer|freq<=1k,правительство || мужчина || музыка || номер || вода || отец
+95,sul,юг,noun,build:pilot_ptpt_001_pilot_safe,1K,291,pilot_safe,150,pilot_safe|hot_bin:1K|short_correct|noun_short_answer|freq<=1k,закон || война || юг || зло || площадь || проект
+123,mão,рука,noun,build:pilot_ptpt_001_pilot_safe,1K,451,pilot_safe,150,pilot_safe|hot_bin:1K|short_correct|noun_short_answer|freq<=1k,производство || поле || общество || воспитание || рука || бумага
+125,paz,мир,noun,build:pilot_ptpt_001_pilot_safe,1K,453,pilot_safe,150,pilot_safe|hot_bin:1K|short_correct|noun_short_answer|freq<=1k,воспитание || мир || общество || перо || поле || господин
+163,visto,виза,noun,build:pilot_ptpt_001_pilot_safe,1K,623,pilot_safe,150,pilot_safe|hot_bin:1K|short_correct|noun_short_answer|freq<=1k,виза || игра || правительство || отец || мужчина || музыка
+178,sexo,пол,noun,build:pilot_ptpt_001_pilot_safe,1K,678,pilot_safe,150,pilot_safe|hot_bin:1K|short_correct|noun_short_answer|freq<=1k,воля || искусство || защита || испытание || пол || эпоха
+191,boca,рот,noun,build:pilot_ptpt_001_pilot_safe,1K,735,pilot_safe,150,pilot_safe|hot_bin:1K|short_correct|noun_short_answer|freq<=1k,рот || пламя || соль || ответ || республика || базар
+265,preço,цена,noun,build:pilot_ptpt_001_pilot_safe,1K,996,pilot_safe,150,pilot_safe|hot_bin:1K|short_correct|noun_short_answer|freq<=1k,кровать || качество || переезд || цена || муниципалитет || разрешение
+270,esposa,жена,noun,build:pilot_ptpt_001_pilot_safe,2K,1010,pilot_safe,145,pilot_safe|hot_bin:2K|short_correct|noun_short_answer|freq<=2k,разговор || жена || остров || день рождения || левый || девочка
+285,sonho,сон,noun,build:pilot_ptpt_001_pilot_safe,2K,1058,pilot_safe,145,pilot_safe|hot_bin:2K|short_correct|noun_short_answer|freq<=2k,восток || воссоединение || носок || парк || перевозка || сон
+332,bola,мяч,noun,build:pilot_ptpt_001_pilot_safe,2K,1235,pilot_safe,145,pilot_safe|hot_bin:2K|short_correct|noun_short_answer|freq<=2k,площадь || память || гостиница || мяч || королева || мусор
+361,espécie,вид,noun,build:pilot_ptpt_001_pilot_safe,2K,1334,pilot_safe,145,pilot_safe|hot_bin:2K|short_correct|noun_short_answer|freq<=2k,ключ || компьютер || эпизод || категория || вид || расстояние
+377,batalha,бой,noun,build:pilot_ptpt_001_pilot_safe,2K,1382,pilot_safe,145,pilot_safe|hot_bin:2K|short_correct|noun_short_answer|freq<=2k,бой || количество || торговля || раствор || адвокат || костюм
+385,teste,тест,noun,build:pilot_ptpt_001_pilot_safe,2K,1412,pilot_safe,145,pilot_safe|hot_bin:2K|short_correct|noun_short_answer|freq<=2k,страхование || брутальность || физика || помилование || тишина || тест
+414,peso,вес,noun,build:pilot_ptpt_001_pilot_safe,2K,1549,pilot_safe,145,pilot_safe|hot_bin:2K|short_correct|noun_short_answer|freq<=2k,вес || участник || роза || концепт || журналист || дождь
+434,lua,луна,noun,build:pilot_ptpt_001_pilot_safe,2K,1619,pilot_safe,145,pilot_safe|hot_bin:2K|short_correct|noun_short_answer|freq<=2k,луна || падение || переворот || крест || сопротивление || сектор
+467,posto,азс,noun,build:pilot_ptpt_001_pilot_safe,2K,1722,pilot_safe,145,pilot_safe|hot_bin:2K|short_correct|noun_short_answer|freq<=2k,мышление || спина || pаспределение || набла || молоко || азс
+491,cadeia,цепь,noun,build:pilot_ptpt_001_pilot_safe,2K,1838,pilot_safe,145,pilot_safe|hot_bin:2K|short_correct|noun_short_answer|freq<=2k,финиш || почитание || жара || цепь || обед || географическая карта
+497,ponte,мост,noun,build:pilot_ptpt_001_pilot_safe,2K,1859,pilot_safe,145,pilot_safe|hot_bin:2K|short_correct|noun_short_answer|freq<=2k,почитание || продукция || географическая карта || мост || медицина || финиш
+535,leão,лев,noun,build:pilot_ptpt_001_pilot_safe,2K,1981,pilot_safe,145,pilot_safe|hot_bin:2K|short_correct|noun_short_answer|freq<=2k,кадр || звезда || обсуждение || лев || независимость || молния
