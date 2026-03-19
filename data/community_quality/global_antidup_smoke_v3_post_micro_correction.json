@@ -1,0 +1,1186 @@
+{
+  "config": {
+    "db": "/home/andrey/Projects/lingua_bot_v2/data/lingua_staging.db",
+    "ticks": 40,
+    "per_chat_cooldown_ticks": 3,
+    "global_item_cooldown_ticks": 3,
+    "log_table": "community_delivery_log_smoke_v3",
+    "chat_ids": [
+      -1001690275466,
+      -1001656765898,
+      -1001719116315,
+      -1001227461571
+    ]
+  },
+  "global_summary": {
+    "reason_counts": {
+      "candidate_selected_fresh": 56,
+      "cooldown_blocked": 104
+    },
+    "total_events": 160
+  },
+  "chat_summaries": {
+    "-1001690275466": {
+      "reason_counts": {
+        "candidate_selected_fresh": 14,
+        "cooldown_blocked": 26
+      },
+      "picked_count": 14,
+      "topics": {
+        "housing": 3,
+        "shopping": 2,
+        "bureaucracy": 2,
+        "health": 1,
+        "documents": 3,
+        "transport": 2,
+        "services": 1
+      },
+      "formats": {
+        "nuance": 6,
+        "local": 6,
+        "dialogue": 2
+      },
+      "first1": {
+        "что": 3,
+        "какими": 3,
+        "как": 4,
+        "чем": 4
+      },
+      "first2": {
+        "что обычно": 3,
+        "какими словами": 3,
+        "как в": 1,
+        "как мягко": 3,
+        "чем в": 3,
+        "чем люди": 1
+      },
+      "first3": {
+        "что обычно говорят": 2,
+        "какими словами лучше": 2,
+        "как в португалии": 1,
+        "как мягко уточнить": 2,
+        "чем в обычной": 3,
+        "как мягко сказать": 1,
+        "чем люди обычно": 1,
+        "какими словами аккуратно": 1,
+        "что обычно спрашивают": 1
+      },
+      "length_min": 70,
+      "length_max": 173,
+      "length_avg": 96.0
+    },
+    "-1001656765898": {
+      "reason_counts": {
+        "candidate_selected_fresh": 14,
+        "cooldown_blocked": 26
+      },
+      "picked_count": 14,
+      "topics": {
+        "shopping": 2,
+        "housing": 3,
+        "health": 1,
+        "bureaucracy": 2,
+        "documents": 3,
+        "transport": 2,
+        "services": 1
+      },
+      "formats": {
+        "nuance": 6,
+        "dialogue": 2,
+        "local": 6
+      },
+      "first1": {
+        "какими": 3,
+        "что": 3,
+        "как": 4,
+        "чем": 4
+      },
+      "first2": {
+        "какими словами": 3,
+        "что обычно": 3,
+        "как в": 1,
+        "чем в": 3,
+        "как мягко": 3,
+        "чем люди": 1
+      },
+      "first3": {
+        "какими словами лучше": 2,
+        "что обычно говорят": 2,
+        "как в португалии": 1,
+        "чем в обычной": 3,
+        "как мягко уточнить": 2,
+        "как мягко сказать": 1,
+        "чем люди обычно": 1,
+        "какими словами аккуратно": 1,
+        "что обычно спрашивают": 1
+      },
+      "length_min": 70,
+      "length_max": 173,
+      "length_avg": 96.0
+    },
+    "-1001719116315": {
+      "reason_counts": {
+        "candidate_selected_fresh": 14,
+        "cooldown_blocked": 26
+      },
+      "picked_count": 14,
+      "topics": {
+        "bureaucracy": 2,
+        "health": 1,
+        "housing": 4,
+        "shopping": 2,
+        "documents": 2,
+        "transport": 2,
+        "financas": 1
+      },
+      "formats": {
+        "local": 5,
+        "dialogue": 2,
+        "nuance": 7
+      },
+      "first1": {
+        "как": 4,
+        "что": 3,
+        "какими": 2,
+        "чем": 4,
+        "в": 1
+      },
+      "first2": {
+        "как в": 1,
+        "что обычно": 3,
+        "какими словами": 2,
+        "как мягко": 3,
+        "чем в": 3,
+        "чем люди": 1,
+        "в какой": 1
+      },
+      "first3": {
+        "как в португалии": 1,
+        "что обычно говорят": 3,
+        "какими словами лучше": 1,
+        "как мягко сказать": 1,
+        "чем в обычной": 3,
+        "как мягко уточнить": 2,
+        "какими словами аккуратно": 1,
+        "чем люди обычно": 1,
+        "в какой форме": 1
+      },
+      "length_min": 70,
+      "length_max": 182,
+      "length_avg": 95.29
+    },
+    "-1001227461571": {
+      "reason_counts": {
+        "candidate_selected_fresh": 14,
+        "cooldown_blocked": 26
+      },
+      "picked_count": 14,
+      "topics": {
+        "health": 1,
+        "bureaucracy": 2,
+        "shopping": 2,
+        "housing": 4,
+        "documents": 2,
+        "transport": 2,
+        "financas": 1
+      },
+      "formats": {
+        "dialogue": 2,
+        "local": 5,
+        "nuance": 7
+      },
+      "first1": {
+        "что": 3,
+        "как": 4,
+        "какими": 2,
+        "чем": 4,
+        "в": 1
+      },
+      "first2": {
+        "что обычно": 3,
+        "как в": 1,
+        "какими словами": 2,
+        "чем в": 3,
+        "как мягко": 3,
+        "чем люди": 1,
+        "в какой": 1
+      },
+      "first3": {
+        "что обычно говорят": 3,
+        "как в португалии": 1,
+        "какими словами лучше": 1,
+        "чем в обычной": 3,
+        "как мягко сказать": 1,
+        "как мягко уточнить": 2,
+        "какими словами аккуратно": 1,
+        "чем люди обычно": 1,
+        "в какой форме": 1
+      },
+      "length_min": 70,
+      "length_max": 182,
+      "length_avg": 95.29
+    }
+  },
+  "results_head": [
+    {
+      "tick": 1,
+      "chat_id": -1001690275466,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 7,
+        "text": "Что обычно говорят, когда нужно уточнить у senhorio, входит ли internet или это опять квест на выживание?",
+        "format_type": "nuance",
+        "topic": "housing",
+        "priority": 50
+      }
+    },
+    {
+      "tick": 1,
+      "chat_id": -1001656765898,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 10,
+        "text": "Какими словами лучше намекнуть продавцу, что preço fixo звучит смело, но рынок видит это иначе?",
+        "format_type": "nuance",
+        "topic": "shopping",
+        "priority": 50
+      }
+    },
+    {
+      "tick": 1,
+      "chat_id": -1001719116315,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 12,
+        "text": "Как в Португалии обычно спрашивают, работает ли это сегодня или уже amanhã, logo se vê?",
+        "format_type": "local",
+        "topic": "bureaucracy",
+        "priority": 50
+      }
+    },
+    {
+      "tick": 1,
+      "chat_id": -1001227461571,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 13,
+        "text": "Что обычно говорят в аптеке, когда нужно что-то от горла, но без ощущения, что читаешь диссертацию?",
+        "format_type": "dialogue",
+        "topic": "health",
+        "priority": 50
+      }
+    },
+    {
+      "tick": 2,
+      "chat_id": -1001690275466,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 2,
+      "chat_id": -1001656765898,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 2,
+      "chat_id": -1001719116315,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 2,
+      "chat_id": -1001227461571,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 3,
+      "chat_id": -1001690275466,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 3,
+      "chat_id": -1001656765898,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 3,
+      "chat_id": -1001719116315,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 3,
+      "chat_id": -1001227461571,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 4,
+      "chat_id": -1001690275466,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 10,
+        "text": "Какими словами лучше намекнуть продавцу, что preço fixo звучит смело, но рынок видит это иначе?",
+        "format_type": "nuance",
+        "topic": "shopping",
+        "priority": 50
+      }
+    },
+    {
+      "tick": 4,
+      "chat_id": -1001656765898,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 7,
+        "text": "Что обычно говорят, когда нужно уточнить у senhorio, входит ли internet или это опять квест на выживание?",
+        "format_type": "nuance",
+        "topic": "housing",
+        "priority": 50
+      }
+    },
+    {
+      "tick": 4,
+      "chat_id": -1001719116315,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 13,
+        "text": "Что обычно говорят в аптеке, когда нужно что-то от горла, но без ощущения, что читаешь диссертацию?",
+        "format_type": "dialogue",
+        "topic": "health",
+        "priority": 50
+      }
+    },
+    {
+      "tick": 4,
+      "chat_id": -1001227461571,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 12,
+        "text": "Как в Португалии обычно спрашивают, работает ли это сегодня или уже amanhã, logo se vê?",
+        "format_type": "local",
+        "topic": "bureaucracy",
+        "priority": 50
+      }
+    },
+    {
+      "tick": 5,
+      "chat_id": -1001690275466,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 5,
+      "chat_id": -1001656765898,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 5,
+      "chat_id": -1001719116315,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 5,
+      "chat_id": -1001227461571,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 6,
+      "chat_id": -1001690275466,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 6,
+      "chat_id": -1001656765898,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 6,
+      "chat_id": -1001719116315,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 6,
+      "chat_id": -1001227461571,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 7,
+      "chat_id": -1001690275466,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 12,
+        "text": "Как в Португалии обычно спрашивают, работает ли это сегодня или уже amanhã, logo se vê?",
+        "format_type": "local",
+        "topic": "bureaucracy",
+        "priority": 50
+      }
+    },
+    {
+      "tick": 7,
+      "chat_id": -1001656765898,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 13,
+        "text": "Что обычно говорят в аптеке, когда нужно что-то от горла, но без ощущения, что читаешь диссертацию?",
+        "format_type": "dialogue",
+        "topic": "health",
+        "priority": 50
+      }
+    },
+    {
+      "tick": 7,
+      "chat_id": -1001719116315,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 7,
+        "text": "Что обычно говорят, когда нужно уточнить у senhorio, входит ли internet или это опять квест на выживание?",
+        "format_type": "nuance",
+        "topic": "housing",
+        "priority": 50
+      }
+    },
+    {
+      "tick": 7,
+      "chat_id": -1001227461571,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 10,
+        "text": "Какими словами лучше намекнуть продавцу, что preço fixo звучит смело, но рынок видит это иначе?",
+        "format_type": "nuance",
+        "topic": "shopping",
+        "priority": 50
+      }
+    },
+    {
+      "tick": 8,
+      "chat_id": -1001690275466,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 8,
+      "chat_id": -1001656765898,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 8,
+      "chat_id": -1001719116315,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 8,
+      "chat_id": -1001227461571,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 9,
+      "chat_id": -1001690275466,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 9,
+      "chat_id": -1001656765898,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 9,
+      "chat_id": -1001719116315,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 9,
+      "chat_id": -1001227461571,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 10,
+      "chat_id": -1001690275466,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 13,
+        "text": "Что обычно говорят в аптеке, когда нужно что-то от горла, но без ощущения, что читаешь диссертацию?",
+        "format_type": "dialogue",
+        "topic": "health",
+        "priority": 50
+      }
+    },
+    {
+      "tick": 10,
+      "chat_id": -1001656765898,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 12,
+        "text": "Как в Португалии обычно спрашивают, работает ли это сегодня или уже amanhã, logo se vê?",
+        "format_type": "local",
+        "topic": "bureaucracy",
+        "priority": 50
+      }
+    },
+    {
+      "tick": 10,
+      "chat_id": -1001719116315,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 10,
+        "text": "Какими словами лучше намекнуть продавцу, что preço fixo звучит смело, но рынок видит это иначе?",
+        "format_type": "nuance",
+        "topic": "shopping",
+        "priority": 50
+      }
+    },
+    {
+      "tick": 10,
+      "chat_id": -1001227461571,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 7,
+        "text": "Что обычно говорят, когда нужно уточнить у senhorio, входит ли internet или это опять квест на выживание?",
+        "format_type": "nuance",
+        "topic": "housing",
+        "priority": 50
+      }
+    },
+    {
+      "tick": 11,
+      "chat_id": -1001690275466,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 11,
+      "chat_id": -1001656765898,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 11,
+      "chat_id": -1001719116315,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 11,
+      "chat_id": -1001227461571,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 12,
+      "chat_id": -1001690275466,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 12,
+      "chat_id": -1001656765898,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 12,
+      "chat_id": -1001719116315,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 12,
+      "chat_id": -1001227461571,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 13,
+      "chat_id": -1001690275466,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 17,
+        "text": "Как мягко уточнить у агента, что comissão уже немного fica complicado?",
+        "format_type": "nuance",
+        "topic": "housing",
+        "priority": 50
+      }
+    },
+    {
+      "tick": 13,
+      "chat_id": -1001656765898,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 21,
+        "text": "Чем в обычной речи заменяют residência permanente, когда говорят про ПМЖ?",
+        "format_type": "local",
+        "topic": "documents",
+        "priority": 50
+      }
+    },
+    {
+      "tick": 13,
+      "chat_id": -1001719116315,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 23,
+        "text": "Как мягко сказать в AIMA, что вам бы update по делу, а не очередное depois vemos?",
+        "format_type": "nuance",
+        "topic": "documents",
+        "priority": 50
+      }
+    },
+    {
+      "tick": 13,
+      "chat_id": -1001227461571,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 27,
+        "text": "Чем в обычной речи заменяют estabelecimento comercial, когда говорят про магазин?",
+        "format_type": "local",
+        "topic": "shopping",
+        "priority": 50
+      }
+    },
+    {
+      "tick": 14,
+      "chat_id": -1001690275466,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 14,
+      "chat_id": -1001656765898,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 14,
+      "chat_id": -1001719116315,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 14,
+      "chat_id": -1001227461571,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 15,
+      "chat_id": -1001690275466,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 15,
+      "chat_id": -1001656765898,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 15,
+      "chat_id": -1001719116315,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 15,
+      "chat_id": -1001227461571,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 16,
+      "chat_id": -1001690275466,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 21,
+        "text": "Чем в обычной речи заменяют residência permanente, когда говорят про ПМЖ?",
+        "format_type": "local",
+        "topic": "documents",
+        "priority": 50
+      }
+    },
+    {
+      "tick": 16,
+      "chat_id": -1001656765898,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 17,
+        "text": "Как мягко уточнить у агента, что comissão уже немного fica complicado?",
+        "format_type": "nuance",
+        "topic": "housing",
+        "priority": 50
+      }
+    },
+    {
+      "tick": 16,
+      "chat_id": -1001719116315,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 27,
+        "text": "Чем в обычной речи заменяют estabelecimento comercial, когда говорят про магазин?",
+        "format_type": "local",
+        "topic": "shopping",
+        "priority": 50
+      }
+    },
+    {
+      "tick": 16,
+      "chat_id": -1001227461571,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 23,
+        "text": "Как мягко сказать в AIMA, что вам бы update по делу, а не очередное depois vemos?",
+        "format_type": "nuance",
+        "topic": "documents",
+        "priority": 50
+      }
+    },
+    {
+      "tick": 17,
+      "chat_id": -1001690275466,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 17,
+      "chat_id": -1001656765898,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 17,
+      "chat_id": -1001719116315,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 17,
+      "chat_id": -1001227461571,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 18,
+      "chat_id": -1001690275466,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 18,
+      "chat_id": -1001656765898,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 18,
+      "chat_id": -1001719116315,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 18,
+      "chat_id": -1001227461571,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 19,
+      "chat_id": -1001690275466,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 23,
+        "text": "Как мягко сказать в AIMA, что вам бы update по делу, а не очередное depois vemos?",
+        "format_type": "nuance",
+        "topic": "documents",
+        "priority": 50
+      }
+    },
+    {
+      "tick": 19,
+      "chat_id": -1001656765898,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 27,
+        "text": "Чем в обычной речи заменяют estabelecimento comercial, когда говорят про магазин?",
+        "format_type": "local",
+        "topic": "shopping",
+        "priority": 50
+      }
+    },
+    {
+      "tick": 19,
+      "chat_id": -1001719116315,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 17,
+        "text": "Как мягко уточнить у агента, что comissão уже немного fica complicado?",
+        "format_type": "nuance",
+        "topic": "housing",
+        "priority": 50
+      }
+    },
+    {
+      "tick": 19,
+      "chat_id": -1001227461571,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 21,
+        "text": "Чем в обычной речи заменяют residência permanente, когда говорят про ПМЖ?",
+        "format_type": "local",
+        "topic": "documents",
+        "priority": 50
+      }
+    },
+    {
+      "tick": 20,
+      "chat_id": -1001690275466,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 20,
+      "chat_id": -1001656765898,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 20,
+      "chat_id": -1001719116315,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 20,
+      "chat_id": -1001227461571,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 21,
+      "chat_id": -1001690275466,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 21,
+      "chat_id": -1001656765898,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 21,
+      "chat_id": -1001719116315,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 21,
+      "chat_id": -1001227461571,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 22,
+      "chat_id": -1001690275466,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 27,
+        "text": "Чем в обычной речи заменяют estabelecimento comercial, когда говорят про магазин?",
+        "format_type": "local",
+        "topic": "shopping",
+        "priority": 50
+      }
+    },
+    {
+      "tick": 22,
+      "chat_id": -1001656765898,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 23,
+        "text": "Как мягко сказать в AIMA, что вам бы update по делу, а не очередное depois vemos?",
+        "format_type": "nuance",
+        "topic": "documents",
+        "priority": 50
+      }
+    },
+    {
+      "tick": 22,
+      "chat_id": -1001719116315,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 21,
+        "text": "Чем в обычной речи заменяют residência permanente, когда говорят про ПМЖ?",
+        "format_type": "local",
+        "topic": "documents",
+        "priority": 50
+      }
+    },
+    {
+      "tick": 22,
+      "chat_id": -1001227461571,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 17,
+        "text": "Как мягко уточнить у агента, что comissão уже немного fica complicado?",
+        "format_type": "nuance",
+        "topic": "housing",
+        "priority": 50
+      }
+    },
+    {
+      "tick": 23,
+      "chat_id": -1001690275466,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 23,
+      "chat_id": -1001656765898,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 23,
+      "chat_id": -1001719116315,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 23,
+      "chat_id": -1001227461571,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 24,
+      "chat_id": -1001690275466,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 24,
+      "chat_id": -1001656765898,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 24,
+      "chat_id": -1001719116315,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 24,
+      "chat_id": -1001227461571,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 25,
+      "chat_id": -1001690275466,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 33,
+        "text": "Чем люди обычно заменяют deslocação, когда говорят про обычную поездку?",
+        "format_type": "local",
+        "topic": "transport",
+        "priority": 50
+      }
+    },
+    {
+      "tick": 25,
+      "chat_id": -1001656765898,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 35,
+        "text": "Как мягко уточнить, включает ли renda despesas, или это сюрприз в последней серии?",
+        "format_type": "nuance",
+        "topic": "housing",
+        "priority": 50
+      }
+    },
+    {
+      "tick": 25,
+      "chat_id": -1001719116315,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 39,
+        "text": "Чем в обычной речи заменяют viatura, когда имеют в виду просто машину?",
+        "format_type": "local",
+        "topic": "transport",
+        "priority": 50
+      }
+    },
+    {
+      "tick": 25,
+      "chat_id": -1001227461571,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 255,
+        "text": "Какими словами аккуратно спросили, что senha, fila и promessa de rapidez плохо дружат между собой, без канцелярита?",
+        "format_type": "nuance",
+        "topic": "bureaucracy",
+        "priority": 50
+      }
+    },
+    {
+      "tick": 26,
+      "chat_id": -1001690275466,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 26,
+      "chat_id": -1001656765898,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 26,
+      "chat_id": -1001719116315,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 26,
+      "chat_id": -1001227461571,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 27,
+      "chat_id": -1001690275466,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 27,
+      "chat_id": -1001656765898,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 27,
+      "chat_id": -1001719116315,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 27,
+      "chat_id": -1001227461571,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 28,
+      "chat_id": -1001690275466,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 35,
+        "text": "Как мягко уточнить, включает ли renda despesas, или это сюрприз в последней серии?",
+        "format_type": "nuance",
+        "topic": "housing",
+        "priority": 50
+      }
+    },
+    {
+      "tick": 28,
+      "chat_id": -1001656765898,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 33,
+        "text": "Чем люди обычно заменяют deslocação, когда говорят про обычную поездку?",
+        "format_type": "local",
+        "topic": "transport",
+        "priority": 50
+      }
+    },
+    {
+      "tick": 28,
+      "chat_id": -1001719116315,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 255,
+        "text": "Какими словами аккуратно спросили, что senha, fila и promessa de rapidez плохо дружат между собой, без канцелярита?",
+        "format_type": "nuance",
+        "topic": "bureaucracy",
+        "priority": 50
+      }
+    },
+    {
+      "tick": 28,
+      "chat_id": -1001227461571,
+      "reason": "candidate_selected_fresh",
+      "picked": {
+        "id": 39,
+        "text": "Чем в обычной речи заменяют viatura, когда имеют в виду просто машину?",
+        "format_type": "local",
+        "topic": "transport",
+        "priority": 50
+      }
+    },
+    {
+      "tick": 29,
+      "chat_id": -1001690275466,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 29,
+      "chat_id": -1001656765898,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 29,
+      "chat_id": -1001719116315,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 29,
+      "chat_id": -1001227461571,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 30,
+      "chat_id": -1001690275466,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 30,
+      "chat_id": -1001656765898,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 30,
+      "chat_id": -1001719116315,
+      "reason": "cooldown_blocked",
+      "picked": null
+    },
+    {
+      "tick": 30,
+      "chat_id": -1001227461571,
+      "reason": "cooldown_blocked",
+      "picked": null
+    }
+  ]
+}
