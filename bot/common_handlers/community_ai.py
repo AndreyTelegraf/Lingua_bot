@@ -8,6 +8,7 @@ from aiogram.types import Message
 
 from app.config import get_settings
 from services.community_block.ingress import IncomingCommunityMessage, handle_incoming_message
+from services.community_block.ai_live import maybe_send_live_reply
 
 log = structlog.get_logger(__name__)
 
@@ -49,6 +50,18 @@ def build_community_ai_router() -> Router:
         conn = _conn()
         try:
             result = handle_incoming_message(conn, incoming=incoming)
+            live = None
+            if result.get("status") == "captured" and result.get("planned"):
+                live = await maybe_send_live_reply(
+                    conn,
+                    bot=message.bot,
+                    planned=result.get("planned"),
+                    chat_id=incoming.chat_id,
+                    post_log_id=int(result["post_log_id"]),
+                    trigger_message_id=incoming.message_id,
+                    message_thread_id=incoming.message_thread_id,
+                )
+
             log.info(
                 "community_ai_ingress_processed",
                 status=result.get("status"),
@@ -58,6 +71,8 @@ def build_community_ai_router() -> Router:
                 post_log_id=result.get("post_log_id"),
                 event_id=result.get("event_id"),
                 planned=bool(result.get("planned")),
+                live_status=None if live is None else live.get("status"),
+                live_delivery_status=None if live is None else live.get("delivery_status"),
             )
         except Exception:
             log.exception(

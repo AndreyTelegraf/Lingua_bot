@@ -662,3 +662,111 @@ def recompute_post_reply_stats(conn: sqlite3.Connection, *, post_log_id: int) ->
         "thread_depth_max": thread_depth_max,
         "reply_latency_first_sec": reply_latency_first_sec,
     }
+
+# community_ai_live_send_v4 helpers
+
+def get_runtime_int(conn: sqlite3.Connection, *, key: str, default: int) -> int:
+    raw = get_runtime_flag(conn, key=key, default=str(default))
+    try:
+        return int(str(raw))
+    except Exception:
+        return default
+
+
+def get_ai_plan_log(conn: sqlite3.Connection, *, plan_log_id: int) -> dict[str, Any] | None:
+    conn.row_factory = sqlite3.Row
+    row = conn.execute(
+        '''
+        SELECT *
+        FROM community_ai_reply_plan_log
+        WHERE id = ?
+        ''',
+        (plan_log_id,),
+    ).fetchone()
+    return _row_to_dict(row)
+
+
+def has_ai_delivery_for_plan(conn: sqlite3.Connection, *, plan_log_id: int) -> bool:
+    row = conn.execute(
+        '''
+        SELECT 1
+        FROM community_ai_reply_delivery_log
+        WHERE plan_log_id = ?
+        LIMIT 1
+        ''',
+        (plan_log_id,),
+    ).fetchone()
+    return row is not None
+
+
+def has_recent_ai_delivery_for_post(conn: sqlite3.Connection, *, post_log_id: int, cooldown_seconds: int) -> bool:
+    conn.row_factory = sqlite3.Row
+    row = conn.execute(
+        '''
+        SELECT created_at
+        FROM community_ai_reply_delivery_log
+        WHERE post_log_id = ?
+          AND delivery_status IN ('sent_generated', 'sent_fallback')
+        ORDER BY id DESC
+        LIMIT 1
+        ''',
+        (post_log_id,),
+    ).fetchone()
+    if row is None:
+        return False
+
+    from datetime import datetime, UTC, timedelta
+    created_at = datetime.fromisoformat(str(row["created_at"]).replace(" ", "T")).replace(tzinfo=UTC)
+    now = datetime.now(UTC)
+    return (now - created_at) < timedelta(seconds=max(0, cooldown_seconds))
+
+
+def log_ai_reply_delivery(
+    conn: sqlite3.Connection,
+    *,
+    chat_id: int,
+    post_log_id: int | None,
+    plan_log_id: int,
+    trigger_message_id: int | None,
+    reply_to_message_id: int | None,
+    sent_message_id: int | None,
+    delivery_status: str,
+    provider: str | None = None,
+    model: str | None = None,
+    response_id: str | None = None,
+    used_fallback: bool = False,
+    delivered_text: str | None = None,
+) -> int:
+    cur = conn.execute(
+        '''
+        INSERT INTO community_ai_reply_delivery_log (
+            chat_id,
+            post_log_id,
+            plan_log_id,
+            trigger_message_id,
+            reply_to_message_id,
+            sent_message_id,
+            delivery_status,
+            provider,
+            model,
+            response_id,
+            used_fallback,
+            delivered_text
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ''',
+        (
+            chat_id,
+            post_log_id,
+            plan_log_id,
+            trigger_message_id,
+            reply_to_message_id,
+            sent_message_id,
+            delivery_status,
+            provider,
+            model,
+            response_id,
+            1 if used_fallback else 0,
+            delivered_text,
+        ),
+    )
+    return int(cur.lastrowid)
