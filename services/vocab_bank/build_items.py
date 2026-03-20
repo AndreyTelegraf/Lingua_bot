@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import sqlite3
+from services.vocab_bank.build_layer_db import ensure_build_db_attached, resolve_build_table
 
 
 def assign_bin_name(freq_rank: int | None) -> str:
@@ -27,7 +28,9 @@ def build_vocab_items_from_candidates(
 ) -> int:
     conn.row_factory = sqlite3.Row
 
-    sql = """
+    lemma_candidates_table = resolve_build_table(conn, "vocab_lemma_candidates")
+
+    sql = f"""
     SELECT
         id,
         source_name,
@@ -41,7 +44,7 @@ def build_vocab_items_from_candidates(
         is_eligible,
         reject_reason,
         merge_group_id
-    FROM vocab_lemma_candidates
+    FROM {lemma_candidates_table}
     WHERE is_eligible = 1
     """
     params: tuple[object, ...] = ()

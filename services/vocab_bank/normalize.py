@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import re
 import sqlite3
+from services.vocab_bank.build_layer_db import ensure_build_db_attached, resolve_build_table
 import unicodedata
 from dataclasses import dataclass
 
@@ -124,9 +125,12 @@ def normalize_raw_entries_to_candidates(
 ) -> int:
     conn.row_factory = sqlite3.Row
 
-    sql = """
+    raw_entries_table = resolve_build_table(conn, "vocab_raw_entries")
+    lemma_candidates_table = resolve_build_table(conn, "vocab_lemma_candidates")
+
+    sql = f"""
     SELECT id, source_name, external_key, raw_lemma, raw_pos, raw_level, raw_freq, raw_gloss_ru, payload_json
-    FROM vocab_raw_entries
+    FROM {raw_entries_table}
     """
     params: tuple[object, ...] = ()
     if source_name:
@@ -140,15 +144,15 @@ def normalize_raw_entries_to_candidates(
     source_names = sorted({str(r["source_name"]) for r in rows})
     if truncate_source:
         conn.executemany(
-            "DELETE FROM vocab_lemma_candidates WHERE source_name = ?",
+            f"DELETE FROM {lemma_candidates_table} WHERE source_name = ?",
             [(name,) for name in source_names],
         )
 
     candidates = [build_candidate_from_raw_row(r) for r in rows]
 
     conn.executemany(
-        """
-        INSERT INTO vocab_lemma_candidates (
+        f"""
+        INSERT INTO {lemma_candidates_table} (
             build_id,
             source_name,
             source_weight,

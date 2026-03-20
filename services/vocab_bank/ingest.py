@@ -3,6 +3,7 @@ from __future__ import annotations
 import csv
 import json
 import sqlite3
+from services.vocab_bank.build_layer_db import ensure_build_db_attached, resolve_build_table
 from pathlib import Path
 from typing import Iterable
 
@@ -85,16 +86,18 @@ def ingest_entries(
     if not rows:
         return 0
 
+    raw_entries_table = resolve_build_table(conn, "vocab_raw_entries")
+
     if truncate_source:
         source_names = sorted({row.source_name for row in rows})
         conn.executemany(
-            "DELETE FROM vocab_raw_entries WHERE source_name = ?",
+            f"DELETE FROM {raw_entries_table} WHERE source_name = ?",
             [(name,) for name in source_names],
         )
 
     conn.executemany(
-        """
-        INSERT INTO vocab_raw_entries (
+        f"""
+        INSERT INTO {raw_entries_table} (
             source_name,
             external_key,
             raw_lemma,

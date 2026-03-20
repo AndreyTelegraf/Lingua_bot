@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import sqlite3
+from services.vocab_bank.build_layer_db import ensure_build_db_attached, resolve_build_table
 
 
 def _norm_text(value: str | None) -> str:
@@ -16,6 +17,8 @@ def validate_and_publish_items(
     publish: bool = True,
 ) -> int:
     conn.row_factory = sqlite3.Row
+
+    item_validation_table = resolve_build_table(conn, "vocab_item_validation")
 
     if build_code:
         row = conn.execute(
@@ -35,7 +38,7 @@ def validate_and_publish_items(
         else:
             build_id = int(row["id"])
             conn.execute(
-                "DELETE FROM vocab_item_validation WHERE build_id = ?",
+                "DELETE FROM {item_validation_table} WHERE build_id = ?",
                 (build_id,),
             )
             conn.execute(
@@ -99,13 +102,12 @@ def validate_and_publish_items(
              {"positions": [int(r["position_index"]) for r in choices if int(r["is_correct"]) == 1]}),
         )
 
-        item_passed = True
+        item_passed = all(passed == 1 for _, severity, passed, _ in rules if severity == "hard")
+        hard_passed = item_passed
         for rule_code, severity, passed, details in rules:
-            if severity == "hard" and passed != 1:
-                item_passed = False
             conn.execute(
-                """
-                INSERT INTO vocab_item_validation (
+                f"""
+                INSERT INTO {item_validation_table} (
                     build_id, item_temp_id, rule_code, severity, passed, details_json
                 ) VALUES (?, ?, ?, ?, ?, ?)
                 """,
@@ -138,15 +140,7 @@ WHERE id = ?
     FROM vocab_choices vc
     WHERE vc.item_id = vocab_items.id
   ) = 6
-  AND NOT EXISTS (
-    SELECT 1
-    FROM vocab_choices vc
-    LEFT JOIN vocab_items vi2
-      ON TRIM(LOWER(vi2.lemma)) = TRIM(LOWER(vc.choice_text))
-    WHERE vc.item_id = vocab_items.id
-      AND COALESCE(vc.is_correct,0) = 0
-      AND vi2.id IS NULL
-  )
+
   AND NOT EXISTS (
     SELECT 1
     FROM vocab_items v2

@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import re
 import sqlite3
+from services.vocab_bank.build_layer_db import ensure_build_db_attached, resolve_build_table
 from dataclasses import dataclass
 
 
@@ -185,7 +186,9 @@ def merge_candidates_for_source(
 ) -> int:
     conn.row_factory = sqlite3.Row
 
-    sql = """
+    lemma_candidates_table = resolve_build_table(conn, "vocab_lemma_candidates")
+
+    sql = f"""
     SELECT
         id,
         source_name,
@@ -199,7 +202,7 @@ def merge_candidates_for_source(
         is_eligible,
         reject_reason,
         payload_json
-    FROM vocab_lemma_candidates
+    FROM {lemma_candidates_table}
     """
     params: tuple[object, ...] = ()
     if source_name:
@@ -238,8 +241,8 @@ def merge_candidates_for_source(
         )
 
         conn.execute(
-            """
-            UPDATE vocab_lemma_candidates
+            f"""
+            UPDATE {lemma_candidates_table}
             SET
                 merge_group_id = ?,
                 normalized_lemma = ?,
@@ -284,8 +287,8 @@ def merge_candidates_for_source(
                 sort_keys=True,
             )
             conn.execute(
-                """
-                UPDATE vocab_lemma_candidates
+                f"""
+                UPDATE {lemma_candidates_table}
                 SET
                     merge_group_id = ?,
                     is_eligible = 0,

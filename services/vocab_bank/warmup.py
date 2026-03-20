@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import sqlite3
+from services.vocab_bank.build_layer_db import ensure_build_db_attached, resolve_build_table
 
 
 def run_warmup_report(
@@ -92,6 +93,8 @@ def persist_warmup_validation_summary(
 ) -> None:
     conn.row_factory = sqlite3.Row
 
+    item_validation_table = resolve_build_table(conn, "vocab_item_validation")
+
     row = conn.execute(
         "SELECT id FROM vocab_builds WHERE build_code = ?",
         (build_code,),
@@ -101,8 +104,8 @@ def persist_warmup_validation_summary(
 
     build_id = int(row["id"])
     conn.execute(
-        """
-        INSERT INTO vocab_item_validation (
+        f"""
+        INSERT INTO {item_validation_table} (
             build_id, item_temp_id, rule_code, severity, passed, details_json
         ) VALUES (?, ?, ?, ?, ?, ?)
         """,
