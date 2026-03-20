@@ -1,0 +1,13 @@
+{
+  "git_head": "2fd78e9",
+  "active_total": 688,
+  "active_by_pos": {
+    "adjective": 174,
+    "adverb": 27,
+    "noun": 395,
+    "verb": 92
+  },
+  "broken_contract_count": 0,
+  "duplicate_active_lemma_pos_count": 0,
+  "choice_ru_leak_count": 0
+}
