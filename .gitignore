@@ -134,3 +134,8 @@ data/master_source_v1/processed/**/latest_attempt_residual_flagged.json
 
 # optional local scratch backups
 *.db.bak_*
+
+# runtime data
+/data/*.db
+/data/db_backups/
+/data/community_*/
