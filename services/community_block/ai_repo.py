@@ -55,7 +55,12 @@ def fetch_thread_snapshot(conn: sqlite3.Connection, post_log_id: int) -> ThreadS
 
     ai_plan_count_row = _row(
         conn,
-        "SELECT COUNT(*) AS c FROM community_ai_reply_plan_log WHERE post_log_id = ?",
+        '''
+        SELECT COUNT(*) AS c
+        FROM community_ai_reply_delivery_log
+        WHERE post_log_id = ?
+          AND delivery_status IN ('sent_generated', 'sent_fallback')
+        ''',
         (post_log_id,),
     )
     prior_ai_plan_count = 0 if ai_plan_count_row is None else int(ai_plan_count_row["c"])

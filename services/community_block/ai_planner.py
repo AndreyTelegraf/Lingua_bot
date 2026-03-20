@@ -51,7 +51,6 @@ def _candidate_from_text(snapshot: ThreadSnapshot, text: str) -> CandidateReply:
 
 def build_plan(snapshot: ThreadSnapshot, *, min_user_replies: int = 1, max_plans_per_thread: int = 2) -> PlanDecision:
     user_reply_count = ai_repo.count_user_reply_events(snapshot)
-    ai_reply_count = ai_repo.count_ai_reply_events(snapshot)
     last_user_text = _last_user_message(snapshot)
     wants_answer = has_terminal_question(last_user_text)
     risk_level = classify_risk(snapshot.topic, last_user_text)
@@ -61,21 +60,6 @@ def build_plan(snapshot: ThreadSnapshot, *, min_user_replies: int = 1, max_plans
             should_reply=False,
             reply_mode="R0",
             reason="no_user_replies_yet",
-            confidence=1.0,
-            risk_level=risk_level,
-            product_bridge_allowed=False,
-            human_like_score=1.0,
-            verbosity_score=0.0,
-            canned_pattern_score=0.0,
-            selected_reply_text=None,
-            candidates=[],
-        )
-
-    if ai_reply_count > 0:
-        return PlanDecision(
-            should_reply=False,
-            reply_mode="R0",
-            reason="existing_ai_reply_detected",
             confidence=1.0,
             risk_level=risk_level,
             product_bridge_allowed=False,

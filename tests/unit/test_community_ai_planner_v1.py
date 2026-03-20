@@ -100,7 +100,7 @@ def test_planner_builds_candidate_after_user_reply_event() -> None:
     assert row["plan_status"] == "planned"
 
 
-def test_planner_blocks_second_ai_turn_when_ai_event_exists() -> None:
+def test_planner_allows_second_ai_turn_when_only_one_ai_delivery_exists() -> None:
     conn = build_conn()
     _, post_log_id = seed_post(conn)
 
@@ -120,8 +120,40 @@ def test_planner_blocks_second_ai_turn_when_ai_event_exists() -> None:
         """,
         (-1001656765898, post_log_id, 7001, 7003, 999999, "ai_reply"),
     )
+    conn.execute(
+        """
+        INSERT INTO community_ai_reply_delivery_log (
+            chat_id,
+            post_log_id,
+            plan_log_id,
+            trigger_message_id,
+            reply_to_message_id,
+            sent_message_id,
+            delivery_status,
+            provider,
+            model,
+            response_id,
+            used_fallback,
+            delivered_text
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            -1001656765898,
+            post_log_id,
+            9001,
+            7002,
+            7002,
+            7003,
+            "sent_generated",
+            "openai",
+            "gpt-5",
+            "resp_1",
+            0,
+            "Первый AI-ответ",
+        ),
+    )
     conn.commit()
 
     result = plan_and_persist(conn, post_log_id=post_log_id)
-    assert result["decision"]["should_reply"] is False
-    assert result["decision"]["reason"] == "existing_ai_reply_detected"
+    assert result["decision"]["should_reply"] is True
+    assert result["decision"]["reason"] == "planned_candidate_selected"
