@@ -1,0 +1,48 @@
+COMMUNITY BLOCK — FINAL STATE
+
+1. DELIVERY
+- chats_enabled: 7
+- schedule:
+  - left4portugal — 11:11
+  - chatlisboa — 13:00
+  - chatfigueira — 15:00
+  - chatalcochete — 16:20
+  - chatleiria — 18:00
+  - chatporto — 20:00
+  - chatalgarve — 22:00
+
+2. BANK
+- active_total: 151
+- imported_active (id>387): 120
+
+- by_topic:
+  - bureaucracy: 13
+  - culture: 13
+  - documents: 16
+  - financas: 13
+  - food: 13
+  - health: 14
+  - housing: 14
+  - services: 13
+  - shopping: 14
+  - transport: 15
+  - work: 13
+
+- by_format:
+  - dialogue: 57
+  - local: 47
+  - nuance: 47
+
+3. QUALITY
+- removed: 'по-человечески'
+- removed: rigid openers ('как бы вы')
+- removed: colon-heavy dialogue patterns
+- targeted rewrites applied (4 + 9 items)
+- no duplicates across chats in schedule smoke
+- selector stable
+
+4. STATUS
+- staging: OK
+- delivery: OK
+- cleanup: OK
+- ready_for: AI integration
