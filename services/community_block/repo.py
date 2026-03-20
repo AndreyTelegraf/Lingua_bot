@@ -496,3 +496,169 @@ def has_post_for_chat_on_date(
         (chat_id, yyyy_mm_dd),
     ).fetchone()
     return row is not None
+
+# community_ai_ingress_v2 helpers
+
+def find_post_log_by_reply_target(
+    conn: sqlite3.Connection,
+    *,
+    chat_id: int,
+    reply_to_message_id: int,
+) -> dict[str, Any] | None:
+    conn.row_factory = sqlite3.Row
+    row = conn.execute(
+        '''
+        SELECT *
+        FROM community_post_log
+        WHERE chat_id = ?
+          AND (
+            thread_root_message_id = ?
+            OR posted_message_id = ?
+          )
+        ORDER BY id DESC
+        LIMIT 1
+        ''',
+        (chat_id, reply_to_message_id, reply_to_message_id),
+    ).fetchone()
+    if row is not None:
+        return _row_to_dict(row)
+
+    row = conn.execute(
+        '''
+        SELECT pl.*
+        FROM community_thread_events ev
+        JOIN community_post_log pl ON pl.id = ev.post_log_id
+        WHERE ev.chat_id = ?
+          AND ev.message_id = ?
+        ORDER BY pl.id DESC
+        LIMIT 1
+        ''',
+        (chat_id, reply_to_message_id),
+    ).fetchone()
+    return _row_to_dict(row)
+
+
+def has_thread_event_for_message(
+    conn: sqlite3.Connection,
+    *,
+    chat_id: int,
+    message_id: int,
+) -> bool:
+    row = conn.execute(
+        '''
+        SELECT 1
+        FROM community_thread_events
+        WHERE chat_id = ? AND message_id = ?
+        LIMIT 1
+        ''',
+        (chat_id, message_id),
+    ).fetchone()
+    return row is not None
+
+
+def record_thread_event_rich(
+    conn: sqlite3.Connection,
+    *,
+    chat_id: int,
+    post_log_id: int | None,
+    thread_root_message_id: int | None,
+    message_id: int,
+    user_id: int,
+    event_type: str,
+    message_thread_id: int | None = None,
+    reply_to_message_id: int | None = None,
+    message_text: str | None = None,
+) -> int:
+    cur = conn.execute(
+        '''
+        INSERT INTO community_thread_events(
+            chat_id,
+            post_log_id,
+            thread_root_message_id,
+            message_id,
+            user_id,
+            event_type,
+            message_thread_id,
+            reply_to_message_id,
+            message_text
+        )
+        VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ''',
+        (
+            chat_id,
+            post_log_id,
+            thread_root_message_id,
+            message_id,
+            user_id,
+            event_type,
+            message_thread_id,
+            reply_to_message_id,
+            message_text,
+        ),
+    )
+    return int(cur.lastrowid)
+
+
+def recompute_post_reply_stats(conn: sqlite3.Connection, *, post_log_id: int) -> dict[str, Any]:
+    conn.row_factory = sqlite3.Row
+    agg = conn.execute(
+        '''
+        SELECT
+            COUNT(*) AS replies_count,
+            COUNT(DISTINCT user_id) AS unique_users_count,
+            MIN(created_at) AS first_reply_at
+        FROM community_thread_events
+        WHERE post_log_id = ?
+          AND event_type = 'user_reply'
+        ''',
+        (post_log_id,),
+    ).fetchone()
+
+    post = conn.execute(
+        '''
+        SELECT posted_at
+        FROM community_post_log
+        WHERE id = ?
+        ''',
+        (post_log_id,),
+    ).fetchone()
+
+    replies_count = int(agg["replies_count"] or 0)
+    unique_users_count = int(agg["unique_users_count"] or 0)
+    thread_depth_max = 1 if replies_count > 0 else 0
+
+    reply_latency_first_sec = None
+    first_reply_at = agg["first_reply_at"]
+    posted_at = post["posted_at"] if post is not None else None
+    if first_reply_at and posted_at:
+        from datetime import datetime
+        first_dt = datetime.fromisoformat(str(first_reply_at).replace(" ", "T"))
+        posted_dt = datetime.fromisoformat(str(posted_at).replace(" ", "T"))
+        reply_latency_first_sec = max(0, int((first_dt - posted_dt).total_seconds()))
+
+    conn.execute(
+        '''
+        UPDATE community_post_log
+        SET had_replies = ?,
+            replies_count = ?,
+            unique_users_count = ?,
+            thread_depth_max = ?,
+            reply_latency_first_sec = ?
+        WHERE id = ?
+        ''',
+        (
+            1 if replies_count > 0 else 0,
+            replies_count,
+            unique_users_count,
+            thread_depth_max,
+            reply_latency_first_sec,
+            post_log_id,
+        ),
+    )
+
+    return {
+        "replies_count": replies_count,
+        "unique_users_count": unique_users_count,
+        "thread_depth_max": thread_depth_max,
+        "reply_latency_first_sec": reply_latency_first_sec,
+    }
