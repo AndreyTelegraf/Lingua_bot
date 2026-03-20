@@ -14,9 +14,10 @@ SYSTEM_PROMPT = (
 
 
 def render_thread(snapshot: ThreadSnapshot) -> str:
-    lines = [f"seed: {snapshot.seed_text}"]
-    for msg in snapshot.messages[-8:]:
-        lines.append(f"{msg.role}: {msg.text}")
+    lines: list[str] = []
+    for idx, msg in enumerate(snapshot.messages[-8:]):
+        role = "seed" if idx == 0 and msg.role == "seed" else msg.role
+        lines.append(f"{role}: {msg.text}")
     return "\n".join(lines)
 
 

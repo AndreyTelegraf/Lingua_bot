@@ -73,7 +73,7 @@ def fetch_thread_snapshot(conn: sqlite3.Connection, post_log_id: int) -> ThreadS
 
     event_rows = conn.execute(
         """
-        SELECT message_id, user_id, event_type
+        SELECT message_id, user_id, event_type, message_text
         FROM community_thread_events
         WHERE post_log_id = ?
         ORDER BY id ASC
@@ -86,7 +86,7 @@ def fetch_thread_snapshot(conn: sqlite3.Connection, post_log_id: int) -> ThreadS
         role = "user"
         if event_type.startswith("ai_") or event_type.startswith("followup_"):
             role = "ai"
-        text = f"[{event_type}]"
+        text = str(ev["message_text"] or f"[{event_type}]").strip()
         messages.append(
             ThreadMessage(
                 role=role,
@@ -96,20 +96,6 @@ def fetch_thread_snapshot(conn: sqlite3.Connection, post_log_id: int) -> ThreadS
                 event_type=event_type,
             )
         )
-
-    text_event_rows = conn.execute(
-        """
-        SELECT message_id, user_id, event_type
-        FROM community_thread_events
-        WHERE post_log_id = ? AND event_type IN ('user_reply_text', 'ai_reply_text')
-        ORDER BY id ASC
-        """,
-        (post_log_id,),
-    ).fetchall()
-
-    for _ in text_event_rows:
-        # reserved for future richer event storage
-        pass
 
     return ThreadSnapshot(
         post_log_id=int(row["post_log_id"]),

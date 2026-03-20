@@ -23,6 +23,9 @@ class Settings(BaseSettings):
     feature_community_enabled: bool = Field(default=False)
     community_dry_run: bool = Field(default=True)
     community_tick_seconds: int = Field(default=60)
+    openai_api_key: str = Field(default="")
+    community_ai_model: str = Field(default="gpt-5")
+    community_ai_timeout_seconds: int = Field(default=30)
 
 
 @lru_cache(maxsize=1)
