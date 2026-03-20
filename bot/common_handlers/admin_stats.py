@@ -8,6 +8,7 @@ from aiogram import F, Router
 from aiogram.types import Message
 
 ADMIN_TELEGRAM_ID = 336224597
+QUESTIONS_PER_TEST = 24
 
 router = Router(name="admin_stats")
 log = logging.getLogger(__name__)
@@ -71,7 +72,6 @@ def _count_error_report_clicks(conn: sqlite3.Connection) -> int:
 
         cols = _table_columns(conn, table_name)
 
-        # Exact event_type match
         if "event_type" in cols:
             in_list = ", ".join("{}".format(x) for x in event_names)
             total += _safe_scalar(
@@ -79,7 +79,6 @@ def _count_error_report_clicks(conn: sqlite3.Connection) -> int:
                 "SELECT COUNT(*) FROM %s WHERE event_type IN (%s)" % (table_name, in_list),
             )
 
-        # button_code / code match
         if "button_code" in cols:
             total += _safe_scalar(
                 conn,
@@ -92,7 +91,6 @@ def _count_error_report_clicks(conn: sqlite3.Connection) -> int:
                 "SELECT COUNT(*) FROM %s WHERE LOWER(code) LIKE '%%report%%' OR LOWER(code) LIKE '%%error%%'" % table_name,
             )
 
-        # payload text heuristics
         for payload_col in ("payload", "payload_json", "meta_json", "details"):
             if payload_col in cols:
                 total += _safe_scalar(
@@ -103,6 +101,26 @@ def _count_error_report_clicks(conn: sqlite3.Connection) -> int:
                 )
 
     return total
+
+
+def _completion_condition_sql() -> str:
+    return (
+        "(status = 'completed' "
+        "OR finished_at IS NOT NULL "
+        "OR COALESCE(questions_answered, 0) >= %d)" % QUESTIONS_PER_TEST
+    )
+
+
+def _username_expr(conn: sqlite3.Connection) -> str:
+    if not _table_exists(conn, "users"):
+        return "NULL AS username"
+
+    cols = _table_columns(conn, "users")
+    for candidate in ("username", "telegram_username", "user_name", "handle"):
+        if candidate in cols:
+            return "u.%s AS username" % candidate
+
+    return "NULL AS username"
 
 
 @router.message(F.text)
@@ -123,27 +141,38 @@ async def admin_stats(message: Message) -> None:
 
     users_total = _safe_scalar(conn, "SELECT COUNT(*) FROM users")
     attempts_total = _safe_scalar(conn, "SELECT COUNT(*) FROM vocab_attempts")
-    completed_attempts = _safe_scalar(conn, "SELECT COUNT(*) FROM vocab_attempts WHERE status = 'completed'")
     answers_total = _safe_scalar(conn, "SELECT COUNT(*) FROM vocab_answers")
     error_report_clicks = _count_error_report_clicks(conn)
+
+    completed_attempts = _safe_scalar(
+        conn,
+        "SELECT COUNT(*) FROM vocab_attempts WHERE %s" % _completion_condition_sql(),
+    )
 
     completion_rate = 0.0
     if attempts_total > 0:
         completion_rate = round((completed_attempts / attempts_total) * 100.0, 1)
 
-    rows = conn.execute("""
-        SELECT
-          user_id,
-          COUNT(*) AS attempts_n,
-          SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) AS completed_n,
-          MAX(COALESCE(correct_count, 0)) AS best_correct,
-          MAX(COALESCE(finished_at, started_at, created_at, updated_at)) AS last_seen
-        FROM vocab_attempts
-        GROUP BY user_id
-        ORDER BY attempts_n DESC
-        LIMIT 10
-    """).fetchall()
+    username_expr = _username_expr(conn)
 
+    top_sql = """
+        SELECT
+          va.user_id,
+          {username_expr},
+          COUNT(*) AS attempts_n,
+          SUM(CASE WHEN {completion_condition} THEN 1 ELSE 0 END) AS completed_n,
+          MAX(COALESCE(va.correct_count, 0)) AS best_correct
+        FROM vocab_attempts va
+        LEFT JOIN users u ON u.id = va.user_id
+        GROUP BY va.user_id, username
+        ORDER BY attempts_n DESC, best_correct DESC, va.user_id ASC
+        LIMIT 10
+    """.format(
+        username_expr=username_expr,
+        completion_condition=_completion_condition_sql(),
+    )
+
+    rows = conn.execute(top_sql).fetchall()
     conn.close()
 
     lines = []
@@ -159,15 +188,17 @@ async def admin_stats(message: Message) -> None:
 
     if rows:
         for r in rows:
-            uid = r["user_id"]
-            attempts_n = r["attempts_n"]
-            completed_n = r["completed_n"]
-            best_correct = r["best_correct"] or 0
-            last_seen = r["last_seen"] or "-"
+            username = r["username"]
+            if username:
+                label = "@%s" % str(username).lstrip("@")
+            else:
+                label = "<code>%s</code>" % r["user_id"]
 
-            line = (
-                "<code>%s</code> — attempts: %s, completed: %s, best_correct: %s, last_seen: %s"
-                % (uid, attempts_n, completed_n, best_correct, last_seen)
+            line = "%s — attempts: %s, completed: %s, best_correct: %s" % (
+                label,
+                r["attempts_n"],
+                r["completed_n"],
+                r["best_correct"] or 0,
             )
             lines.append(line)
     else:
