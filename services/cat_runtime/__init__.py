@@ -62,3 +62,12 @@ from .orchestrator import (
     plan_next_cat_step,
     record_answer_and_plan_next,
 )
+
+
+from .repo import (
+    append_cat_session_event,
+    ensure_cat_runtime_tables,
+    list_cat_session_events,
+    load_cat_session,
+    save_cat_session,
+)
