@@ -74,14 +74,45 @@ def _decorate_keyboard_for_branch(
     return keyboard
 
 
+def _detect_cat_payload_kind(out: dict[str, object]) -> str:
+    if bool(out.get("finished")):
+        return "result"
+    if out.get("keyboard"):
+        return "question"
+    return "message"
+
+
+def _build_cat_question_text(base_text: object) -> str:
+    return f"🎯 Адаптивный вопрос\n\n{str(base_text)}\n\nСледующий вопрос подбирается по вашим ответам."
+
+
+def _build_cat_result_text(base_text: object) -> str:
+    return f"🎯 Адаптивный результат\n\n{str(base_text)}"
+
+
+def _build_cat_message_text(base_text: object) -> str:
+    return f"🎯 CAT\n\n{str(base_text)}"
+
+
 def _build_cat_visible_payload(out: dict[str, object]) -> dict[str, object]:
-    base_text = str(out.get("text", ""))
+    base_text = out.get("text", "")
+    payload_kind = _detect_cat_payload_kind(out)
+
+    if payload_kind == "question":
+        rendered_text = _build_cat_question_text(base_text)
+    elif payload_kind == "result":
+        rendered_text = _build_cat_result_text(base_text)
+    else:
+        rendered_text = _build_cat_message_text(base_text)
+
     return {
         **out,
-        "text": _decorate_text_for_branch(base_text, ui_branch="cat"),
+        "text": rendered_text,
         "keyboard": _decorate_keyboard_for_branch(out.get("keyboard"), ui_branch="cat"),
         "visible_mode": "cat",
         "visible_semantics": "adaptive",
+        "cat_payload_kind": payload_kind,
+        "cat_native": True,
     }
 
 
@@ -92,6 +123,8 @@ def _build_legacy_visible_payload(out: dict[str, object]) -> dict[str, object]:
         "keyboard": _decorate_keyboard_for_branch(out.get("keyboard"), ui_branch="legacy"),
         "visible_mode": "legacy",
         "visible_semantics": "static",
+        "cat_payload_kind": None,
+        "cat_native": False,
     }
 
 
@@ -129,6 +162,8 @@ def _cat_info_payload() -> dict[str, object]:
         "ui_branch": "cat",
         "visible_mode": "cat",
         "visible_semantics": "adaptive",
+        "cat_payload_kind": "message",
+        "cat_native": True,
     }
 
 
