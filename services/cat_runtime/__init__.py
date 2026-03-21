@@ -1,26 +1,7 @@
-from .item_model import (
-    CATItemModel,
-    CAT_VALID_CEFR,
-    CAT_VALID_MODALITIES,
-    validate_cat_item_model,
-)
-from .estimator import (
-    CATResponse,
-    CATEstimate,
-    build_cat_responses,
-    estimate_from_items,
-    estimate_theta_map,
-)
-from .selector import (
-    CATCandidateScore,
-    item_information,
-    rank_candidates_for_theta,
-    select_next_item_for_theta,
-)
-from .stopping import (
-    CATStoppingDecision,
-    should_stop_cat,
-)
+from .item_model import CATItemModel
+from .estimator import CATEstimate, CATResponse, build_cat_responses, estimate_from_items, estimate_theta_map
+from .selector import CATCandidateScore, item_information, rank_candidates_for_theta, select_next_item_for_theta
+from .stopping import CATStoppingDecision, should_stop_cat
 from .session import (
     CATSessionAnswer,
     CATSessionState,
@@ -43,10 +24,16 @@ from .repo import (
     save_cat_session,
 )
 from .runtime import (
+    CATRuntimeAnswerResult,
+    CATRuntimeNativePayload,
+    CATRuntimeStartResult,
     CATStartResult,
     answer_cat_session_runtime,
+    answer_cat_session_runtime_native,
+    build_cat_runtime_native_payload,
     load_cat_session_runtime,
     start_cat_session_runtime,
+    start_cat_session_runtime_native,
 )
 from .bank_adapter import (
     CATBankAdapterStats,
@@ -96,14 +83,17 @@ from .vocab_fsm_wiring import (
     maybe_continue_cat_from_vocab_attempt_answer,
     maybe_start_cat_from_vocab_attempt,
 )
+from .vocab_runtime_patch import (
+    CATVocabPatchedAnswer,
+    CATVocabPatchedStart,
+    patchable_answer_from_vocab_runtime,
+    patchable_start_from_vocab_runtime,
+)
 
 __all__ = [
     "CATItemModel",
-    "CAT_VALID_CEFR",
-    "CAT_VALID_MODALITIES",
-    "validate_cat_item_model",
-    "CATResponse",
     "CATEstimate",
+    "CATResponse",
     "build_cat_responses",
     "estimate_from_items",
     "estimate_theta_map",
@@ -129,9 +119,15 @@ __all__ = [
     "load_cat_session",
     "save_cat_session",
     "CATStartResult",
+    "CATRuntimeNativePayload",
+    "CATRuntimeStartResult",
+    "CATRuntimeAnswerResult",
     "answer_cat_session_runtime",
+    "answer_cat_session_runtime_native",
+    "build_cat_runtime_native_payload",
     "load_cat_session_runtime",
     "start_cat_session_runtime",
+    "start_cat_session_runtime_native",
     "CATBankAdapterStats",
     "map_vocab_row_to_cat_item",
     "map_vocab_rows_to_cat_items",
@@ -166,14 +162,6 @@ __all__ = [
     "maybe_continue_cat_from_vocab_attempt_answer",
     "CATVocabPatchedStart",
     "CATVocabPatchedAnswer",
-    "patchable_start_from_vocab_runtime",
     "patchable_answer_from_vocab_runtime",
+    "patchable_start_from_vocab_runtime",
 ]
-
-
-from .vocab_runtime_patch import (
-    CATVocabPatchedAnswer,
-    CATVocabPatchedStart,
-    patchable_answer_from_vocab_runtime,
-    patchable_start_from_vocab_runtime,
-)
