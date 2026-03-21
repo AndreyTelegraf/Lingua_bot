@@ -58,7 +58,11 @@ __all__ = [
     "start_cat_session_runtime",
     "answer_cat_session_runtime",
     "load_cat_session_runtime",
-]
+
+    "CATBankAdapterStats",
+    "map_vocab_row_to_cat_item",
+    "map_vocab_rows_to_cat_items",
+    "summarize_vocab_rows_adapter",]
 
 
 from .orchestrator import (
@@ -81,4 +85,12 @@ from .runtime import (
     answer_cat_session_runtime,
     load_cat_session_runtime,
     start_cat_session_runtime,
+)
+
+
+from .bank_adapter import (
+    CATBankAdapterStats,
+    map_vocab_row_to_cat_item,
+    map_vocab_rows_to_cat_items,
+    summarize_vocab_rows_adapter,
 )
