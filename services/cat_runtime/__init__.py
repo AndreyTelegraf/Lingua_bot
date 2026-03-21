@@ -21,6 +21,15 @@ from .stopping import (
     CATStoppingDecision,
     should_stop_cat,
 )
+from .session import (
+    CATSessionAnswer,
+    CATSessionState,
+    append_answer,
+    create_cat_session,
+    finish_cat_session,
+    restore_cat_session,
+    serialize_cat_session,
+)
 
 __all__ = [
     "CATItemModel",
@@ -38,4 +47,11 @@ __all__ = [
     "select_next_item_for_theta",
     "CATStoppingDecision",
     "should_stop_cat",
+    "CATSessionAnswer",
+    "CATSessionState",
+    "append_answer",
+    "create_cat_session",
+    "finish_cat_session",
+    "restore_cat_session",
+    "serialize_cat_session",
 ]
