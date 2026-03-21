@@ -128,4 +128,16 @@ __all__ = [
     "build_vocab_cat_handoff",
     "answer_vocab_cat_handoff",
     "CATVocabHandoff",
+    "CATVocabEntryDecision",
+    "CATVocabEntryStartResult",
+    "decide_vocab_cat_entry",
+    "start_vocab_runtime_cat_entry",
 ]
+
+
+from .vocab_entry import (
+    CATVocabEntryDecision,
+    CATVocabEntryStartResult,
+    decide_vocab_cat_entry,
+    start_vocab_runtime_cat_entry,
+)
