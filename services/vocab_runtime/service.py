@@ -157,3 +157,62 @@ def submit_choice(
         "sample_score": stats.get("sample_score"),
         "scoring_model": stats.get("scoring_model"),
     }
+
+
+# ===== CAT layer 19: real vocab service integration seam =====
+
+def maybe_start_cat_from_vocab_service(
+    conn,
+    *,
+    user_id: int,
+    attempt_id: int,
+    feature_enabled: bool,
+    item_bank=None,
+    started_at: str | None = None,
+    metadata: dict | None = None,
+    active_only: bool = True,
+    limit: int | None = None,
+):
+    from services.cat_runtime import patchable_start_from_vocab_runtime
+
+    return patchable_start_from_vocab_runtime(
+        conn,
+        user_id=int(user_id),
+        attempt_id=int(attempt_id),
+        feature_enabled=feature_enabled,
+        item_bank=item_bank,
+        started_at=started_at,
+        metadata=metadata,
+        active_only=active_only,
+        limit=limit,
+    )
+
+
+def maybe_continue_cat_from_vocab_service_answer(
+    conn,
+    *,
+    user_id: int,
+    attempt_id: int,
+    feature_enabled: bool,
+    item,
+    response_value: int | float,
+    is_correct: bool,
+    item_bank=None,
+    updated_at: str | None = None,
+    metadata: dict | None = None,
+):
+    from services.cat_runtime import patchable_answer_from_vocab_runtime
+
+    return patchable_answer_from_vocab_runtime(
+        conn,
+        user_id=int(user_id),
+        attempt_id=int(attempt_id),
+        feature_enabled=feature_enabled,
+        item=item,
+        response_value=response_value,
+        is_correct=is_correct,
+        item_bank=item_bank,
+        updated_at=updated_at,
+        metadata=metadata,
+    )
+
