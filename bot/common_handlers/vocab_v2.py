@@ -45,9 +45,22 @@ def _attach_ui_branch(payload: dict[str, object] | None) -> dict[str, object]:
     return out
 
 
+def _decorate_text_for_branch(text: object, *, ui_branch: str) -> str:
+    base = str(text)
+    if ui_branch == "cat":
+        return f"🎯 CAT\n\n{base}"
+    return base
+
+
+def _attach_ui_render(payload: dict[str, object] | None) -> dict[str, object]:
+    out = _attach_ui_branch(payload)
+    out["text"] = _decorate_text_for_branch(out.get("text", ""), ui_branch=str(out.get("ui_branch", "legacy")))
+    return out
+
+
 def run_vocab_v2_start_ui(*, conn, store, user_id: int) -> dict[str, object]:
     out = run_vocab_v2_start(conn=conn, store=store, user_id=user_id)
-    return _attach_ui_branch(out)
+    return _attach_ui_render(out)
 
 
 def run_vocab_v2_callback_ui(*, conn, store, user_id: int, callback_data: str) -> dict[str, object]:
@@ -57,7 +70,7 @@ def run_vocab_v2_callback_ui(*, conn, store, user_id: int, callback_data: str) -
         user_id=user_id,
         callback_data=callback_data,
     )
-    return _attach_ui_branch(out)
+    return _attach_ui_render(out)
 
 
 def build_vocab_v2_router() -> Router:
