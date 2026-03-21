@@ -27,6 +27,39 @@ def _keyboard(rows: list[dict[str, object]]) -> InlineKeyboardMarkup:
     )
 
 
+def _extract_runtime_branch(payload: dict[str, object] | None) -> str:
+    if not isinstance(payload, dict):
+        return "legacy"
+    raw = payload.get("runtime_branch", "legacy")
+    return "cat" if str(raw) == "cat" else "legacy"
+
+
+def _attach_ui_branch(payload: dict[str, object] | None) -> dict[str, object]:
+    if not isinstance(payload, dict):
+        return {"runtime_branch": "legacy", "ui_branch": "legacy"}
+
+    out = dict(payload)
+    branch = _extract_runtime_branch(payload)
+    out["runtime_branch"] = branch
+    out["ui_branch"] = branch
+    return out
+
+
+def run_vocab_v2_start_ui(*, conn, store, user_id: int) -> dict[str, object]:
+    out = run_vocab_v2_start(conn=conn, store=store, user_id=user_id)
+    return _attach_ui_branch(out)
+
+
+def run_vocab_v2_callback_ui(*, conn, store, user_id: int, callback_data: str) -> dict[str, object]:
+    out = run_vocab_v2_callback(
+        conn=conn,
+        store=store,
+        user_id=user_id,
+        callback_data=callback_data,
+    )
+    return _attach_ui_branch(out)
+
+
 def build_vocab_v2_router() -> Router:
     router = Router(name="vocab_v2_router")
 
@@ -37,7 +70,7 @@ def build_vocab_v2_router() -> Router:
 
         conn = _conn()
         try:
-            out = run_vocab_v2_start(conn=conn, store=_STORE, user_id=int(message.from_user.id))
+            out = run_vocab_v2_start_ui(conn=conn, store=_STORE, user_id=int(message.from_user.id))
         finally:
             conn.close()
 
@@ -55,7 +88,7 @@ def build_vocab_v2_router() -> Router:
 
         conn = _conn()
         try:
-            out = run_vocab_v2_callback(
+            out = run_vocab_v2_callback_ui(
                 conn=conn,
                 store=_STORE,
                 user_id=int(callback.from_user.id),
