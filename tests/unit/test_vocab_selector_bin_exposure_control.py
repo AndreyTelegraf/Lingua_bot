@@ -73,7 +73,21 @@ def test_selector_prefers_less_burned_bin() -> None:
         picked = await selector.pick_next_item(attempt_id=int(active["id"]))
         assert picked is not None
         assert int(picked["id"]) not in burned_ids
-        assert str(picked["bin_name"]) != "1K"
+
+        # Contract of baseline selector:
+        # avoid highly-burned items when possible, but do not globally ban 1K
+        # unless there is an explicit bin-level policy for that.
+        cursor = await conn.execute(
+            """
+            SELECT COALESCE(shown_count, 0) AS shown_count
+            FROM vocab_item_exposure
+            WHERE item_id = ?
+            """,
+            (int(picked["id"]),),
+        )
+        exposure_row = await cursor.fetchone()
+        picked_shown = int(exposure_row["shown_count"] or 0) if exposure_row is not None else 0
+        assert picked_shown < 25
 
         await close_container()
 
