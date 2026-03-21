@@ -54,6 +54,10 @@ __all__ = [
     "finish_cat_session",
     "restore_cat_session",
     "serialize_cat_session",
+    "CATStartResult",
+    "start_cat_session_runtime",
+    "answer_cat_session_runtime",
+    "load_cat_session_runtime",
 ]
 
 
@@ -70,4 +74,11 @@ from .repo import (
     list_cat_session_events,
     load_cat_session,
     save_cat_session,
+)
+
+from .runtime import (
+    CATStartResult,
+    answer_cat_session_runtime,
+    load_cat_session_runtime,
+    start_cat_session_runtime,
 )

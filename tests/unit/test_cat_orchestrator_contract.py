@@ -15,7 +15,12 @@ from services.cat_runtime import (
 @dataclass(slots=True)
 class _Stop:
     should_stop: bool
-    reason: str
+    reason: str | None
+    questions_answered: int = 0
+    min_questions: int = 8
+    max_questions: int = 24
+    current_se: float | None = None
+    target_se: float | None = 0.35
 
 
 def _item(item_id: int, difficulty_b: float = 0.0) -> CATItemModel:
@@ -46,7 +51,7 @@ def test_plan_next_cat_step_selects_item_for_active_session(monkeypatch) -> None
 
     def fake_should_stop(**kwargs):
         seen["stop_kwargs"] = kwargs
-        return _Stop(should_stop=False, reason="continue")
+        return _Stop(should_stop=False, reason=None, questions_answered=0, current_se=0.40)
 
     def fake_select(**kwargs):
         seen["select_kwargs"] = kwargs
@@ -66,10 +71,10 @@ def test_plan_next_cat_step_selects_item_for_active_session(monkeypatch) -> None
     assert step.estimate.se == 0.40
     assert round(step.estimate.information, 2) == 6.25
 
-    select_est = seen["select_kwargs"].get("estimate")
-    assert select_est is not None
-    assert select_est.theta == 0.25
-    assert seen["stop_kwargs"]["estimate"].theta == 0.25
+    assert seen["stop_kwargs"]["questions_answered"] == 0
+    assert seen["stop_kwargs"]["current_se"] == 0.40
+    assert seen["select_kwargs"]["items"][1].item_id == 2
+    assert seen["select_kwargs"]["theta"] == 0.25
 
 
 def test_plan_next_cat_step_finishes_when_stopping_rule_triggers(monkeypatch) -> None:
@@ -80,14 +85,19 @@ def test_plan_next_cat_step_finishes_when_stopping_rule_triggers(monkeypatch) ->
     finished: dict[str, object] = {}
 
     def fake_should_stop(**kwargs):
-        return _Stop(should_stop=True, reason="target_se_reached")
+        return _Stop(
+            should_stop=True,
+            reason="target_precision_reached",
+            questions_answered=8,
+            current_se=0.18,
+        )
 
-    def fake_finish(s, *, final_estimate=None, finished_at=None, stop_reason=None):
+    def fake_finish(s, *, final_estimate=None, finished_at=None, reason=None):
         s.status = "finished"
         if final_estimate is not None:
             s.theta = final_estimate.theta
             s.se = final_estimate.se
-        finished["stop_reason"] = stop_reason
+        finished["reason"] = reason
         finished["final_estimate"] = final_estimate
 
     monkeypatch.setattr("services.cat_runtime.orchestrator.should_stop_cat", fake_should_stop)
@@ -103,7 +113,7 @@ def test_plan_next_cat_step_finishes_when_stopping_rule_triggers(monkeypatch) ->
     assert session.status == "finished"
     assert session.theta == -0.10
     assert session.se == 0.18
-    assert finished["stop_reason"] == "target_se_reached"
+    assert finished["reason"] == "target_precision_reached"
     assert finished["final_estimate"] is not None
 
 
@@ -129,7 +139,7 @@ def test_record_answer_and_plan_next_updates_session_and_returns_next_item(monke
         return new_est
 
     def fake_should_stop(**kwargs):
-        return _Stop(should_stop=False, reason="continue")
+        return _Stop(should_stop=False, reason=None, questions_answered=1, current_se=0.27)
 
     def fake_select(**kwargs):
         calls["select"] = kwargs
@@ -156,7 +166,4 @@ def test_record_answer_and_plan_next_updates_session_and_returns_next_item(monke
     assert session.se == new_est.se
     assert calls["build_responses"]["answers"] == []
     assert calls["estimate"]["responses"][0]["item_id"] == 10
-
-    select_est = calls["select"].get("estimate")
-    assert select_est is not None
-    assert select_est.theta == 0.61
+    assert calls["select"]["theta"] == 0.61
