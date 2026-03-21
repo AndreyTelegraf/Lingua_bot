@@ -52,10 +52,55 @@ def _decorate_text_for_branch(text: object, *, ui_branch: str) -> str:
     return base
 
 
+def _decorate_keyboard_for_branch(
+    keyboard: object,
+    *,
+    ui_branch: str,
+) -> object:
+    if ui_branch != "cat":
+        return keyboard
+
+    if keyboard is None:
+        return [
+            {"text": "ℹ️ Adaptive mode", "callback_data": "vocab:cat:info"},
+        ]
+
+    if isinstance(keyboard, list):
+        return [
+            {"text": "ℹ️ Adaptive mode", "callback_data": "vocab:cat:info"},
+            *keyboard,
+        ]
+
+    return keyboard
+
+
+def _build_cat_visible_payload(out: dict[str, object]) -> dict[str, object]:
+    base_text = str(out.get("text", ""))
+    return {
+        **out,
+        "text": _decorate_text_for_branch(base_text, ui_branch="cat"),
+        "keyboard": _decorate_keyboard_for_branch(out.get("keyboard"), ui_branch="cat"),
+        "visible_mode": "cat",
+        "visible_semantics": "adaptive",
+    }
+
+
+def _build_legacy_visible_payload(out: dict[str, object]) -> dict[str, object]:
+    return {
+        **out,
+        "text": _decorate_text_for_branch(out.get("text", ""), ui_branch="legacy"),
+        "keyboard": _decorate_keyboard_for_branch(out.get("keyboard"), ui_branch="legacy"),
+        "visible_mode": "legacy",
+        "visible_semantics": "static",
+    }
+
+
 def _attach_ui_render(payload: dict[str, object] | None) -> dict[str, object]:
     out = _attach_ui_branch(payload)
-    out["text"] = _decorate_text_for_branch(out.get("text", ""), ui_branch=str(out.get("ui_branch", "legacy")))
-    return out
+    branch = str(out.get("ui_branch", "legacy"))
+    if branch == "cat":
+        return _build_cat_visible_payload(out)
+    return _build_legacy_visible_payload(out)
 
 
 def run_vocab_v2_start_ui(*, conn, store, user_id: int) -> dict[str, object]:
@@ -73,6 +118,20 @@ def run_vocab_v2_callback_ui(*, conn, store, user_id: int, callback_data: str) -
     return _attach_ui_render(out)
 
 
+
+def _cat_info_payload() -> dict[str, object]:
+    return {
+        "ok": True,
+        "text": "🎯 CAT\n\nЭтот тест сейчас работает в адаптивном режиме: следующие задания подбираются по вашим ответам.",
+        "keyboard": [],
+        "finished": False,
+        "runtime_branch": "cat",
+        "ui_branch": "cat",
+        "visible_mode": "cat",
+        "visible_semantics": "adaptive",
+    }
+
+
 def build_vocab_v2_router() -> Router:
     router = Router(name="vocab_v2_router")
 
@@ -88,6 +147,19 @@ def build_vocab_v2_router() -> Router:
             conn.close()
 
         await message.answer(
+            str(out["text"]),
+            reply_markup=_keyboard(out["keyboard"]) if out.get("keyboard") else None,
+        )
+
+    @router.callback_query(F.data == "vocab:cat:info")
+    async def vocab2_cat_info_handler(callback: CallbackQuery) -> None:
+        await callback.answer()
+
+        if callback.message is None:
+            return
+
+        out = _cat_info_payload()
+        await callback.message.answer(
             str(out["text"]),
             reply_markup=_keyboard(out["keyboard"]) if out.get("keyboard") else None,
         )
