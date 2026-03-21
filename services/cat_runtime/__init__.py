@@ -66,7 +66,8 @@ __all__ = [
     "CATBankLoadStats",
     "load_vocab_rows_for_cat",
     "summarize_vocab_rows_eligibility",
-    "load_cat_item_bank_from_vocab",]
+    "load_cat_item_bank_from_vocab",
+]
 
 
 from .orchestrator import (
