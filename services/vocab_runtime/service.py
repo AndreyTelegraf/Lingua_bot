@@ -13,12 +13,12 @@ from services.vocab_runtime.repo import (
 from services.vocab_runtime.selector import get_next_item
 
 
-def start_or_resume_attempt(conn: sqlite3.Connection, *, user_id: int) -> dict[str, object]:
+def _start_or_resume_attempt_legacy(conn: sqlite3.Connection, *, user_id: int) -> dict[str, object]:
     attempt_id = start_attempt(conn, user_id=user_id)
     return get_attempt_stats(conn, attempt_id=attempt_id)
 
 
-def get_next_question(conn: sqlite3.Connection, *, user_id: int) -> dict[str, object] | None:
+def _get_next_question_legacy(conn: sqlite3.Connection, *, user_id: int) -> dict[str, object] | None:
     active = get_active_attempt(conn, user_id=user_id)
     if active is None:
         attempt_id = start_attempt(conn, user_id=user_id)
@@ -47,7 +47,7 @@ def get_next_question(conn: sqlite3.Connection, *, user_id: int) -> dict[str, ob
     }
 
 
-def submit_answer(
+def _submit_answer_legacy(
     conn: sqlite3.Connection,
     *,
     user_id: int,
@@ -110,7 +110,7 @@ def finish_active_attempt(
     return persist_finished_result(conn, attempt_id=attempt_id)
 
 
-def submit_choice(
+def _submit_choice_legacy(
     conn: sqlite3.Connection,
     *,
     user_id: int,
@@ -216,3 +216,171 @@ def maybe_continue_cat_from_vocab_service_answer(
         metadata=metadata,
     )
 
+# ===== CAT layer 20: patch real vocab service entrypoints =====
+
+def _cat_service_feature_enabled(flag_value) -> bool:
+    return bool(flag_value)
+
+
+def _attach_cat_route(result, cat_route):
+    if isinstance(result, dict):
+        out = dict(result)
+        out["cat_route"] = cat_route
+        return out
+    return result
+
+
+def start_or_resume_attempt(
+    conn: sqlite3.Connection,
+    *,
+    user_id: int,
+    cat_feature_enabled: bool = False,
+    item_bank=None,
+    started_at: str | None = None,
+    metadata: dict | None = None,
+    active_only: bool = True,
+    limit: int | None = None,
+) -> dict[str, object]:
+    result = _start_or_resume_attempt_legacy(conn, user_id=user_id)
+
+    if not _cat_service_feature_enabled(cat_feature_enabled):
+        return result
+
+    attempt_id = int(result["attempt_id"])
+    cat_route = maybe_start_cat_from_vocab_service(
+        conn,
+        user_id=int(user_id),
+        attempt_id=attempt_id,
+        feature_enabled=True,
+        item_bank=item_bank,
+        started_at=started_at,
+        metadata=metadata,
+        active_only=active_only,
+        limit=limit,
+    )
+    return _attach_cat_route(result, cat_route)
+
+
+def get_next_question(
+    conn: sqlite3.Connection,
+    *,
+    user_id: int,
+    cat_feature_enabled: bool = False,
+    item_bank=None,
+    started_at: str | None = None,
+    metadata: dict | None = None,
+    active_only: bool = True,
+    limit: int | None = None,
+) -> dict[str, object] | None:
+    result = _get_next_question_legacy(conn, user_id=user_id)
+
+    if result is None or not _cat_service_feature_enabled(cat_feature_enabled):
+        return result
+
+    attempt_id = int(result["attempt_id"])
+    cat_route = maybe_start_cat_from_vocab_service(
+        conn,
+        user_id=int(user_id),
+        attempt_id=attempt_id,
+        feature_enabled=True,
+        item_bank=item_bank,
+        started_at=started_at,
+        metadata=metadata,
+        active_only=active_only,
+        limit=limit,
+    )
+    return _attach_cat_route(result, cat_route)
+
+
+def submit_answer(
+    conn: sqlite3.Connection,
+    *,
+    user_id: int,
+    attempt_id: int,
+    item_id: int,
+    answer_text: str | None,
+    cat_feature_enabled: bool = False,
+    item=None,
+    response_value: int | float | None = None,
+    is_correct: bool | None = None,
+    item_bank=None,
+    updated_at: str | None = None,
+    metadata: dict | None = None,
+) -> dict[str, object]:
+    result = _submit_answer_legacy(
+        conn,
+        user_id=user_id,
+        attempt_id=attempt_id,
+        item_id=item_id,
+        answer_text=answer_text,
+    )
+
+    if not _cat_service_feature_enabled(cat_feature_enabled) or item is None:
+        return result
+
+    effective_response = 1 if bool(result.get("is_correct")) else 0
+    if response_value is not None:
+        effective_response = response_value
+
+    effective_correct = bool(result.get("is_correct")) if is_correct is None else bool(is_correct)
+
+    cat_route = maybe_continue_cat_from_vocab_service_answer(
+        conn,
+        user_id=int(user_id),
+        attempt_id=int(attempt_id),
+        feature_enabled=True,
+        item=item,
+        response_value=effective_response,
+        is_correct=effective_correct,
+        item_bank=item_bank,
+        updated_at=updated_at,
+        metadata=metadata,
+    )
+    return _attach_cat_route(result, cat_route)
+
+
+def submit_choice(
+    conn: sqlite3.Connection,
+    *,
+    user_id: int,
+    attempt_id: int,
+    item_id: int,
+    choice_id: int,
+    cat_feature_enabled: bool = False,
+    item=None,
+    response_value: int | float | None = None,
+    is_correct: bool | None = None,
+    item_bank=None,
+    updated_at: str | None = None,
+    metadata: dict | None = None,
+) -> dict[str, object]:
+    result = _submit_choice_legacy(
+        conn,
+        user_id=user_id,
+        attempt_id=attempt_id,
+        item_id=item_id,
+        choice_id=choice_id,
+    )
+
+    if not _cat_service_feature_enabled(cat_feature_enabled) or item is None:
+        return result
+
+    effective_response = 1 if bool(result.get("is_correct")) else 0
+    if response_value is not None:
+        effective_response = response_value
+
+    effective_correct = bool(result.get("is_correct")) if is_correct is None else bool(is_correct)
+
+    cat_route = maybe_continue_cat_from_vocab_service_answer(
+        conn,
+        user_id=int(user_id),
+        attempt_id=int(attempt_id),
+        feature_enabled=True,
+        item=item,
+        response_value=effective_response,
+        is_correct=effective_correct,
+        item_bank=item_bank,
+        updated_at=updated_at,
+        metadata=metadata,
+    )
+    return _attach_cat_route(result, cat_route)
