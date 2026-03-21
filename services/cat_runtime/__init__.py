@@ -62,7 +62,11 @@ __all__ = [
     "CATBankAdapterStats",
     "map_vocab_row_to_cat_item",
     "map_vocab_rows_to_cat_items",
-    "summarize_vocab_rows_adapter",]
+    "summarize_vocab_rows_adapter",
+    "CATBankLoadStats",
+    "load_vocab_rows_for_cat",
+    "summarize_vocab_rows_eligibility",
+    "load_cat_item_bank_from_vocab",]
 
 
 from .orchestrator import (
@@ -93,4 +97,12 @@ from .bank_adapter import (
     map_vocab_row_to_cat_item,
     map_vocab_rows_to_cat_items,
     summarize_vocab_rows_adapter,
+)
+
+
+from .bank_loader import (
+    CATBankLoadStats,
+    load_vocab_rows_for_cat,
+    summarize_vocab_rows_eligibility,
+    load_cat_item_bank_from_vocab,
 )
