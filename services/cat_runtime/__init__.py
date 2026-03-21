@@ -17,6 +17,10 @@ from .selector import (
     rank_candidates_for_theta,
     select_next_item_for_theta,
 )
+from .stopping import (
+    CATStoppingDecision,
+    should_stop_cat,
+)
 
 __all__ = [
     "CATItemModel",
@@ -32,4 +36,6 @@ __all__ = [
     "item_information",
     "rank_candidates_for_theta",
     "select_next_item_for_theta",
+    "CATStoppingDecision",
+    "should_stop_cat",
 ]
