@@ -132,6 +132,9 @@ __all__ = [
     "CATVocabEntryStartResult",
     "decide_vocab_cat_entry",
     "start_vocab_runtime_cat_entry",
+    "CATVocabAnswerDecision",
+    "decide_vocab_cat_answer",
+    "continue_vocab_runtime_cat_entry",
 ]
 
 
@@ -140,4 +143,9 @@ from .vocab_entry import (
     CATVocabEntryStartResult,
     decide_vocab_cat_entry,
     start_vocab_runtime_cat_entry,
+)
+from .vocab_answer_entry import (
+    CATVocabAnswerDecision,
+    continue_vocab_runtime_cat_entry,
+    decide_vocab_cat_answer,
 )
