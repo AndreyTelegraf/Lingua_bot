@@ -74,6 +74,28 @@ from .vocab_handoff import (
     build_vocab_cat_handoff,
     start_vocab_cat_handoff,
 )
+from .vocab_entry import (
+    CATVocabEntryDecision,
+    CATVocabEntryStartResult,
+    decide_vocab_cat_entry,
+    start_vocab_runtime_cat_entry,
+)
+from .vocab_answer_entry import (
+    CATVocabAnswerDecision,
+    continue_vocab_runtime_cat_entry,
+    decide_vocab_cat_answer,
+)
+from .vocab_runtime_router import (
+    CATVocabRuntimeRouteResult,
+    route_vocab_runtime_cat_answer,
+    route_vocab_runtime_cat_start,
+)
+from .vocab_fsm_wiring import (
+    CATVocabFSMAnswerRoute,
+    CATVocabFSMStartRoute,
+    maybe_continue_cat_from_vocab_attempt_answer,
+    maybe_start_cat_from_vocab_attempt,
+)
 
 __all__ = [
     "CATItemModel",
@@ -124,38 +146,22 @@ __all__ = [
     "cat_feature_enabled",
     "should_use_cat_for_mode",
     "start_mode_cat_bridge",
-    "start_vocab_cat_handoff",
-    "build_vocab_cat_handoff",
-    "answer_vocab_cat_handoff",
     "CATVocabHandoff",
+    "answer_vocab_cat_handoff",
+    "build_vocab_cat_handoff",
+    "start_vocab_cat_handoff",
     "CATVocabEntryDecision",
     "CATVocabEntryStartResult",
     "decide_vocab_cat_entry",
     "start_vocab_runtime_cat_entry",
     "CATVocabAnswerDecision",
-    "decide_vocab_cat_answer",
     "continue_vocab_runtime_cat_entry",
+    "decide_vocab_cat_answer",
     "CATVocabRuntimeRouteResult",
-    "route_vocab_runtime_cat_start",
     "route_vocab_runtime_cat_answer",
+    "route_vocab_runtime_cat_start",
+    "CATVocabFSMStartRoute",
+    "CATVocabFSMAnswerRoute",
+    "maybe_start_cat_from_vocab_attempt",
+    "maybe_continue_cat_from_vocab_attempt_answer",
 ]
-
-
-from .vocab_entry import (
-    CATVocabEntryDecision,
-    CATVocabEntryStartResult,
-    decide_vocab_cat_entry,
-    start_vocab_runtime_cat_entry,
-)
-from .vocab_answer_entry import (
-    CATVocabAnswerDecision,
-    continue_vocab_runtime_cat_entry,
-    decide_vocab_cat_answer,
-)
-
-
-from .vocab_runtime_router import (
-    CATVocabRuntimeRouteResult,
-    route_vocab_runtime_cat_answer,
-    route_vocab_runtime_cat_start,
-)
