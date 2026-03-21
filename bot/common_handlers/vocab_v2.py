@@ -34,15 +34,45 @@ def _extract_runtime_branch(payload: dict[str, object] | None) -> str:
     return "cat" if str(raw) == "cat" else "legacy"
 
 
-def _attach_ui_branch(payload: dict[str, object] | None) -> dict[str, object]:
+def _extract_cat_payload_kind(payload: dict[str, object] | None) -> str | None:
     if not isinstance(payload, dict):
-        return {"runtime_branch": "legacy", "ui_branch": "legacy"}
+        return None
 
-    out = dict(payload)
+    raw = payload.get("cat_payload_kind")
+    if raw is not None:
+        value = str(raw)
+        if value in {"question", "result", "message"}:
+            return value
+
     branch = _extract_runtime_branch(payload)
-    out["runtime_branch"] = branch
-    out["ui_branch"] = branch
-    return out
+    if branch != "cat":
+        return None
+
+    if bool(payload.get("finished")):
+        return "result"
+    if payload.get("keyboard"):
+        return "question"
+    return "message"
+
+
+def _extract_visible_mode(payload: dict[str, object] | None) -> str:
+    if not isinstance(payload, dict):
+        return "legacy"
+    raw = str(payload.get("visible_mode", "legacy"))
+    return "cat" if raw == "cat" else "legacy"
+
+
+def _extract_visible_semantics(payload: dict[str, object] | None) -> str:
+    if not isinstance(payload, dict):
+        return "static"
+    raw = str(payload.get("visible_semantics", "static"))
+    return "adaptive" if raw == "adaptive" else "static"
+
+
+def _extract_cat_native(payload: dict[str, object] | None) -> bool:
+    if not isinstance(payload, dict):
+        return False
+    return bool(payload.get("cat_native", False))
 
 
 def _decorate_text_for_branch(text: object, *, ui_branch: str) -> str:
@@ -60,58 +90,39 @@ def _decorate_keyboard_for_branch(
     if ui_branch != "cat":
         return keyboard
 
+    info_row = {"text": "ℹ️ Adaptive mode", "callback_data": "vocab:cat:info"}
+
     if keyboard is None:
-        return [
-            {"text": "ℹ️ Adaptive mode", "callback_data": "vocab:cat:info"},
-        ]
+        return [info_row]
 
     if isinstance(keyboard, list):
-        return [
-            {"text": "ℹ️ Adaptive mode", "callback_data": "vocab:cat:info"},
-            *keyboard,
-        ]
+        if keyboard and isinstance(keyboard[0], dict) and keyboard[0].get("callback_data") == "vocab:cat:info":
+            return keyboard
+        return [info_row, *keyboard]
 
     return keyboard
 
 
-def _detect_cat_payload_kind(out: dict[str, object]) -> str:
-    if bool(out.get("finished")):
-        return "result"
-    if out.get("keyboard"):
-        return "question"
-    return "message"
-
-
-def _build_cat_question_text(base_text: object) -> str:
-    return f"🎯 Адаптивный вопрос\n\n{str(base_text)}\n\nСледующий вопрос подбирается по вашим ответам."
-
-
-def _build_cat_result_text(base_text: object) -> str:
-    return f"🎯 Адаптивный результат\n\n{str(base_text)}"
-
-
-def _build_cat_message_text(base_text: object) -> str:
-    return f"🎯 CAT\n\n{str(base_text)}"
+def _render_cat_text_from_kind(base_text: object, *, kind: str | None) -> str:
+    text = str(base_text)
+    if kind == "question":
+        return f"🎯 Адаптивный вопрос\n\n{text}\n\nСледующий вопрос подбирается по вашим ответам."
+    if kind == "result":
+        return f"🎯 Адаптивный результат\n\n{text}"
+    return f"🎯 CAT\n\n{text}"
 
 
 def _build_cat_visible_payload(out: dict[str, object]) -> dict[str, object]:
-    base_text = out.get("text", "")
-    payload_kind = _detect_cat_payload_kind(out)
-
-    if payload_kind == "question":
-        rendered_text = _build_cat_question_text(base_text)
-    elif payload_kind == "result":
-        rendered_text = _build_cat_result_text(base_text)
-    else:
-        rendered_text = _build_cat_message_text(base_text)
-
+    kind = _extract_cat_payload_kind(out)
     return {
         **out,
-        "text": rendered_text,
+        "text": _render_cat_text_from_kind(out.get("text", ""), kind=kind),
         "keyboard": _decorate_keyboard_for_branch(out.get("keyboard"), ui_branch="cat"),
+        "runtime_branch": "cat",
+        "ui_branch": "cat",
         "visible_mode": "cat",
         "visible_semantics": "adaptive",
-        "cat_payload_kind": payload_kind,
+        "cat_payload_kind": kind,
         "cat_native": True,
     }
 
@@ -121,6 +132,8 @@ def _build_legacy_visible_payload(out: dict[str, object]) -> dict[str, object]:
         **out,
         "text": _decorate_text_for_branch(out.get("text", ""), ui_branch="legacy"),
         "keyboard": _decorate_keyboard_for_branch(out.get("keyboard"), ui_branch="legacy"),
+        "runtime_branch": "legacy",
+        "ui_branch": "legacy",
         "visible_mode": "legacy",
         "visible_semantics": "static",
         "cat_payload_kind": None,
@@ -129,10 +142,30 @@ def _build_legacy_visible_payload(out: dict[str, object]) -> dict[str, object]:
 
 
 def _attach_ui_render(payload: dict[str, object] | None) -> dict[str, object]:
-    out = _attach_ui_branch(payload)
-    branch = str(out.get("ui_branch", "legacy"))
-    if branch == "cat":
+    if not isinstance(payload, dict):
+        return {
+            "ok": False,
+            "text": "",
+            "keyboard": [],
+            "finished": True,
+            "runtime_branch": "legacy",
+            "ui_branch": "legacy",
+            "visible_mode": "legacy",
+            "visible_semantics": "static",
+            "cat_payload_kind": None,
+            "cat_native": False,
+        }
+
+    runtime_branch = _extract_runtime_branch(payload)
+    visible_mode = _extract_visible_mode(payload)
+    visible_semantics = _extract_visible_semantics(payload)
+    cat_native = _extract_cat_native(payload)
+
+    out = dict(payload)
+
+    if runtime_branch == "cat" or visible_mode == "cat" or visible_semantics == "adaptive" or cat_native:
         return _build_cat_visible_payload(out)
+
     return _build_legacy_visible_payload(out)
 
 
@@ -149,7 +182,6 @@ def run_vocab_v2_callback_ui(*, conn, store, user_id: int, callback_data: str) -
         callback_data=callback_data,
     )
     return _attach_ui_render(out)
-
 
 
 def _cat_info_payload() -> dict[str, object]:
