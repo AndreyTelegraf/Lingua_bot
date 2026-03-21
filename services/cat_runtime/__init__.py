@@ -30,6 +30,44 @@ from .session import (
     restore_cat_session,
     serialize_cat_session,
 )
+from .orchestrator import (
+    CATOrchestrationStep,
+    plan_next_cat_step,
+    record_answer_and_plan_next,
+)
+from .repo import (
+    append_cat_session_event,
+    ensure_cat_runtime_tables,
+    list_cat_session_events,
+    load_cat_session,
+    save_cat_session,
+)
+from .runtime import (
+    CATStartResult,
+    answer_cat_session_runtime,
+    load_cat_session_runtime,
+    start_cat_session_runtime,
+)
+from .bank_adapter import (
+    CATBankAdapterStats,
+    map_vocab_row_to_cat_item,
+    map_vocab_rows_to_cat_items,
+    summarize_vocab_rows_adapter,
+)
+from .bank_loader import (
+    CATBankLoadStats,
+    load_cat_item_bank_from_vocab,
+    load_vocab_rows_for_cat,
+    summarize_vocab_rows_eligibility,
+)
+from .vocab_bridge import (
+    CATBridgeDecision,
+    answer_mode_cat_bridge,
+    build_cat_session_id,
+    cat_feature_enabled,
+    should_use_cat_for_mode,
+    start_mode_cat_bridge,
+)
 
 __all__ = [
     "CATItemModel",
@@ -54,56 +92,30 @@ __all__ = [
     "finish_cat_session",
     "restore_cat_session",
     "serialize_cat_session",
+    "CATOrchestrationStep",
+    "plan_next_cat_step",
+    "record_answer_and_plan_next",
+    "append_cat_session_event",
+    "ensure_cat_runtime_tables",
+    "list_cat_session_events",
+    "load_cat_session",
+    "save_cat_session",
     "CATStartResult",
-    "start_cat_session_runtime",
     "answer_cat_session_runtime",
     "load_cat_session_runtime",
-
+    "start_cat_session_runtime",
     "CATBankAdapterStats",
     "map_vocab_row_to_cat_item",
     "map_vocab_rows_to_cat_items",
     "summarize_vocab_rows_adapter",
     "CATBankLoadStats",
+    "load_cat_item_bank_from_vocab",
     "load_vocab_rows_for_cat",
     "summarize_vocab_rows_eligibility",
-    "load_cat_item_bank_from_vocab",
+    "CATBridgeDecision",
+    "answer_mode_cat_bridge",
+    "build_cat_session_id",
+    "cat_feature_enabled",
+    "should_use_cat_for_mode",
+    "start_mode_cat_bridge",
 ]
-
-
-from .orchestrator import (
-    CATOrchestrationStep,
-    plan_next_cat_step,
-    record_answer_and_plan_next,
-)
-
-
-from .repo import (
-    append_cat_session_event,
-    ensure_cat_runtime_tables,
-    list_cat_session_events,
-    load_cat_session,
-    save_cat_session,
-)
-
-from .runtime import (
-    CATStartResult,
-    answer_cat_session_runtime,
-    load_cat_session_runtime,
-    start_cat_session_runtime,
-)
-
-
-from .bank_adapter import (
-    CATBankAdapterStats,
-    map_vocab_row_to_cat_item,
-    map_vocab_rows_to_cat_items,
-    summarize_vocab_rows_adapter,
-)
-
-
-from .bank_loader import (
-    CATBankLoadStats,
-    load_vocab_rows_for_cat,
-    summarize_vocab_rows_eligibility,
-    load_cat_item_bank_from_vocab,
-)
