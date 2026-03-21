@@ -7,8 +7,11 @@ from services.vocab_runtime.handler_api import answer_callback, start_command
 
 
 def handle_start(conn: sqlite3.Connection, *, user_id: int) -> dict[str, object]:
-    return map_start_result(start_command(conn, user_id=user_id))
-
+    raw = start_command(conn, user_id=user_id)
+    mapped = map_start_result(raw)
+    return mapped
 
 def handle_callback(conn: sqlite3.Connection, *, fsm: object, callback_data: str) -> dict[str, object]:
-    return map_answer_result(answer_callback(conn, fsm=fsm, callback_data=callback_data))
+    raw = answer_callback(conn, fsm=fsm, callback_data=callback_data)
+    mapped = map_answer_result(raw)
+    return mapped

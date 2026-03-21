@@ -14,14 +14,16 @@ from services.vocab_runtime.selector import get_next_item
 
 
 def _start_or_resume_attempt_legacy(conn: sqlite3.Connection, *, user_id: int) -> dict[str, object]:
-    attempt_id = start_attempt(conn, user_id=user_id)
+    import uuid
+    mode_run_id = str(uuid.uuid4())
+    attempt_id = start_attempt(conn, user_id=user_id, mode_run_id=mode_run_id)
     return get_attempt_stats(conn, attempt_id=attempt_id)
 
 
 def _get_next_question_legacy(conn: sqlite3.Connection, *, user_id: int) -> dict[str, object] | None:
     active = get_active_attempt(conn, user_id=user_id)
     if active is None:
-        attempt_id = start_attempt(conn, user_id=user_id)
+        attempt_id = start_attempt(conn, user_id=user_id, mode_run_id=str(uuid.uuid4()))
     else:
         attempt_id = int(active["id"])
 

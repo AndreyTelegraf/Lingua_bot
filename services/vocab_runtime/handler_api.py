@@ -19,8 +19,8 @@ def start_command(conn: sqlite3.Connection, *, user_id: int) -> tuple[VocabFSM, 
         return fsm, None
     if 'choices' not in payload:
         return fsm, payload
-    return fsm, build_telegram_question_view(payload)
-
+    view = build_telegram_question_view(payload)
+    return fsm, view
 
 def answer_callback(
     conn: sqlite3.Connection,
@@ -32,6 +32,7 @@ def answer_callback(
     fsm, result = submit_vocab_choice(conn, fsm=fsm, choice_id=choice_id)
     fsm, next_payload = get_vocab_question(conn, fsm=fsm)
 
+
     if next_payload is None:
         return fsm, {'answer_result': result, 'next_view': None}
 
@@ -39,6 +40,7 @@ def answer_callback(
         next_view = build_telegram_question_view(next_payload)
     else:
         next_view = next_payload
+
 
     return fsm, {
         'answer_result': result,
