@@ -164,4 +164,16 @@ __all__ = [
     "CATVocabFSMAnswerRoute",
     "maybe_start_cat_from_vocab_attempt",
     "maybe_continue_cat_from_vocab_attempt_answer",
+    "CATVocabPatchedStart",
+    "CATVocabPatchedAnswer",
+    "patchable_start_from_vocab_runtime",
+    "patchable_answer_from_vocab_runtime",
 ]
+
+
+from .vocab_runtime_patch import (
+    CATVocabPatchedAnswer,
+    CATVocabPatchedStart,
+    patchable_answer_from_vocab_runtime,
+    patchable_start_from_vocab_runtime,
+)
