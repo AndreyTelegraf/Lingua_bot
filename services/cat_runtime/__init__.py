@@ -11,6 +11,12 @@ from .estimator import (
     estimate_from_items,
     estimate_theta_map,
 )
+from .selector import (
+    CATCandidateScore,
+    item_information,
+    rank_candidates_for_theta,
+    select_next_item_for_theta,
+)
 
 __all__ = [
     "CATItemModel",
@@ -22,4 +28,8 @@ __all__ = [
     "build_cat_responses",
     "estimate_from_items",
     "estimate_theta_map",
+    "CATCandidateScore",
+    "item_information",
+    "rank_candidates_for_theta",
+    "select_next_item_for_theta",
 ]
