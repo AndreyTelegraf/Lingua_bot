@@ -34,6 +34,34 @@ def _extract_runtime_branch(payload: dict[str, object] | None) -> str:
     return "cat" if str(raw) == "cat" else "legacy"
 
 
+def _attach_ui_branch(payload: dict[str, object] | None) -> dict[str, object]:
+    if not isinstance(payload, dict):
+        return {
+            "ok": False,
+            "text": "",
+            "keyboard": [],
+            "finished": True,
+            "runtime_branch": "legacy",
+            "ui_branch": "legacy",
+            "visible_mode": "legacy",
+            "visible_semantics": "static",
+            "cat_payload_kind": None,
+            "cat_native": False,
+            "runtime_native_payload": None,
+        }
+
+    out = dict(payload)
+    branch = _extract_runtime_branch(payload)
+    out["runtime_branch"] = branch
+    out["ui_branch"] = branch
+    out.setdefault("visible_mode", "cat" if branch == "cat" else "legacy")
+    out.setdefault("visible_semantics", "adaptive" if branch == "cat" else "static")
+    out.setdefault("cat_payload_kind", None)
+    out.setdefault("cat_native", False)
+    out.setdefault("runtime_native_payload", None)
+    return out
+
+
 def _extract_cat_payload_kind(payload: dict[str, object] | None) -> str | None:
     if not isinstance(payload, dict):
         return None
@@ -80,6 +108,18 @@ def _decorate_text_for_branch(text: object, *, ui_branch: str) -> str:
     if ui_branch == "cat":
         return f"🎯 CAT\n\n{base}"
     return base
+
+
+def _build_cat_question_text(base_text: object) -> str:
+    return f"🎯 Адаптивный вопрос\n\n{str(base_text)}\n\nСледующий вопрос подбирается по вашим ответам."
+
+
+def _build_cat_result_text(base_text: object) -> str:
+    return f"🎯 Адаптивный результат\n\n{str(base_text)}"
+
+
+def _build_cat_message_text(base_text: object) -> str:
+    return f"🎯 CAT\n\n{str(base_text)}"
 
 
 def _decorate_keyboard_for_branch(
@@ -141,33 +181,75 @@ def _build_legacy_visible_payload(out: dict[str, object]) -> dict[str, object]:
     }
 
 
-def _attach_ui_render(payload: dict[str, object] | None) -> dict[str, object]:
+def _runtime_native_payload(payload: dict[str, object] | None) -> dict[str, object] | None:
     if not isinstance(payload, dict):
-        return {
-            "ok": False,
-            "text": "",
-            "keyboard": [],
-            "finished": True,
-            "runtime_branch": "legacy",
-            "ui_branch": "legacy",
-            "visible_mode": "legacy",
-            "visible_semantics": "static",
-            "cat_payload_kind": None,
-            "cat_native": False,
-        }
+        return None
+    raw = payload.get("runtime_native_payload")
+    return raw if isinstance(raw, dict) else None
 
-    runtime_branch = _extract_runtime_branch(payload)
-    visible_mode = _extract_visible_mode(payload)
-    visible_semantics = _extract_visible_semantics(payload)
-    cat_native = _extract_cat_native(payload)
 
-    out = dict(payload)
+def _apply_runtime_native_payload(out: dict[str, object]) -> dict[str, object]:
+    native = _runtime_native_payload(out)
+    if native is None:
+        return out
 
-    if runtime_branch == "cat" or visible_mode == "cat" or visible_semantics == "adaptive" or cat_native:
+    rendered = dict(out)
+    kind = str(native.get("kind") or "")
+    prompt_text = native.get("prompt_text")
+    stop_reason = native.get("stop_reason")
+
+    rendered["cat_payload_kind"] = kind or rendered.get("cat_payload_kind")
+    rendered["cat_native"] = True
+    rendered["visible_mode"] = "cat"
+    rendered["visible_semantics"] = "adaptive"
+
+    if kind == "question":
+        rendered["text"] = _build_cat_question_text(prompt_text or rendered.get("text", ""))
+        rendered["keyboard"] = _decorate_keyboard_for_branch(rendered.get("keyboard"), ui_branch="cat")
+    elif kind == "result":
+        base = rendered.get("text", "")
+        if stop_reason:
+            base = f"{base}\n\nПричина остановки: {stop_reason}"
+        rendered["text"] = _build_cat_result_text(base)
+        rendered["keyboard"] = _decorate_keyboard_for_branch(rendered.get("keyboard"), ui_branch="cat")
+    else:
+        rendered["text"] = _build_cat_message_text(rendered.get("text", ""))
+        rendered["keyboard"] = _decorate_keyboard_for_branch(rendered.get("keyboard"), ui_branch="cat")
+
+    return rendered
+
+
+def _attach_ui_render(payload: dict[str, object] | None) -> dict[str, object]:
+    out = _attach_ui_branch(payload)
+    branch = str(out.get("ui_branch", "legacy"))
+
+    if branch == "cat":
+        native = _runtime_native_payload(out)
+        if native is not None:
+            return _apply_runtime_native_payload(out)
+
+        if bool(out.get("cat_native")):
+            payload_kind = out.get("cat_payload_kind")
+            rendered = dict(out)
+            rendered["runtime_branch"] = "cat"
+            rendered["ui_branch"] = "cat"
+            rendered["visible_mode"] = "cat"
+            rendered["visible_semantics"] = "adaptive"
+
+            if payload_kind == "question":
+                rendered["text"] = _build_cat_question_text(rendered.get("text", ""))
+                rendered["keyboard"] = _decorate_keyboard_for_branch(rendered.get("keyboard"), ui_branch="cat")
+            elif payload_kind == "result":
+                rendered["text"] = _build_cat_result_text(rendered.get("text", ""))
+                rendered["keyboard"] = _decorate_keyboard_for_branch(rendered.get("keyboard"), ui_branch="cat")
+            else:
+                rendered["text"] = _build_cat_message_text(rendered.get("text", ""))
+                rendered["keyboard"] = _decorate_keyboard_for_branch(rendered.get("keyboard"), ui_branch="cat")
+            return rendered
+
         return _build_cat_visible_payload(out)
 
     return _build_legacy_visible_payload(out)
-
 
 def run_vocab_v2_start_ui(*, conn, store, user_id: int) -> dict[str, object]:
     out = run_vocab_v2_start(conn=conn, store=store, user_id=user_id)
