@@ -68,6 +68,12 @@ from .vocab_bridge import (
     should_use_cat_for_mode,
     start_mode_cat_bridge,
 )
+from .vocab_handoff import (
+    CATVocabHandoff,
+    answer_vocab_cat_handoff,
+    build_vocab_cat_handoff,
+    start_vocab_cat_handoff,
+)
 
 __all__ = [
     "CATItemModel",
@@ -118,4 +124,8 @@ __all__ = [
     "cat_feature_enabled",
     "should_use_cat_for_mode",
     "start_mode_cat_bridge",
+    "start_vocab_cat_handoff",
+    "build_vocab_cat_handoff",
+    "answer_vocab_cat_handoff",
+    "CATVocabHandoff",
 ]
