@@ -1,0 +1,16 @@
+b78ac54 cat: make runtime start idempotently resume session
+34389eb cat: preserve live runtime-native payload path
+9c4709b cat: preserve live toggle path fields through session driver
+5049437 cat: add rollout readiness contract
+7ab5999 cat: add staging smoke contract
+5faf2a6 cat: make ui strictly prefer runtime-native payload
+34e69fe cat: preserve runtime-native branch in vocab_v2 e2e path
+b0a8f7f cat: make vocab_v2 ui consume runtime-native payload
+fe28a7f cat: make handler layer consume runtime-native payload compatibly
+5524bc5 cat: add runtime-native payload core
+a827af2 cat: make vocab_v2 ui trust handler semantics compatibly
+a327f07 cat: add handler-layer native payload contract
+104eaa4 cat: patch real vocab_v2 cat native payloads
+0578fc2 cat: patch real vocab_v2 cat visible rendering
+27fa9f5 cat: patch real vocab_v2 ui branching
+e69eca4 cat: patch real vocab_v2 common handler branching
