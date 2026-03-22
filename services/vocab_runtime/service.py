@@ -11,6 +11,7 @@ from services.vocab_runtime.repo import (
     start_attempt,
 )
 from services.vocab_runtime.selector import get_next_item
+from services.cat_runtime import build_cat_runtime_native_payload
 
 
 def _start_or_resume_attempt_legacy(conn: sqlite3.Connection, *, user_id: int) -> dict[str, object]:
@@ -224,12 +225,98 @@ def _cat_service_feature_enabled(flag_value) -> bool:
     return bool(flag_value)
 
 
+def _cat_route_source(cat_route) -> str | None:
+    if cat_route is None:
+        return None
+    source = getattr(cat_route, "source", None)
+    if source is None and isinstance(cat_route, dict):
+        source = cat_route.get("source")
+    return None if source is None else str(source)
+
+
+def _cat_route_runtime_native_payload(cat_route) -> dict[str, object] | None:
+    if cat_route is None:
+        return None
+
+    route_result = getattr(cat_route, "route_result", None)
+    if route_result is None and isinstance(cat_route, dict):
+        route_result = cat_route.get("route_result")
+
+    result = getattr(route_result, "result", None)
+    if result is None and isinstance(route_result, dict):
+        result = route_result.get("result")
+
+    cat_started = getattr(result, "cat_started", None)
+    if cat_started is None and isinstance(result, dict):
+        cat_started = result.get("cat_started")
+
+    payload = getattr(cat_started, "payload", None)
+    if payload is None and isinstance(cat_started, dict):
+        payload = cat_started.get("payload")
+
+    if payload is None and cat_started is not None:
+        session = getattr(cat_started, "session", None)
+        if session is None and isinstance(cat_started, dict):
+            session = cat_started.get("session")
+
+        step = getattr(cat_started, "step", None)
+        if step is None and isinstance(cat_started, dict):
+            step = cat_started.get("step")
+
+        if session is not None and step is not None:
+            payload = build_cat_runtime_native_payload(
+                session=session,
+                step=step,
+                mode=str(getattr(session, "modality", "vocab")),
+            )
+
+    if payload is None:
+        return None
+
+    out = {
+        "kind": getattr(payload, "kind", None),
+        "mode": getattr(payload, "mode", None),
+        "session_id": getattr(payload, "session_id", None),
+        "status": getattr(payload, "status", None),
+        "theta": getattr(payload, "theta", None),
+        "se": getattr(payload, "se", None),
+        "item_id": getattr(payload, "item_id", None),
+        "prompt_text": getattr(payload, "prompt_text", None),
+        "answer_key": getattr(payload, "answer_key", None),
+        "stop_reason": getattr(payload, "stop_reason", None),
+        "payload_version": getattr(payload, "payload_version", "cat_runtime_payload_v1"),
+    }
+
+    if not out["kind"]:
+        return None
+
+    return out
+
+
 def _attach_cat_route(result, cat_route):
-    if isinstance(result, dict):
-        out = dict(result)
-        out["cat_route"] = cat_route
-        return out
-    return result
+    if not isinstance(result, dict):
+        return result
+
+    out = dict(result)
+    out["cat_route"] = cat_route
+
+    source = _cat_route_source(cat_route)
+    if source == "cat":
+        out.setdefault("runtime_branch", "cat")
+        out.setdefault("cat_native", True)
+        out.setdefault("visible_mode", "cat")
+        out.setdefault("visible_semantics", "adaptive")
+
+    native = _cat_route_runtime_native_payload(cat_route)
+    if native is not None:
+        out["runtime_branch"] = "cat"
+        out["runtime_native_payload"] = native
+        out["cat_native"] = True
+        out["visible_mode"] = "cat"
+        out["visible_semantics"] = "adaptive"
+        out["cat_payload_kind"] = native.get("kind")
+
+    return out
 
 
 def start_or_resume_attempt(

@@ -1,4 +1,5 @@
 from __future__ import annotations
+import uuid
 
 from services.vocab_runtime.result_snapshot import build_vocab_result_snapshot
 
@@ -415,21 +416,13 @@ def _bump_item_exposure(conn: sqlite3.Connection, *, item_id: int) -> None:
     )
 
 
-def start_attempt(conn: sqlite3.Connection, *, user_id: int) -> int:
+def start_attempt(conn: sqlite3.Connection, *, user_id: int, mode_run_id: str | None = None) -> int:
     conn.row_factory = sqlite3.Row
-    row = conn.execute(
-        "SELECT id FROM vocab_attempts WHERE user_id = ? AND status = 'started' ORDER BY id DESC LIMIT 1",
-        (user_id,),
-    ).fetchone()
-    if row is not None:
-        return int(row["id"])
 
-    if _has_column(conn, table="vocab_attempts", column="total_questions"):
-        cur = conn.execute(
-            "INSERT INTO vocab_attempts (user_id, status, total_questions, correct_answers) VALUES (?, 'started', 0, 0)",
-            (user_id,),
-        )
-    elif _has_column(conn, table="vocab_attempts", column="questions_answered"):
+    if mode_run_id is None:
+        mode_run_id = str(uuid.uuid4())
+
+    if _has_column(conn, table="vocab_attempts", column="questions_answered"):
         cols = ["user_id", "status", "questions_answered", "correct_count"]
         vals: list[object] = [user_id, "started", 0, 0]
         if _has_column(conn, table="vocab_attempts", column="dont_know_count"):
@@ -441,15 +434,35 @@ def start_attempt(conn: sqlite3.Connection, *, user_id: int) -> int:
         if _has_column(conn, table="vocab_attempts", column="question_limit"):
             cols.append("question_limit")
             vals.append(24)
+        if _has_column(conn, table="vocab_attempts", column="mode_run_id"):
+            cols.append("mode_run_id")
+            vals.append(str(mode_run_id))
+        placeholders = ", ".join("?" for _ in vals)
+        cur = conn.execute(
+            f"INSERT INTO vocab_attempts ({', '.join(cols)}) VALUES ({placeholders})",
+            tuple(vals),
+        )
+    elif _has_column(conn, table="vocab_attempts", column="total_questions"):
+        cols = ["user_id", "status", "total_questions", "correct_answers"]
+        vals: list[object] = [user_id, "started", 0, 0]
+        if _has_column(conn, table="vocab_attempts", column="mode_run_id"):
+            cols.append("mode_run_id")
+            vals.append(str(mode_run_id))
         placeholders = ", ".join("?" for _ in vals)
         cur = conn.execute(
             f"INSERT INTO vocab_attempts ({', '.join(cols)}) VALUES ({placeholders})",
             tuple(vals),
         )
     else:
+        cols = ["user_id", "status"]
+        vals: list[object] = [user_id, "started"]
+        if _has_column(conn, table="vocab_attempts", column="mode_run_id"):
+            cols.append("mode_run_id")
+            vals.append(str(mode_run_id))
+        placeholders = ", ".join("?" for _ in vals)
         cur = conn.execute(
-            "INSERT INTO vocab_attempts (user_id, status) VALUES (?, 'started')",
-            (user_id,),
+            f"INSERT INTO vocab_attempts ({', '.join(cols)}) VALUES ({placeholders})",
+            tuple(vals),
         )
 
     conn.commit()
@@ -647,7 +660,7 @@ def get_attempt_stats(conn: sqlite3.Connection, *, attempt_id: int) -> dict[str,
     if "question_limit" in row.keys():
         out["question_limit"] = int(row["question_limit"] or 0)
     if "mode_run_id" in row.keys():
-        out["mode_run_id"] = int(row["mode_run_id"]) if row["mode_run_id"] is not None else None
+        out["mode_run_id"] = str(row["mode_run_id"]) if row["mode_run_id"] is not None else None
 
     out["summary_text"] = _summary_text(
         correct=correct_answers,
