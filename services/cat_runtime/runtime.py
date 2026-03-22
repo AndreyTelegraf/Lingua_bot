@@ -160,16 +160,18 @@ def start_cat_session_runtime(
 ) -> CATStartResult:
     ensure_cat_runtime_tables(conn)
 
-    existing = load_cat_session(conn, session_id=session_id)
-    if existing is not None:
-        raise ValueError("session_id already exists")
-
     bank = _load_bank_or_raise(
         conn,
         item_bank=item_bank,
         active_only=active_only,
         limit=limit,
     )
+
+    existing = load_cat_session(conn, session_id=session_id)
+    if existing is not None:
+        step = plan_next_cat_step(existing, candidate_items=bank)
+        _append_step_event(conn, session_id=session_id, step=step)
+        return CATStartResult(session=existing, step=step)
 
     session = create_cat_session(
         session_id=session_id,
@@ -195,7 +197,6 @@ def start_cat_session_runtime(
     save_cat_session(conn, session)
     _append_step_event(conn, session_id=session_id, step=step)
     return CATStartResult(session=session, step=step)
-
 
 def start_cat_session_runtime_native(
     conn: sqlite3.Connection,
