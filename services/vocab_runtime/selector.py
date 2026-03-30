@@ -5,6 +5,7 @@ from services.vocab_runtime.attempt_coverage import (
     coverage_priority_order,
     coverage_priority_order_soft_bias,
 )
+import random
 import sqlite3
 import os
 import json
@@ -65,7 +66,7 @@ def rebalance_pos_weights(
     return out
 
 
-_SHOWN_EVENT_TYPES = ("shown", "question_shown")
+_SHOWN_EVENT_TYPES = ("question_prepared", "shown", "question_shown")
 
 
 def _selector_trace_enabled() -> bool:
@@ -140,12 +141,55 @@ def _has_column(conn: sqlite3.Connection, *, table: str, column: str) -> bool:
 
 
 def _cooldown_sec() -> int:
-    raw = os.getenv("VOCAB_RUNTIME_ITEM_COOLDOWN_SEC", "86400").strip()
+    for env_name in ("VOCAB_RUNTIME_ITEM_COOLDOWN_SEC", "VOCAB_SELECTOR_ITEM_COOLDOWN_SEC"):
+        raw = os.getenv(env_name, "").strip()
+        if not raw:
+            continue
+        try:
+            value = int(raw)
+        except ValueError:
+            continue
+        return max(0, value)
+    return 86400
+
+
+def _candidate_pool_size() -> int:
+    raw = os.getenv("VOCAB_SELECTOR_CANDIDATE_POOL", "24").strip()
     try:
-        value = int(raw)
+        n = int(raw)
     except ValueError:
-        return 86400
-    return max(0, value)
+        return 24
+    return max(1, min(n, 100))
+
+
+def _recent_exposure_window() -> int:
+    raw = os.getenv("VOCAB_SELECTOR_RECENT_EXPOSURE_WINDOW", "120").strip()
+    try:
+        n = int(raw)
+    except ValueError:
+        return 120
+    return max(10, n)
+
+
+def _choose_from_candidates(
+    rows: list[sqlite3.Row],
+    *,
+    attempt_id: int,
+    step: int,
+) -> sqlite3.Row | None:
+    if not rows:
+        return None
+    if len(rows) == 1:
+        return rows[0]
+
+    seed = "|".join([
+        "slot-pool",
+        str(attempt_id),
+        str(step),
+        ",".join(str(int(r["id"])) for r in rows if "id" in r.keys()),
+    ])
+    rng = random.Random(seed)
+    return rng.choice(rows)
 
 
 def _shift_bin(bin_name: str | None, delta: int) -> str | None:
@@ -287,10 +331,12 @@ def _preferred_pos_order(
 def _build_selector_sql(
     conn: sqlite3.Connection,
     *,
+    attempt_id: int | None = None,
     apply_cooldown: bool,
     target_bin: str | None = None,
     soft_start_bins: tuple[str, ...] | None = None,
     required_pos: str | None = None,
+    pool_limit: int = 1,
 ) -> tuple[str, tuple[object, ...], tuple[object, ...]]:
     select_cols = "vi.id, vi.lemma, vi.question_text, vi.correct_answer, vi.pos"
     join_sql = ""
@@ -308,6 +354,14 @@ def _build_selector_sql(
     )
     has_last_shown_at = has_exposure and _has_column(conn, table="vocab_item_exposure", column="last_shown_at")
     has_bin_name = _has_column(conn, table="vocab_items", column="bin_name")
+    has_recent_exposure = (
+        attempt_id is not None
+        and _table_exists(conn, table="vocab_attempts")
+        and _table_exists(conn, table="vocab_attempt_events")
+        and _has_column(conn, table="vocab_attempt_events", column="attempt_id")
+        and _has_column(conn, table="vocab_attempt_events", column="item_id")
+        and _has_column(conn, table="vocab_attempt_events", column="event_type")
+    )
 
     if has_bin_name and soft_start_bins:
         placeholders = ", ".join("?" for _ in soft_start_bins)
@@ -321,6 +375,18 @@ def _build_selector_sql(
     if has_exposure:
         select_cols += ", COALESCE(vie.shown_count, 0) AS global_shown_count"
         join_sql = "LEFT JOIN vocab_item_exposure vie ON vie.item_id = vi.id"
+
+    if has_recent_exposure:
+        recent_attempt_window = _recent_exposure_window()
+        select_cols += (
+            ", COALESCE((SELECT COUNT(*) FROM vocab_attempt_events vae_recent "
+            "WHERE vae_recent.item_id = vi.id "
+            "AND vae_recent.event_type IN ('question_prepared', 'question_shown') "
+            "AND vae_recent.attempt_id IN (SELECT id FROM vocab_attempts ORDER BY id DESC LIMIT "
+            f"{int(recent_attempt_window)}"
+            ")), 0) AS recent_shown_count"
+        )
+        order_parts.append("recent_shown_count ASC")
 
     if has_exposure and has_bin_name:
         select_cols += (
@@ -339,6 +405,7 @@ def _build_selector_sql(
 
     if has_exposure:
         order_parts.append("COALESCE(vie.shown_count, 0) ASC")
+        order_parts.append("COALESCE(vie.last_shown_at, '1970-01-01 00:00:00') ASC")
 
     cooldown_sec = _cooldown_sec()
     if apply_cooldown and has_last_shown_at and cooldown_sec > 0:
@@ -382,15 +449,159 @@ def _build_selector_sql(
         WHERE {where_sql}
         {{shown_filter_sql}}
         {order_sql}
-        LIMIT 1
+        LIMIT ?
     """
+    params_after_shown.append(pool_limit)
     return sql, tuple(params_before_shown), tuple(params_after_shown)
+
+
+def _attempt_question_limit(conn: sqlite3.Connection, *, attempt_id: int, default: int = 24) -> int:
+    if not _has_column(conn, table="vocab_attempts", column="question_limit"):
+        return default
+    row = conn.execute(
+        "SELECT question_limit FROM vocab_attempts WHERE id = ? LIMIT 1",
+        (attempt_id,),
+    ).fetchone()
+    if row is None:
+        return default
+    value = row[0] if not isinstance(row, sqlite3.Row) else row["question_limit"]
+    try:
+        n = int(value or 0)
+    except (TypeError, ValueError):
+        return default
+    return n if n > 0 else default
+
+
+def _attempt_pos_caps(total_questions: int) -> dict[str, int]:
+    if total_questions <= 0:
+        total_questions = 24
+
+    if total_questions == 24:
+        return {
+            "noun": 12,
+            "verb": 4,
+            "adjective": 4,
+            "adverb": 4,
+        }
+
+    noun = max(1, round(total_questions * 0.5))
+    rem = max(0, total_questions - noun)
+    verb = rem // 3
+    adjective = rem // 3
+    adverb = rem - verb - adjective
+    return {
+        "noun": noun,
+        "verb": verb,
+        "adjective": adjective,
+        "adverb": adverb,
+    }
+
+
+def _slot_schedule_for_attempt(*, attempt_id: int, total_questions: int) -> list[str]:
+    caps = _attempt_pos_caps(total_questions)
+    slots: list[str] = []
+    for pos in ("noun", "verb", "adjective", "adverb"):
+        slots.extend([pos] * int(caps.get(pos, 0) or 0))
+
+    rng = random.Random(f"slot-schedule|{attempt_id}|{total_questions}")
+    rng.shuffle(slots)
+    return slots[:total_questions]
+
+
+def _shown_lemmas_for_attempt(conn: sqlite3.Connection, *, attempt_id: int) -> set[str]:
+    conn.row_factory = sqlite3.Row
+    placeholders = ", ".join("?" for _ in _SHOWN_EVENT_TYPES)
+    rows = conn.execute(
+        f"""
+        SELECT DISTINCT COALESCE(NULLIF(TRIM(LOWER(vi.lemma)), ''), '__none__') AS lemma_norm
+        FROM vocab_attempt_events vae
+        JOIN vocab_items vi ON vi.id = vae.item_id
+        WHERE vae.attempt_id = ?
+          AND vae.event_type IN ({placeholders})
+        """,
+        (attempt_id, *_SHOWN_EVENT_TYPES),
+    ).fetchall()
+    out: set[str] = set()
+    for row in rows:
+        val = row["lemma_norm"] if isinstance(row, sqlite3.Row) else row[0]
+        out.add(str(val))
+    return out
+
+
+def _shown_pos_counts_for_attempt(conn: sqlite3.Connection, *, attempt_id: int) -> dict[str, int]:
+    conn.row_factory = sqlite3.Row
+    placeholders = ", ".join("?" for _ in _SHOWN_EVENT_TYPES)
+    rows = conn.execute(
+        f"""
+        SELECT vi.pos AS pos, COUNT(DISTINCT vae.item_id) AS n
+        FROM vocab_attempt_events vae
+        JOIN vocab_items vi ON vi.id = vae.item_id
+        WHERE vae.attempt_id = ?
+          AND vae.event_type IN ({placeholders})
+          AND vae.item_id IS NOT NULL
+        GROUP BY vi.pos
+        """,
+        (attempt_id, *_SHOWN_EVENT_TYPES),
+    ).fetchall()
+
+    out: dict[str, int] = {}
+    for row in rows:
+        pos = str(row["pos"] or "")
+        out[pos] = int(row["n"] or 0)
+    return out
+
+
+def _allowed_pos_order(
+    *,
+    caps: dict[str, int],
+    shown_pos_counts: dict[str, int],
+    preferred_pos: str | None,
+) -> list[str]:
+    remaining_caps: dict[str, int] = {}
+    for pos, cap in caps.items():
+        used = int(shown_pos_counts.get(pos, 0) or 0)
+        left = int(cap or 0) - used
+        if left > 0:
+            remaining_caps[pos] = left
+
+    if not remaining_caps:
+        return []
+
+    order: list[str] = []
+    if preferred_pos and remaining_caps.get(preferred_pos, 0) > 0:
+        order.append(preferred_pos)
+
+    rest = sorted(
+        [pos for pos in remaining_caps.keys() if pos != preferred_pos],
+        key=lambda pos: (-remaining_caps[pos], pos),
+    )
+    order.extend(rest)
+    return order
 
 
 def get_next_item(conn: sqlite3.Connection, *, attempt_id: int) -> sqlite3.Row | None:
     conn.row_factory = sqlite3.Row
 
     placeholders = ", ".join("?" for _ in _SHOWN_EVENT_TYPES)
+
+    step_row = conn.execute(
+        f"""
+        SELECT COUNT(DISTINCT item_id) AS n
+        FROM vocab_attempt_events
+        WHERE attempt_id = ?
+          AND event_type IN ({placeholders})
+          AND item_id IS NOT NULL
+        """,
+        (attempt_id, *_SHOWN_EVENT_TYPES),
+    ).fetchone()
+    step = int(step_row["n"] or 0) if step_row is not None else 0
+
+    question_limit = _attempt_question_limit(conn, attempt_id=attempt_id, default=24)
+    caps = _attempt_pos_caps(question_limit)
+    schedule = _slot_schedule_for_attempt(attempt_id=attempt_id, total_questions=question_limit)
+    preferred_pos = schedule[step] if step < len(schedule) else None
+    shown_pos_counts = _shown_pos_counts_for_attempt(conn, attempt_id=attempt_id)
+
     shown_filter_sql = f"""
       AND vi.id NOT IN (
         SELECT item_id
@@ -398,106 +609,118 @@ def get_next_item(conn: sqlite3.Connection, *, attempt_id: int) -> sqlite3.Row |
         WHERE attempt_id = ?
           AND event_type IN ({placeholders})
       )
+      AND COALESCE(NULLIF(TRIM(LOWER(vi.lemma)), ''), '__none__') NOT IN (
+        SELECT COALESCE(NULLIF(TRIM(LOWER(vi2.lemma)), ''), '__none__')
+        FROM vocab_attempt_events vae2
+        JOIN vocab_items vi2 ON vi2.id = vae2.item_id
+        WHERE vae2.attempt_id = ?
+          AND vae2.event_type IN ({placeholders})
+      )
     """
-    shown_params = (attempt_id, *_SHOWN_EVENT_TYPES)
-
-    step_row = conn.execute(
-        f"""
-        SELECT COUNT(*) AS n
-        FROM vocab_attempt_events
-        WHERE attempt_id = ?
-          AND event_type IN ({placeholders})
-        """,
-        shown_params,
-    ).fetchone()
-    step = int(step_row["n"] or 0) if step_row is not None else 0
+    shown_params = (attempt_id, *_SHOWN_EVENT_TYPES, attempt_id, *_SHOWN_EVENT_TYPES)
 
     soft_start_bins: tuple[str, ...] | None = ("1K", "2K") if step < 6 else None
     target_bin = _derive_target_bin(_load_recent_answer_signals(conn, attempt_id=attempt_id))
-    preferred_pos_order = _preferred_pos_order(
-        conn,
-        attempt_id=attempt_id,
-        asked_count=step,
-        soft_start_bins=soft_start_bins,
+
+    pos_order = _allowed_pos_order(
+        caps=caps,
+        shown_pos_counts=shown_pos_counts,
+        preferred_pos=preferred_pos,
     )
 
-    for required_pos in preferred_pos_order:
+    for required_pos in pos_order:
         sql_cooldown, before_cooldown, after_cooldown = _build_selector_sql(
             conn,
+            attempt_id=attempt_id,
             apply_cooldown=True,
             target_bin=target_bin,
             soft_start_bins=soft_start_bins,
             required_pos=required_pos,
+            pool_limit=_candidate_pool_size(),
         )
-        row = conn.execute(
-            sql_cooldown.replace("{shown_filter_sql}", shown_filter_sql),
-            (*before_cooldown, *shown_params, *after_cooldown),
-        ).fetchone()
+        row = _choose_from_candidates(
+            conn.execute(
+                sql_cooldown.replace("{shown_filter_sql}", shown_filter_sql),
+                (*before_cooldown, *shown_params, *after_cooldown),
+            ).fetchall(),
+            attempt_id=attempt_id,
+            step=step,
+        )
         if row is not None:
             _trace_selector(
                 conn,
                 attempt_id=attempt_id,
                 step=step,
-                preferred_pos_order=preferred_pos_order,
+                preferred_pos_order=pos_order,
                 chosen_row=row,
-                chosen_source=f"cooldown_required_pos:{required_pos}",
+                chosen_source=f"cooldown_slot_pos:{required_pos}",
             )
             return row
 
-    sql_cooldown, before_cooldown, after_cooldown = _build_selector_sql(
-        conn,
-        apply_cooldown=True,
-        target_bin=target_bin,
-        soft_start_bins=soft_start_bins,
-        required_pos=None,
-    )
-    row = conn.execute(
-        sql_cooldown.replace("{shown_filter_sql}", shown_filter_sql),
-        (*before_cooldown, *shown_params, *after_cooldown),
-    ).fetchone()
-    if row is not None:
-        _trace_selector(
-            conn,
-            attempt_id=attempt_id,
-            step=step,
-            preferred_pos_order=preferred_pos_order,
-            chosen_row=row,
-            chosen_source="cooldown_no_required_pos",
-        )
-        return row
-
-    for required_pos in preferred_pos_order:
+    for required_pos in pos_order:
         sql_fallback, before_fallback, after_fallback = _build_selector_sql(
             conn,
+            attempt_id=attempt_id,
             apply_cooldown=False,
             target_bin=target_bin,
             soft_start_bins=soft_start_bins,
             required_pos=required_pos,
+            pool_limit=_candidate_pool_size(),
         )
-        row = conn.execute(
-            sql_fallback.replace("{shown_filter_sql}", shown_filter_sql),
-            (*before_fallback, *shown_params, *after_fallback),
-        ).fetchone()
+        row = _choose_from_candidates(
+            conn.execute(
+                sql_fallback.replace("{shown_filter_sql}", shown_filter_sql),
+                (*before_fallback, *shown_params, *after_fallback),
+            ).fetchall(),
+            attempt_id=attempt_id,
+            step=step,
+        )
         if row is not None:
+            _trace_selector(
+                conn,
+                attempt_id=attempt_id,
+                step=step,
+                preferred_pos_order=pos_order,
+                chosen_row=row,
+                chosen_source=f"fallback_slot_pos:{required_pos}",
+            )
             return row
+
+    if pos_order:
+        _trace_selector(
+            conn,
+            attempt_id=attempt_id,
+            step=step,
+            preferred_pos_order=pos_order,
+            chosen_row=None,
+            chosen_source="no_candidate_within_remaining_caps",
+        )
+        return None
 
     sql_fallback, before_fallback, after_fallback = _build_selector_sql(
         conn,
+        attempt_id=attempt_id,
         apply_cooldown=False,
         target_bin=target_bin,
         soft_start_bins=soft_start_bins,
         required_pos=None,
+        pool_limit=_candidate_pool_size(),
     )
-    row = conn.execute(
-        sql_fallback.replace("{shown_filter_sql}", shown_filter_sql),
-        (*before_fallback, *shown_params, *after_fallback),
-    ).fetchone()
+    row = _choose_from_candidates(
+        conn.execute(
+            sql_fallback.replace("{shown_filter_sql}", shown_filter_sql),
+            (*before_fallback, *shown_params, *after_fallback),
+        ).fetchall(),
+        attempt_id=attempt_id,
+        step=step,
+    )
+
     _trace_selector(
         conn,
         attempt_id=attempt_id,
         step=step,
-        preferred_pos_order=preferred_pos_order,
+        preferred_pos_order=pos_order,
         chosen_row=row,
-        chosen_source="fallback_no_required_pos",
+        chosen_source="fallback_no_required_pos_after_caps_exhausted",
     )
     return row
