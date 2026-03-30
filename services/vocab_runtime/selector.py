@@ -171,12 +171,45 @@ def _recent_exposure_window() -> int:
     return max(10, n)
 
 
+def _recent_exposure_cap_for_pos(pos: str | None) -> int:
+    raw = str(pos or "").strip().lower()
+    if raw == "adverb":
+        return 8
+    if raw in ("verb", "adjective"):
+        return 10
+    if raw == "noun":
+        return 12
+    return 10
+
+
+def _apply_recent_exposure_hard_cap(rows: list[sqlite3.Row]) -> list[sqlite3.Row]:
+    if not rows:
+        return rows
+
+    filtered: list[sqlite3.Row] = []
+    for row in rows:
+        pos = row["pos"] if "pos" in row.keys() else None
+        cap = _recent_exposure_cap_for_pos(pos)
+        recent = 0
+        if "recent_shown_count" in row.keys() and row["recent_shown_count"] is not None:
+            try:
+                recent = int(row["recent_shown_count"] or 0)
+            except (TypeError, ValueError):
+                recent = 0
+        if recent < cap:
+            filtered.append(row)
+
+    return filtered if filtered else rows
+
+
 def _choose_from_candidates(
     rows: list[sqlite3.Row],
     *,
     attempt_id: int,
     step: int,
 ) -> sqlite3.Row | None:
+    rows = _apply_recent_exposure_hard_cap(rows)
+
     if not rows:
         return None
     if len(rows) == 1:
