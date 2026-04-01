@@ -652,8 +652,25 @@ def get_next_item(conn: sqlite3.Connection, *, attempt_id: int) -> sqlite3.Row |
     """
     shown_params = (attempt_id, *_SHOWN_EVENT_TYPES, attempt_id, *_SHOWN_EVENT_TYPES)
 
-    soft_start_bins: tuple[str, ...] | None = ("1K", "2K") if step < 6 else None
-    target_bin = _derive_target_bin(_load_recent_answer_signals(conn, attempt_id=attempt_id))
+    adaptive_target_bin = _derive_target_bin(_load_recent_answer_signals(conn, attempt_id=attempt_id))
+
+    if step < 4:
+        stage_target_bin = "1K"
+        soft_start_bins: tuple[str, ...] | None = ("1K", "2K")
+    elif step < 8:
+        stage_target_bin = "2K"
+        soft_start_bins = ("1K", "2K", "5K")
+    elif step < 16:
+        stage_target_bin = "5K"
+        soft_start_bins = ("2K", "5K", "10K")
+    elif step < 22:
+        stage_target_bin = "10K"
+        soft_start_bins = ("5K", "10K", "20K")
+    else:
+        stage_target_bin = "20K"
+        soft_start_bins = ("5K", "10K", "20K")
+
+    target_bin = adaptive_target_bin or stage_target_bin
 
     pos_order = _allowed_pos_order(
         caps=caps,
@@ -718,6 +735,36 @@ def get_next_item(conn: sqlite3.Connection, *, attempt_id: int) -> sqlite3.Row |
                 chosen_source=f"fallback_slot_pos:{required_pos}",
             )
             return row
+
+    if step >= max(0, question_limit - 4):
+        for required_pos in pos_order:
+            sql_rescue, before_rescue, after_rescue = _build_selector_sql(
+                conn,
+                attempt_id=attempt_id,
+                apply_cooldown=False,
+                target_bin=None,
+                soft_start_bins=None,
+                required_pos=required_pos,
+                pool_limit=_candidate_pool_size(),
+            )
+            row = _choose_from_candidates(
+                conn.execute(
+                    sql_rescue.replace("{shown_filter_sql}", shown_filter_sql),
+                    (*before_rescue, *shown_params, *after_rescue),
+                ).fetchall(),
+                attempt_id=attempt_id,
+                step=step,
+            )
+            if row is not None:
+                _trace_selector(
+                    conn,
+                    attempt_id=attempt_id,
+                    step=step,
+                    preferred_pos_order=pos_order,
+                    chosen_row=row,
+                    chosen_source=f"late_rescue_no_bin_slot_pos:{required_pos}",
+                )
+                return row
 
     if pos_order:
         _trace_selector(
