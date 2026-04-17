@@ -1,0 +1,32 @@
+statuses:
+  - approve
+  - hold
+  - reject
+
+reject_codes:
+  - transparent_cognate
+  - internationalism
+  - obvious_suffix_pattern
+  - morphology_giveaway
+  - broken_distractor
+  - distractor_too_easy
+  - distractor_register_mismatch
+  - duplicate_lemma
+  - duplicate_concept
+  - duplicate_test_function
+  - too_easy_for_band
+  - too_rare_or_weird
+  - ambiguous_prompt
+  - ambiguous_gloss
+  - bad_russian_gloss
+  - bad_band_assignment
+  - bad_semantic_field_balance
+  - low_discriminative_value
+
+hold_codes:
+  - borderline_transparency
+  - band_uncertainty
+  - sense_uncertainty
+  - duplicate_risk
+  - distractor_needs_rebuild
+  - manual_review_needed
