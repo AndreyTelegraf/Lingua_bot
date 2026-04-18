@@ -1,0 +1,15 @@
+{
+  "prepared_at": "2026-04-18T14:01:40Z",
+  "activation_status": "PREPARE_ONLY — DO NOT ACTIVATE without monitoring gate",
+  "selected_count": 0,
+  "selected": [],
+  "reserve_count": 0,
+  "reserve": [],
+  "selection_rules": [
+    "bin priority: ['10K', '20K', '5K', '2K', '1K']",
+    "max 2 items per concept_group (topic_tag)",
+    "exclude items failing Rule 1a, Rule 1b, duplicate lemma, or choice integrity",
+    "intra-tranche conflict avoidance: no CA/distractor cross-use among selected"
+  ],
+  "activation_gate": "Do not run apply script until verb monitoring runner reports PREPARE_NEXT_TRANCHE AND minimum sample gate is met (30 sessions, 3 users, 5 answers/item for Signal 4)."
+}

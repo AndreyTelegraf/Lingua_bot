@@ -1,0 +1,1909 @@
+{
+  "prepared_at": "2026-04-18T14:01:40Z",
+  "active_bank_size": 809,
+  "ready_pool_size": 33,
+  "hard_blocked_count": 33,
+  "eligible_count": 0,
+  "hard_blocked": [
+    {
+      "item_id": 868,
+      "lemma": "acelerar",
+      "bin_name": "10K",
+      "correct_answer": "торопить",
+      "concept_group": "build:pilot_ptpt_001_enriched_qc",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": false,
+        "violation": "'торопить' is a distractor in active item(s) [2032, 2209, 2645]"
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'предпочесть' is CA of active item 2218",
+          "distractor 'активизировать' is CA of active item 991",
+          "distractor 'считать' is CA of active item 1110",
+          "distractor 'прыгать' is CA of active item 2391",
+          "distractor 'обвинять' is CA of active item 876"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 921,
+      "lemma": "alterar",
+      "bin_name": "10K",
+      "correct_answer": "менять",
+      "concept_group": "build:pilot_ptpt_001_enriched_qc",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": false,
+        "violation": "'менять' is a distractor in active item(s) [1311, 2292]"
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'отдыхать' is CA of active item 2334",
+          "distractor 'принимать' is CA of active item 884",
+          "distractor 'успеть' is CA of active item 950",
+          "distractor 'переводить' is CA of active item 2558"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 989,
+      "lemma": "atirar",
+      "bin_name": "10K",
+      "correct_answer": "стрелять",
+      "concept_group": "build:pilot_ptpt_001_enriched_qc",
+      "duplicate_lemma": {
+        "passes": false,
+        "violation": "lemma 'atirar' already active (id=10682)"
+      },
+      "rule1a": {
+        "passes": false,
+        "violation": "'стрелять' is a distractor in active item(s) [1047, 1767, 10002]"
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'взрываться' is CA of active item 1537",
+          "distractor 'обожать' is CA of active item 883",
+          "distractor 'сравнивать' is CA of active item 1246",
+          "distractor 'лечить' is CA of active item 1324"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 1732,
+      "lemma": "implementar",
+      "bin_name": "10K",
+      "correct_answer": "выполнять",
+      "concept_group": "build:pilot_ptpt_001_enriched_qc",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": false,
+        "violation": "'выполнять' is a distractor in active item(s) [883, 1246, 1324, 2326]"
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'обвинить' is CA of active item 1321",
+          "distractor 'болеть' is CA of active item 1414",
+          "distractor 'прекращать' is CA of active item 1181",
+          "distractor 'давить' is CA of active item 2227"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 1759,
+      "lemma": "instalar",
+      "bin_name": "10K",
+      "correct_answer": "провести",
+      "concept_group": "build:pilot_ptpt_001_enriched_qc",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": false,
+        "violation": "'провести' is a distractor in active item(s) [884, 950, 2334]"
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'предложить' is CA of active item 2482",
+          "distractor 'обожать' is CA of active item 883",
+          "distractor 'приспособить' is CA of active item 878",
+          "distractor 'охотиться' is CA of active item 1167"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 2172,
+      "lemma": "pintar",
+      "bin_name": "10K",
+      "correct_answer": "писать",
+      "concept_group": "build:pilot_ptpt_001_enriched_qc",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": false,
+        "violation": "'писать' is a distractor in active item(s) [499, 522, 636, 1408, 1953, 2222, 2455]"
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'расширить' is CA of active item 1532",
+          "distractor 'будить' is CA of active item 1378",
+          "distractor 'исчезать' is CA of active item 1369"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 3467,
+      "lemma": "aproximar",
+      "bin_name": "10K",
+      "correct_answer": "оценивать",
+      "concept_group": "build:pilot_ptpt_001_enriched:safe_promote",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": false,
+        "violation": "'оценивать' is a distractor in active item(s) [1301, 2072, 2430, 2659]"
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'мечтать' is CA of active item 2470",
+          "distractor 'менять' is CA of active item 10002",
+          "distractor 'целовать' is CA of active item 1047",
+          "distractor 'отбиваться' is CA of active item 3615"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 3491,
+      "lemma": "cancelar",
+      "bin_name": "10K",
+      "correct_answer": "нарушать",
+      "concept_group": "build:pilot_ptpt_001_enriched:safe_promote",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": false,
+        "violation": "'нарушать' is a distractor in active item(s) [1301, 2072, 2430, 2659]"
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'отбиваться' is CA of active item 3615",
+          "distractor 'целовать' is CA of active item 1047",
+          "distractor 'менять' is CA of active item 10002",
+          "distractor 'мечтать' is CA of active item 2470",
+          "distractor 'переводить' is CA of active item 2558"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 3509,
+      "lemma": "curtir",
+      "bin_name": "10K",
+      "correct_answer": "дубить",
+      "concept_group": "build:pilot_ptpt_001_enriched:safe_promote",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": false,
+        "violation": "'дубить' is a distractor in active item(s) [1301, 1401, 2075, 2292, 2401, 2430, 9999]"
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'нанимать' is CA of active item 1251",
+          "distractor 'предать' is CA of active item 2560",
+          "distractor 'болеть' is CA of active item 1414",
+          "distractor 'переводить' is CA of active item 2558",
+          "distractor 'охотиться' is CA of active item 1167"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 9328,
+      "lemma": "inventar",
+      "bin_name": "10K",
+      "correct_answer": "изобрета́ть",
+      "concept_group": "build:pilot_ptpt_001_enriched:safe_promote_v2",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'активизировать' is CA of active item 991",
+          "distractor 'бегать' is CA of active item 431",
+          "distractor 'болеть' is CA of active item 1414",
+          "distractor 'будить' is CA of active item 1378"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 187,
+      "lemma": "conhecer",
+      "bin_name": "1K",
+      "correct_answer": "знать",
+      "concept_group": "build:pilot_ptpt_001_pilot_safe",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": false,
+        "violation": "'знать' is a distractor in active item(s) [167, 168, 173, 175, 185, 198, 244, 9998, 10005]"
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'понять' is CA of active item 198",
+          "distractor 'читать' is CA of active item 168",
+          "distractor 'слушать' is CA of active item 133",
+          "distractor 'спать' is CA of active item 244",
+          "distractor 'начать' is CA of active item 131"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 195,
+      "lemma": "contar",
+      "bin_name": "1K",
+      "correct_answer": "читать",
+      "concept_group": "build:pilot_ptpt_001_pilot_safe",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": false,
+        "violation": "'читать' is a distractor in active item(s) [133, 158, 167, 173, 197, 198]"
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'платить' is CA of active item 213",
+          "distractor 'ждать' is CA of active item 241",
+          "distractor 'понять' is CA of active item 198",
+          "distractor 'есть' is CA of active item 197",
+          "distractor 'спать' is CA of active item 244"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 1548,
+      "lemma": "falar",
+      "bin_name": "1K",
+      "correct_answer": "сказать",
+      "concept_group": "build:pilot_ptpt_001_enriched_qc",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": false,
+        "violation": "'сказать' is a distractor in active item(s) [67, 213, 241, 9999]"
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'использовать' is CA of active item 105",
+          "distractor 'найти' is CA of active item 126",
+          "distractor 'видеть' is CA of active item 62",
+          "distractor 'помочь' is CA of active item 111",
+          "distractor 'оставаться' is CA of active item 67"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 2703,
+      "lemma": "pensar",
+      "bin_name": "1K",
+      "correct_answer": "найти",
+      "concept_group": "build:pilot_ptpt_002_kaikki_pos",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": false,
+        "violation": "'найти' is a distractor in active item(s) [67, 105, 111]"
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'слушать' is CA of active item 133",
+          "distractor 'начать' is CA of active item 131",
+          "distractor 'помочь' is CA of active item 111",
+          "distractor 'использовать' is CA of active item 105",
+          "distractor 'жить' is CA of active item 149"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 10651,
+      "lemma": "achar",
+      "bin_name": "1K",
+      "correct_answer": "считать",
+      "concept_group": "manual_curated_v1",
+      "duplicate_lemma": {
+        "passes": false,
+        "violation": "lemma 'achar' already active (id=870)"
+      },
+      "rule1a": {
+        "passes": false,
+        "violation": "'считать' is a distractor in active item(s) [876, 1082, 2218, 2255]"
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'ждать' is CA of active item 241",
+          "distractor 'искать' is CA of active item 389",
+          "distractor 'менять' is CA of active item 10002",
+          "distractor 'терять' is CA of active item 10656",
+          "distractor 'держать' is CA of active item 2410"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 10655,
+      "lemma": "pensar",
+      "bin_name": "1K",
+      "correct_answer": "думать",
+      "concept_group": "manual_curated_v1",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": false,
+        "violation": "'думать' is a distractor in active item(s) [41, 281, 10654]"
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'расти' is CA of active item 531",
+          "distractor 'тащить' is CA of active item 10677",
+          "distractor 'входить' is CA of active item 10001"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 10657,
+      "lemma": "pôr",
+      "bin_name": "1K",
+      "correct_answer": "класть",
+      "concept_group": "manual_curated_v1",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'тащить' is CA of active item 10677"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 2082,
+      "lemma": "orar",
+      "bin_name": "20K",
+      "correct_answer": "просить",
+      "concept_group": "build:pilot_ptpt_001_enriched_qc",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": false,
+        "violation": "'просить' is a distractor in active item(s) [872, 1110, 1197, 1389, 1596, 2178]"
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'вмещать' is CA of active item 872",
+          "distractor 'запретить' is CA of active item 2255",
+          "distractor 'отличать' is CA of active item 1389",
+          "distractor 'сосать' is CA of active item 1197",
+          "distractor 'возбуждать' is CA of active item 1596"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 408,
+      "lemma": "beber",
+      "bin_name": "2K",
+      "correct_answer": "пить",
+      "concept_group": "build:pilot_ptpt_001_pilot_safe",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": false,
+        "violation": "'пить' is a distractor in active item(s) [28, 126, 396, 431, 453, 10005]"
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'забыть' is CA of active item 453",
+          "distractor 'решить' is CA of active item 396",
+          "distractor 'бегать' is CA of active item 431",
+          "distractor 'казаться' is CA of active item 484",
+          "distractor 'открывать' is CA of active item 28"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 448,
+      "lemma": "tocar",
+      "bin_name": "2K",
+      "correct_answer": "играть",
+      "concept_group": "build:pilot_ptpt_001_pilot_safe",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": false,
+        "violation": "'играть' is a distractor in active item(s) [401]"
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'посещать' is CA of active item 457",
+          "distractor 'спасать' is CA of active item 499",
+          "distractor 'забыть' is CA of active item 453"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 10663,
+      "lemma": "ajudar",
+      "bin_name": "2K",
+      "correct_answer": "помогать",
+      "concept_group": "manual_curated_v1",
+      "duplicate_lemma": {
+        "passes": false,
+        "violation": "lemma 'ajudar' already active (id=111)"
+      },
+      "rule1a": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'терять' is CA of active item 10656"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 10666,
+      "lemma": "começar",
+      "bin_name": "2K",
+      "correct_answer": "начинать",
+      "concept_group": "manual_curated_v1",
+      "duplicate_lemma": {
+        "passes": false,
+        "violation": "lemma 'começar' already active (id=131)"
+      },
+      "rule1a": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'служить' is CA of active item 10660",
+          "distractor 'кричать' is CA of active item 1667"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 10668,
+      "lemma": "esquecer",
+      "bin_name": "2K",
+      "correct_answer": "забывать",
+      "concept_group": "manual_curated_v1",
+      "duplicate_lemma": {
+        "passes": false,
+        "violation": "lemma 'esquecer' already active (id=453)"
+      },
+      "rule1a": {
+        "passes": false,
+        "violation": "'забывать' is a distractor in active item(s) [10652]"
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'держать' is CA of active item 2410"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 10675,
+      "lemma": "parar",
+      "bin_name": "2K",
+      "correct_answer": "останавливать",
+      "concept_group": "manual_curated_v1",
+      "duplicate_lemma": {
+        "passes": false,
+        "violation": "lemma 'parar' already active (id=173)"
+      },
+      "rule1a": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'думать' is CA of active item 870"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 10678,
+      "lemma": "resolver",
+      "bin_name": "2K",
+      "correct_answer": "решать",
+      "concept_group": "manual_curated_v1",
+      "duplicate_lemma": {
+        "passes": false,
+        "violation": "lemma 'resolver' already active (id=396)"
+      },
+      "rule1a": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'звать' is CA of active item 10665",
+          "distractor 'расти' is CA of active item 531"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 10679,
+      "lemma": "trazer",
+      "bin_name": "2K",
+      "correct_answer": "приносить",
+      "concept_group": "manual_curated_v1",
+      "duplicate_lemma": {
+        "passes": false,
+        "violation": "lemma 'trazer' already active (id=340)"
+      },
+      "rule1a": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'мешать' is CA of active item 636"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 703,
+      "lemma": "existir",
+      "bin_name": "5K",
+      "correct_answer": "бывать",
+      "concept_group": "build:pilot_ptpt_001_pilot_safe",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": false,
+        "violation": "'бывать' is a distractor in active item(s) [627, 680, 690, 10000, 10001]"
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'кормить' is CA of active item 690",
+          "distractor 'ломаться' is CA of active item 714",
+          "distractor 'записать' is CA of active item 723",
+          "distractor 'спрятать' is CA of active item 788"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 751,
+      "lemma": "morar",
+      "bin_name": "5K",
+      "correct_answer": "жить",
+      "concept_group": "build:pilot_ptpt_001_pilot_safe",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": false,
+        "violation": "'жить' is a distractor in active item(s) [111, 126, 131, 133, 152, 185, 198]"
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'грузить' is CA of active item 830",
+          "distractor 'следить' is CA of active item 849",
+          "distractor 'воровать' is CA of active item 803",
+          "distractor 'спрятать' is CA of active item 788",
+          "distractor 'кричать' is CA of active item 1667"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 1006,
+      "lemma": "avançar",
+      "bin_name": "5K",
+      "correct_answer": "продолжать",
+      "concept_group": "build:pilot_ptpt_001_enriched_qc",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": false,
+        "violation": "'продолжать' is a distractor in active item(s) [987, 2410]"
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'делить' is CA of active item 1408",
+          "distractor 'лгать' is CA of active item 1953",
+          "distractor 'увлечь' is CA of active item 2222",
+          "distractor 'ходить' is CA of active item 309",
+          "distractor 'переживать' is CA of active item 2455"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 1489,
+      "lemma": "escutar",
+      "bin_name": "5K",
+      "correct_answer": "слущать",
+      "concept_group": "build:pilot_ptpt_001_enriched_qc",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'занимать' is CA of active item 2072",
+          "distractor 'отделиться' is CA of active item 2430",
+          "distractor 'курить' is CA of active item 1615",
+          "distractor 'лететь' is CA of active item 2659"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 2632,
+      "lemma": "vestir",
+      "bin_name": "5K",
+      "correct_answer": "ходить",
+      "concept_group": "build:pilot_ptpt_001_enriched_qc",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": false,
+        "violation": "'ходить' is a distractor in active item(s) [890, 987, 2410]"
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'делить' is CA of active item 1408",
+          "distractor 'лгать' is CA of active item 1953",
+          "distractor 'увлечь' is CA of active item 2222",
+          "distractor 'переживать' is CA of active item 2455"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 3983,
+      "lemma": "dever",
+      "bin_name": "5K",
+      "correct_answer": "должен",
+      "concept_group": "build:pilot_ptpt_002_kaikki_pos:safe_promote_v2",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": false,
+        "violation": "'должен' is a distractor in active item(s) [690, 714, 723]"
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'грузить' is CA of active item 830",
+          "distractor 'кричать' is CA of active item 1667",
+          "distractor 'расследовать' is CA of active item 1779",
+          "distractor 'следить' is CA of active item 849",
+          "distractor 'воровать' is CA of active item 803"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 9997,
+      "lemma": "dar",
+      "bin_name": "5K",
+      "correct_answer": "давать",
+      "concept_group": "_solo_9997",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'петь' is CA of active item 593",
+          "distractor 'достичь' is CA of active item 591",
+          "distractor 'писать' is CA of active item 52",
+          "distractor 'любить' is CA of active item 627",
+          "distractor 'мешать' is CA of active item 636"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    }
+  ],
+  "full_collision_results": [
+    {
+      "item_id": 868,
+      "lemma": "acelerar",
+      "bin_name": "10K",
+      "correct_answer": "торопить",
+      "concept_group": "build:pilot_ptpt_001_enriched_qc",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": false,
+        "violation": "'торопить' is a distractor in active item(s) [2032, 2209, 2645]"
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'предпочесть' is CA of active item 2218",
+          "distractor 'активизировать' is CA of active item 991",
+          "distractor 'считать' is CA of active item 1110",
+          "distractor 'прыгать' is CA of active item 2391",
+          "distractor 'обвинять' is CA of active item 876"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 921,
+      "lemma": "alterar",
+      "bin_name": "10K",
+      "correct_answer": "менять",
+      "concept_group": "build:pilot_ptpt_001_enriched_qc",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": false,
+        "violation": "'менять' is a distractor in active item(s) [1311, 2292]"
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'отдыхать' is CA of active item 2334",
+          "distractor 'принимать' is CA of active item 884",
+          "distractor 'успеть' is CA of active item 950",
+          "distractor 'переводить' is CA of active item 2558"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 989,
+      "lemma": "atirar",
+      "bin_name": "10K",
+      "correct_answer": "стрелять",
+      "concept_group": "build:pilot_ptpt_001_enriched_qc",
+      "duplicate_lemma": {
+        "passes": false,
+        "violation": "lemma 'atirar' already active (id=10682)"
+      },
+      "rule1a": {
+        "passes": false,
+        "violation": "'стрелять' is a distractor in active item(s) [1047, 1767, 10002]"
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'взрываться' is CA of active item 1537",
+          "distractor 'обожать' is CA of active item 883",
+          "distractor 'сравнивать' is CA of active item 1246",
+          "distractor 'лечить' is CA of active item 1324"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 1732,
+      "lemma": "implementar",
+      "bin_name": "10K",
+      "correct_answer": "выполнять",
+      "concept_group": "build:pilot_ptpt_001_enriched_qc",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": false,
+        "violation": "'выполнять' is a distractor in active item(s) [883, 1246, 1324, 2326]"
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'обвинить' is CA of active item 1321",
+          "distractor 'болеть' is CA of active item 1414",
+          "distractor 'прекращать' is CA of active item 1181",
+          "distractor 'давить' is CA of active item 2227"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 1759,
+      "lemma": "instalar",
+      "bin_name": "10K",
+      "correct_answer": "провести",
+      "concept_group": "build:pilot_ptpt_001_enriched_qc",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": false,
+        "violation": "'провести' is a distractor in active item(s) [884, 950, 2334]"
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'предложить' is CA of active item 2482",
+          "distractor 'обожать' is CA of active item 883",
+          "distractor 'приспособить' is CA of active item 878",
+          "distractor 'охотиться' is CA of active item 1167"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 2172,
+      "lemma": "pintar",
+      "bin_name": "10K",
+      "correct_answer": "писать",
+      "concept_group": "build:pilot_ptpt_001_enriched_qc",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": false,
+        "violation": "'писать' is a distractor in active item(s) [499, 522, 636, 1408, 1953, 2222, 2455]"
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'расширить' is CA of active item 1532",
+          "distractor 'будить' is CA of active item 1378",
+          "distractor 'исчезать' is CA of active item 1369"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 3467,
+      "lemma": "aproximar",
+      "bin_name": "10K",
+      "correct_answer": "оценивать",
+      "concept_group": "build:pilot_ptpt_001_enriched:safe_promote",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": false,
+        "violation": "'оценивать' is a distractor in active item(s) [1301, 2072, 2430, 2659]"
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'мечтать' is CA of active item 2470",
+          "distractor 'менять' is CA of active item 10002",
+          "distractor 'целовать' is CA of active item 1047",
+          "distractor 'отбиваться' is CA of active item 3615"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 3491,
+      "lemma": "cancelar",
+      "bin_name": "10K",
+      "correct_answer": "нарушать",
+      "concept_group": "build:pilot_ptpt_001_enriched:safe_promote",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": false,
+        "violation": "'нарушать' is a distractor in active item(s) [1301, 2072, 2430, 2659]"
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'отбиваться' is CA of active item 3615",
+          "distractor 'целовать' is CA of active item 1047",
+          "distractor 'менять' is CA of active item 10002",
+          "distractor 'мечтать' is CA of active item 2470",
+          "distractor 'переводить' is CA of active item 2558"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 3509,
+      "lemma": "curtir",
+      "bin_name": "10K",
+      "correct_answer": "дубить",
+      "concept_group": "build:pilot_ptpt_001_enriched:safe_promote",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": false,
+        "violation": "'дубить' is a distractor in active item(s) [1301, 1401, 2075, 2292, 2401, 2430, 9999]"
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'нанимать' is CA of active item 1251",
+          "distractor 'предать' is CA of active item 2560",
+          "distractor 'болеть' is CA of active item 1414",
+          "distractor 'переводить' is CA of active item 2558",
+          "distractor 'охотиться' is CA of active item 1167"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 9328,
+      "lemma": "inventar",
+      "bin_name": "10K",
+      "correct_answer": "изобрета́ть",
+      "concept_group": "build:pilot_ptpt_001_enriched:safe_promote_v2",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'активизировать' is CA of active item 991",
+          "distractor 'бегать' is CA of active item 431",
+          "distractor 'болеть' is CA of active item 1414",
+          "distractor 'будить' is CA of active item 1378"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 187,
+      "lemma": "conhecer",
+      "bin_name": "1K",
+      "correct_answer": "знать",
+      "concept_group": "build:pilot_ptpt_001_pilot_safe",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": false,
+        "violation": "'знать' is a distractor in active item(s) [167, 168, 173, 175, 185, 198, 244, 9998, 10005]"
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'понять' is CA of active item 198",
+          "distractor 'читать' is CA of active item 168",
+          "distractor 'слушать' is CA of active item 133",
+          "distractor 'спать' is CA of active item 244",
+          "distractor 'начать' is CA of active item 131"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 195,
+      "lemma": "contar",
+      "bin_name": "1K",
+      "correct_answer": "читать",
+      "concept_group": "build:pilot_ptpt_001_pilot_safe",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": false,
+        "violation": "'читать' is a distractor in active item(s) [133, 158, 167, 173, 197, 198]"
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'платить' is CA of active item 213",
+          "distractor 'ждать' is CA of active item 241",
+          "distractor 'понять' is CA of active item 198",
+          "distractor 'есть' is CA of active item 197",
+          "distractor 'спать' is CA of active item 244"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 1548,
+      "lemma": "falar",
+      "bin_name": "1K",
+      "correct_answer": "сказать",
+      "concept_group": "build:pilot_ptpt_001_enriched_qc",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": false,
+        "violation": "'сказать' is a distractor in active item(s) [67, 213, 241, 9999]"
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'использовать' is CA of active item 105",
+          "distractor 'найти' is CA of active item 126",
+          "distractor 'видеть' is CA of active item 62",
+          "distractor 'помочь' is CA of active item 111",
+          "distractor 'оставаться' is CA of active item 67"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 2703,
+      "lemma": "pensar",
+      "bin_name": "1K",
+      "correct_answer": "найти",
+      "concept_group": "build:pilot_ptpt_002_kaikki_pos",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": false,
+        "violation": "'найти' is a distractor in active item(s) [67, 105, 111]"
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'слушать' is CA of active item 133",
+          "distractor 'начать' is CA of active item 131",
+          "distractor 'помочь' is CA of active item 111",
+          "distractor 'использовать' is CA of active item 105",
+          "distractor 'жить' is CA of active item 149"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 10651,
+      "lemma": "achar",
+      "bin_name": "1K",
+      "correct_answer": "считать",
+      "concept_group": "manual_curated_v1",
+      "duplicate_lemma": {
+        "passes": false,
+        "violation": "lemma 'achar' already active (id=870)"
+      },
+      "rule1a": {
+        "passes": false,
+        "violation": "'считать' is a distractor in active item(s) [876, 1082, 2218, 2255]"
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'ждать' is CA of active item 241",
+          "distractor 'искать' is CA of active item 389",
+          "distractor 'менять' is CA of active item 10002",
+          "distractor 'терять' is CA of active item 10656",
+          "distractor 'держать' is CA of active item 2410"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 10655,
+      "lemma": "pensar",
+      "bin_name": "1K",
+      "correct_answer": "думать",
+      "concept_group": "manual_curated_v1",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": false,
+        "violation": "'думать' is a distractor in active item(s) [41, 281, 10654]"
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'расти' is CA of active item 531",
+          "distractor 'тащить' is CA of active item 10677",
+          "distractor 'входить' is CA of active item 10001"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 10657,
+      "lemma": "pôr",
+      "bin_name": "1K",
+      "correct_answer": "класть",
+      "concept_group": "manual_curated_v1",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'тащить' is CA of active item 10677"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 2082,
+      "lemma": "orar",
+      "bin_name": "20K",
+      "correct_answer": "просить",
+      "concept_group": "build:pilot_ptpt_001_enriched_qc",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": false,
+        "violation": "'просить' is a distractor in active item(s) [872, 1110, 1197, 1389, 1596, 2178]"
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'вмещать' is CA of active item 872",
+          "distractor 'запретить' is CA of active item 2255",
+          "distractor 'отличать' is CA of active item 1389",
+          "distractor 'сосать' is CA of active item 1197",
+          "distractor 'возбуждать' is CA of active item 1596"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 408,
+      "lemma": "beber",
+      "bin_name": "2K",
+      "correct_answer": "пить",
+      "concept_group": "build:pilot_ptpt_001_pilot_safe",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": false,
+        "violation": "'пить' is a distractor in active item(s) [28, 126, 396, 431, 453, 10005]"
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'забыть' is CA of active item 453",
+          "distractor 'решить' is CA of active item 396",
+          "distractor 'бегать' is CA of active item 431",
+          "distractor 'казаться' is CA of active item 484",
+          "distractor 'открывать' is CA of active item 28"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 448,
+      "lemma": "tocar",
+      "bin_name": "2K",
+      "correct_answer": "играть",
+      "concept_group": "build:pilot_ptpt_001_pilot_safe",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": false,
+        "violation": "'играть' is a distractor in active item(s) [401]"
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'посещать' is CA of active item 457",
+          "distractor 'спасать' is CA of active item 499",
+          "distractor 'забыть' is CA of active item 453"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 10663,
+      "lemma": "ajudar",
+      "bin_name": "2K",
+      "correct_answer": "помогать",
+      "concept_group": "manual_curated_v1",
+      "duplicate_lemma": {
+        "passes": false,
+        "violation": "lemma 'ajudar' already active (id=111)"
+      },
+      "rule1a": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'терять' is CA of active item 10656"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 10666,
+      "lemma": "começar",
+      "bin_name": "2K",
+      "correct_answer": "начинать",
+      "concept_group": "manual_curated_v1",
+      "duplicate_lemma": {
+        "passes": false,
+        "violation": "lemma 'começar' already active (id=131)"
+      },
+      "rule1a": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'служить' is CA of active item 10660",
+          "distractor 'кричать' is CA of active item 1667"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 10668,
+      "lemma": "esquecer",
+      "bin_name": "2K",
+      "correct_answer": "забывать",
+      "concept_group": "manual_curated_v1",
+      "duplicate_lemma": {
+        "passes": false,
+        "violation": "lemma 'esquecer' already active (id=453)"
+      },
+      "rule1a": {
+        "passes": false,
+        "violation": "'забывать' is a distractor in active item(s) [10652]"
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'держать' is CA of active item 2410"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 10675,
+      "lemma": "parar",
+      "bin_name": "2K",
+      "correct_answer": "останавливать",
+      "concept_group": "manual_curated_v1",
+      "duplicate_lemma": {
+        "passes": false,
+        "violation": "lemma 'parar' already active (id=173)"
+      },
+      "rule1a": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'думать' is CA of active item 870"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 10678,
+      "lemma": "resolver",
+      "bin_name": "2K",
+      "correct_answer": "решать",
+      "concept_group": "manual_curated_v1",
+      "duplicate_lemma": {
+        "passes": false,
+        "violation": "lemma 'resolver' already active (id=396)"
+      },
+      "rule1a": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'звать' is CA of active item 10665",
+          "distractor 'расти' is CA of active item 531"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 10679,
+      "lemma": "trazer",
+      "bin_name": "2K",
+      "correct_answer": "приносить",
+      "concept_group": "manual_curated_v1",
+      "duplicate_lemma": {
+        "passes": false,
+        "violation": "lemma 'trazer' already active (id=340)"
+      },
+      "rule1a": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'мешать' is CA of active item 636"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 703,
+      "lemma": "existir",
+      "bin_name": "5K",
+      "correct_answer": "бывать",
+      "concept_group": "build:pilot_ptpt_001_pilot_safe",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": false,
+        "violation": "'бывать' is a distractor in active item(s) [627, 680, 690, 10000, 10001]"
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'кормить' is CA of active item 690",
+          "distractor 'ломаться' is CA of active item 714",
+          "distractor 'записать' is CA of active item 723",
+          "distractor 'спрятать' is CA of active item 788"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 751,
+      "lemma": "morar",
+      "bin_name": "5K",
+      "correct_answer": "жить",
+      "concept_group": "build:pilot_ptpt_001_pilot_safe",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": false,
+        "violation": "'жить' is a distractor in active item(s) [111, 126, 131, 133, 152, 185, 198]"
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'грузить' is CA of active item 830",
+          "distractor 'следить' is CA of active item 849",
+          "distractor 'воровать' is CA of active item 803",
+          "distractor 'спрятать' is CA of active item 788",
+          "distractor 'кричать' is CA of active item 1667"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 1006,
+      "lemma": "avançar",
+      "bin_name": "5K",
+      "correct_answer": "продолжать",
+      "concept_group": "build:pilot_ptpt_001_enriched_qc",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": false,
+        "violation": "'продолжать' is a distractor in active item(s) [987, 2410]"
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'делить' is CA of active item 1408",
+          "distractor 'лгать' is CA of active item 1953",
+          "distractor 'увлечь' is CA of active item 2222",
+          "distractor 'ходить' is CA of active item 309",
+          "distractor 'переживать' is CA of active item 2455"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 1489,
+      "lemma": "escutar",
+      "bin_name": "5K",
+      "correct_answer": "слущать",
+      "concept_group": "build:pilot_ptpt_001_enriched_qc",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'занимать' is CA of active item 2072",
+          "distractor 'отделиться' is CA of active item 2430",
+          "distractor 'курить' is CA of active item 1615",
+          "distractor 'лететь' is CA of active item 2659"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 2632,
+      "lemma": "vestir",
+      "bin_name": "5K",
+      "correct_answer": "ходить",
+      "concept_group": "build:pilot_ptpt_001_enriched_qc",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": false,
+        "violation": "'ходить' is a distractor in active item(s) [890, 987, 2410]"
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'делить' is CA of active item 1408",
+          "distractor 'лгать' is CA of active item 1953",
+          "distractor 'увлечь' is CA of active item 2222",
+          "distractor 'переживать' is CA of active item 2455"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 3983,
+      "lemma": "dever",
+      "bin_name": "5K",
+      "correct_answer": "должен",
+      "concept_group": "build:pilot_ptpt_002_kaikki_pos:safe_promote_v2",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": false,
+        "violation": "'должен' is a distractor in active item(s) [690, 714, 723]"
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'грузить' is CA of active item 830",
+          "distractor 'кричать' is CA of active item 1667",
+          "distractor 'расследовать' is CA of active item 1779",
+          "distractor 'следить' is CA of active item 849",
+          "distractor 'воровать' is CA of active item 803"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    },
+    {
+      "item_id": 9997,
+      "lemma": "dar",
+      "bin_name": "5K",
+      "correct_answer": "давать",
+      "concept_group": "_solo_9997",
+      "duplicate_lemma": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1a": {
+        "passes": true,
+        "violation": null
+      },
+      "rule1b": {
+        "passes": false,
+        "violations": [
+          "distractor 'петь' is CA of active item 593",
+          "distractor 'достичь' is CA of active item 591",
+          "distractor 'писать' is CA of active item 52",
+          "distractor 'любить' is CA of active item 627",
+          "distractor 'мешать' is CA of active item 636"
+        ]
+      },
+      "choice_integrity": {
+        "passes": true,
+        "violation": null
+      },
+      "eligible": false
+    }
+  ]
+}
