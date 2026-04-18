@@ -1,0 +1,274 @@
+{
+  "prepared_at": "2026-04-18T10:53:55Z",
+  "activation_status": "PREPARE_ONLY — DO NOT ACTIVATE without monitoring gate",
+  "selected_count": 10,
+  "selected": [
+    {
+      "import_item_id": 10734,
+      "lemma": "bigode",
+      "correct_answer": "усы",
+      "concept_group": "body_parts",
+      "collision_note": "CLEAN",
+      "distractors": [
+        "борода",
+        "брови",
+        "бакенбарды"
+      ]
+    },
+    {
+      "import_item_id": 10738,
+      "lemma": "penhasco",
+      "correct_answer": "обрыв",
+      "concept_group": "landscape_nature",
+      "collision_note": "CLEAN",
+      "distractors": [
+        "склон",
+        "вершина",
+        "ущелье"
+      ]
+    },
+    {
+      "import_item_id": 10740,
+      "lemma": "orvalho",
+      "correct_answer": "роса",
+      "concept_group": "weather_phenomena",
+      "collision_note": "CLEAN",
+      "distractors": [
+        "иней",
+        "туман",
+        "ливень"
+      ]
+    },
+    {
+      "import_item_id": 10743,
+      "lemma": "ferida",
+      "correct_answer": "рана",
+      "concept_group": "medical",
+      "collision_note": "CLEAN",
+      "distractors": [
+        "шрам",
+        "синяк",
+        "ожог"
+      ]
+    },
+    {
+      "import_item_id": 10745,
+      "lemma": "agulha",
+      "correct_answer": "игла",
+      "concept_group": "tools_kitchen",
+      "collision_note": "CLEAN",
+      "distractors": [
+        "нить",
+        "шило",
+        "булавка"
+      ]
+    },
+    {
+      "import_item_id": 10746,
+      "lemma": "peneira",
+      "correct_answer": "сито",
+      "concept_group": "tools_kitchen",
+      "collision_note": "CLEAN",
+      "distractors": [
+        "воронка",
+        "ковш",
+        "ведро"
+      ]
+    },
+    {
+      "import_item_id": 10764,
+      "lemma": "esquilo",
+      "correct_answer": "белка",
+      "concept_group": "mammals_wild",
+      "collision_note": "CLEAN",
+      "distractors": [
+        "лиса",
+        "бобёр",
+        "куница"
+      ]
+    },
+    {
+      "import_item_id": 10765,
+      "lemma": "javali",
+      "correct_answer": "кабан",
+      "concept_group": "mammals_wild",
+      "collision_note": "CLEAN",
+      "distractors": [
+        "лиса",
+        "рысь",
+        "олень"
+      ]
+    },
+    {
+      "import_item_id": 10770,
+      "lemma": "emboscada",
+      "correct_answer": "засада",
+      "concept_group": "abstract_social_institutional",
+      "collision_note": "CLEAN",
+      "distractors": [
+        "осада",
+        "облава",
+        "сражение"
+      ]
+    },
+    {
+      "import_item_id": 10771,
+      "lemma": "sindicato",
+      "correct_answer": "профсоюз",
+      "concept_group": "abstract_social_institutional",
+      "collision_note": "CLEAN",
+      "distractors": [
+        "совет",
+        "устав",
+        "съезд"
+      ]
+    }
+  ],
+  "unselected_eligible_reserve": [
+    {
+      "import_item_id": 10731,
+      "lemma": "nuca",
+      "concept_group": "body_parts",
+      "collision_note": "WARN: подбородок (d1) is correct_answer of G006/queixo — intra-cluster; selector manages"
+    },
+    {
+      "import_item_id": 10733,
+      "lemma": "queixo",
+      "concept_group": "body_parts",
+      "collision_note": "WARN: затылок (d1) is correct_answer of G004/nuca — intra-cluster; selector manages"
+    },
+    {
+      "import_item_id": 10748,
+      "lemma": "pires",
+      "concept_group": "tools_kitchen",
+      "collision_note": "CLEAN"
+    },
+    {
+      "import_item_id": 10749,
+      "lemma": "tigela",
+      "concept_group": "tools_kitchen",
+      "collision_note": "CLEAN"
+    },
+    {
+      "import_item_id": 10751,
+      "lemma": "centeio",
+      "concept_group": "food_vegetables_grains",
+      "collision_note": "WARN: ячмень (d2) is correct_answer of G056/cevada — intra-cluster; cap grains at 1/session"
+    },
+    {
+      "import_item_id": 10752,
+      "lemma": "cevada",
+      "concept_group": "food_vegetables_grains",
+      "collision_note": "WARN: рожь (d1) is correct_answer of G055/centeio — intra-cluster; cap grains at 1/session"
+    },
+    {
+      "import_item_id": 10754,
+      "lemma": "musgo",
+      "concept_group": "plant_parts",
+      "collision_note": "WARN: гриб (d2) is correct_answer of G063/cogumelo — intra-cluster; selector manages"
+    },
+    {
+      "import_item_id": 10755,
+      "lemma": "cogumelo",
+      "concept_group": "plant_parts",
+      "collision_note": "WARN: мох (d1) is correct_answer of G062/musgo — intra-cluster; selector manages"
+    },
+    {
+      "import_item_id": 10756,
+      "lemma": "coruja",
+      "concept_group": "birds",
+      "collision_note": "WARN: ворон (d1) and ястреб (d2) are correct_answers of G066/G065 — intra-cluster; cap birds at 2/session"
+    },
+    {
+      "import_item_id": 10757,
+      "lemma": "gavião",
+      "concept_group": "birds",
+      "collision_note": "WARN: сова (d1) and ворон (d2) are correct_answers of G064/G066 — intra-cluster; cap birds at 2/session"
+    },
+    {
+      "import_item_id": 10758,
+      "lemma": "corvo",
+      "concept_group": "birds",
+      "collision_note": "WARN: сова (d1) and ястреб (d2) are correct_answers of G064/G065 — intra-cluster; cap birds at 2/session"
+    },
+    {
+      "import_item_id": 10761,
+      "lemma": "lontra",
+      "concept_group": "mammals_wild",
+      "collision_note": "WARN: белка (d2) is correct_answer of G074/esquilo; ёж (d3) is correct_answer of G072/ouriço — intra-cluster; selector manages"
+    },
+    {
+      "import_item_id": 10762,
+      "lemma": "ouriço",
+      "concept_group": "mammals_wild",
+      "collision_note": "WARN: выдра (d2) is correct_answer of G071/lontra; барсук (d3) is correct_answer of G073/texugo — intra-cluster; selector manages"
+    },
+    {
+      "import_item_id": 10763,
+      "lemma": "texugo",
+      "concept_group": "mammals_wild",
+      "collision_note": "WARN: ёж (d1) is correct_answer of G072/ouriço; выдра (d2) is correct_answer of G071/lontra — intra-cluster; selector manages"
+    },
+    {
+      "import_item_id": 10766,
+      "lemma": "enguia",
+      "concept_group": "aquatic",
+      "collision_note": "WARN: краб (d1) is correct_answer of G078/caranguejo; мидия (d3) is correct_answer of G079/mexilhão — intra-cluster; cap seafood at 2/session"
+    },
+    {
+      "import_item_id": 10767,
+      "lemma": "caranguejo",
+      "concept_group": "aquatic",
+      "collision_note": "WARN: угорь (d2) is correct_answer of G076/enguia; мидия (d3) is correct_answer of G079/mexilhão — intra-cluster; cap seafood at 2/session"
+    },
+    {
+      "import_item_id": 10768,
+      "lemma": "mexilhão",
+      "concept_group": "aquatic",
+      "collision_note": "WARN: краб (d1) is correct_answer of G078/caranguejo; угорь (d3) is correct_answer of G076/enguia — intra-cluster; cap seafood at 2/session"
+    },
+    {
+      "import_item_id": 10772,
+      "lemma": "orçamento",
+      "concept_group": "abstract_social_institutional",
+      "collision_note": "CLEAN"
+    },
+    {
+      "import_item_id": 10773,
+      "lemma": "testemunha",
+      "concept_group": "abstract_social_institutional",
+      "collision_note": "CLEAN"
+    },
+    {
+      "import_item_id": 10774,
+      "lemma": "cozinheiro",
+      "concept_group": "abstract_social_institutional",
+      "collision_note": "CLEAN"
+    },
+    {
+      "import_item_id": 10775,
+      "lemma": "laje",
+      "concept_group": "construction",
+      "collision_note": "CLEAN"
+    },
+    {
+      "import_item_id": 10776,
+      "lemma": "desperdício",
+      "concept_group": "abstract_social_institutional",
+      "collision_note": "CLEAN"
+    },
+    {
+      "import_item_id": 10777,
+      "lemma": "talhão",
+      "concept_group": "land_use",
+      "collision_note": "CLEAN"
+    }
+  ],
+  "selection_rules_applied": [
+    "prefer CLEAN collision_note over WARN",
+    "max 2 items per concept_group per tranche",
+    "exclude items with Rule 1b hard block against current active bank",
+    "for intra-cluster WARN pairs among inactive items: include at most one side"
+  ],
+  "activation_gate": "Do not run apply script until monitoring runner reports PREPARE_NEXT_TRANCHE verdict AND Rule 1 re-check passes."
+}
