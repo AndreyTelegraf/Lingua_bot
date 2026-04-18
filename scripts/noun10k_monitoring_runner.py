@@ -107,6 +107,7 @@ def fetch_signal1_items_per_session(
         JOIN vocab_items vi ON vi.id = va.item_id
         WHERE vi.pos = ?
           AND vi.bin_name = ?
+          AND vi.is_active = 1
           AND att.id IN ({placeholders})
         GROUP BY att.id
         ORDER BY att.id
@@ -195,6 +196,7 @@ def fetch_signal3_repeat_rate(
         JOIN vocab_items vi ON vi.id = va.item_id
         WHERE vi.pos = ?
           AND vi.bin_name = ?
+          AND vi.is_active = 1
           AND att.id IN ({placeholders})
         ORDER BY att.user_id, att.id
         """,
@@ -451,6 +453,11 @@ def build_report(conn: sqlite3.Connection) -> dict:
             "mean_noun10k_per_session": mean_items,
             "active_noun10k_items": len(signal2),
         },
+        "signal_scope_note": (
+            "Signal 1 and Signal 3 count only items currently active in the noun/10K pool "
+            "(vi.is_active=1). Legacy noun/10K items deactivated before the monitoring "
+            "window are excluded. Signal 2 and Signal 4 were already filtering is_active=1."
+        ),
         "signal1_items_per_session": signal1,
         "signal2_exposure_per_item": signal2,
         "signal3_repeat_rate": signal3,

@@ -206,6 +206,29 @@ def test_signal1_excludes_non_noun10k():
     assert result == [], "Verb items should not count toward noun/10K signal"
 
 
+def test_signal1_excludes_inactive_noun10k():
+    conn = _make_db()
+    # Active item
+    conn.execute(
+        "INSERT INTO vocab_items (id, lemma, pos, bin_name, is_active) "
+        "VALUES (1, 'active_lemma', 'noun', '10K', 1)"
+    )
+    # Inactive legacy item
+    conn.execute(
+        "INSERT INTO vocab_items (id, lemma, pos, bin_name, is_active) "
+        "VALUES (2, 'legacy_lemma', 'noun', '10K', 0)"
+    )
+    conn.commit()
+    _add_session(conn, 1, user_id=10)
+    _add_answer(conn, 1, attempt_id=1, item_id=1)
+    _add_answer(conn, 2, attempt_id=1, item_id=2)
+
+    ids = fetch_real_session_ids(conn)
+    result = fetch_signal1_items_per_session(conn, ids)
+    assert len(result) == 1
+    assert result[0]["noun10k_shown"] == 1, "Inactive noun/10K item must not be counted"
+
+
 # ---------------------------------------------------------------------------
 # Signal 2 tests
 # ---------------------------------------------------------------------------
@@ -293,6 +316,35 @@ def test_signal3_single_session_no_pairs():
     result = fetch_signal3_repeat_rate(conn, ids)
 
     assert result["pairs_evaluated"] == 0
+
+
+def test_signal3_excludes_inactive_noun10k():
+    conn = _make_db()
+    # Active item used in both sessions
+    conn.execute(
+        "INSERT INTO vocab_items (id, lemma, pos, bin_name, is_active) "
+        "VALUES (1, 'active_lemma', 'noun', '10K', 1)"
+    )
+    # Inactive legacy item — would create a false repeat if included
+    conn.execute(
+        "INSERT INTO vocab_items (id, lemma, pos, bin_name, is_active) "
+        "VALUES (2, 'legacy_lemma', 'noun', '10K', 0)"
+    )
+    conn.commit()
+    _add_session(conn, 1, user_id=10)
+    _add_session(conn, 2, user_id=10)
+    # Session 1: active + legacy; Session 2: legacy only
+    _add_answer(conn, 1, 1, 1)
+    _add_answer(conn, 2, 1, 2)
+    _add_answer(conn, 3, 2, 2)
+
+    ids = fetch_real_session_ids(conn)
+    result = fetch_signal3_repeat_rate(conn, ids)
+    # After filtering inactive: session 1 has {1}, session 2 has {}
+    # Pair is skipped (curr_items empty) → 0 pairs evaluated
+    assert result["pairs_evaluated"] == 0, (
+        "Inactive noun/10K items must not contribute to repeat-rate pairs"
+    )
 
 
 # ---------------------------------------------------------------------------
