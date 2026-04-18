@@ -1,7 +1,7 @@
 import sqlite3
 from services.vocab_runtime.service import get_next_question
 
-conn = sqlite3.connect("data/lingua.db")
+conn = sqlite3.connect("data/lingua_staging.db")
 conn.row_factory = sqlite3.Row
 
 user_id = 999001

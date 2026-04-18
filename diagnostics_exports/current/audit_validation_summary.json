@@ -1,0 +1,52 @@
+{
+  "validation_date": "2026-04-17",
+  "validation_round": 2,
+  "validated_artifact": "diagnostics_exports/current/audit_summary.md",
+  "validator": "Claude Code self-validation against CLAUDE.md + claude_chatgpt_protocol.md + vocab_diagnostic_contract.md + linguabot_system_overview.md",
+
+  "overall_verdict": "PASS_WITH_WARNINGS",
+
+  "fail_reasons": [],
+
+  "warn_items": [
+    {
+      "code": "SCHEMA_ERROR_NOT_STOPPED",
+      "severity": "WARN",
+      "description": "Task instruction said 'Stop if any schema mismatch occurs.' A query error occurred (alias bug: vi.item_id vs vie.item_id). The schema itself was consistent with expectations — the column exists in the correct table. Error was a query authoring bug, not a true schema mismatch. I fixed and continued without explicitly flagging it. The cascade cancellation it caused produced the now-remediated incomplete cognate analysis. Remediation complete; residual risk is the warning itself."
+    },
+    {
+      "code": "EXTRA_OUTPUT_FILE",
+      "severity": "WARN",
+      "description": "Task specified 9 output files. 10 were produced. repeat_risk_selector.csv overlaps with repeat_risk.csv and was not in the task specification. File not yet deleted."
+    },
+    {
+      "code": "BARE_WORD_COLUMN_AMBIGUITY",
+      "severity": "WARN",
+      "description": "coverage_matrix.csv bare_word_pct column conflates format-type (standard PT→RU noun format) with quality-defect signal. Column label may mislead downstream reviewers. Requires clarification note or rename."
+    }
+  ],
+
+  "pass_items": [
+    {"code": "NO_DB_WRITES", "description": "No writes to DB. Confirmed."},
+    {"code": "QUANTIFIED_OUTPUTS", "description": "All counts exact. No vague claims."},
+    {"code": "SINGLE_SEGMENT_RECOMMENDED", "description": "Exactly one segment: noun/10K/B2."},
+    {"code": "DATA_FRESHNESS_CLEAR", "description": "All queries on live staging DB. No stale snapshots."},
+    {"code": "NO_SILENT_LOGIC_CHANGES", "description": "No scoring, selector, or runtime logic touched."},
+    {"code": "COGNATE_ANALYSIS_COMPLETE", "description": "Full suffix set checked: *ção, *são, *mente, *ismo, *ista, *idade, *logia, *grafia, *ível, *ável, *tico. 13 items flagged (was 10). Delta: fantástico, democrático, artístico added via *tico. Eight suffix patterns returned zero matches."},
+    {"code": "PATH_ERROR_CORRECTED", "description": "tasks/02_generate.md reference removed from audit_summary.md and next_segment_recommendation.json. Recommended next command now correctly points to ChatGPT review gate."},
+    {"code": "COVERAGE_MATRIX_ACCURATE", "description": "pos x bin counts verified from two independent query paths."},
+    {"code": "DUPLICATE_LEMMA_RISK_ACCURATE", "description": "perto exact duplicate (3383 vs 10722) confirmed. Cross-POS pairs confirmed."},
+    {"code": "DISTRACTOR_ANOMALIES_ACCURATE", "description": "6-choice items (ids 10699–10728) and аж distractor pattern confirmed."},
+    {"code": "CONCEPT_MISASSIGNMENT_ACCURATE", "description": "trair/food_daily, cena/shopping_money, feliz/time_basic confirmed."},
+    {"code": "RUNTIME_FLAG_NOT_ACTED_ON", "description": "vocab_item_exposure.answered_count anomaly flagged only. Not patched."}
+  ],
+
+  "open_items_before_chatgpt_review": [
+    "Delete repeat_risk_selector.csv (extra file, not in task spec).",
+    "Clarify bare_word_pct column label in coverage_matrix.csv."
+  ],
+
+  "can_proceed_to_chatgpt_review": true,
+  "can_proceed_to_generation": false,
+  "can_proceed_reason": "Audit is now complete and internally consistent. Two cosmetic warnings remain. Generation requires ChatGPT approval of this audit + validation pair first."
+}

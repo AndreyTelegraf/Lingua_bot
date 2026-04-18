@@ -1,0 +1,94 @@
+{
+  "diagnosis_date": "2026-04-18",
+  "diagnosis_type": "read-only selector starvation analysis",
+  "selector_file": "services/vocab_runtime/selector.py",
+  "selector_function": "get_next_item",
+  "runtime_wiring": "services/vocab_runtime/service.py:14,31",
+
+  "active_noun_10k_count": 13,
+  "active_noun_10k_ids": [10727, 10729, 10732, 10735, 10737, 10739, 10741, 10744, 10747, 10750, 10753, 10759, 10769],
+
+  "noun_pool_by_stage": {
+    "steps_0_3":  { "bins": ["1K", "2K"],              "noun_pool": 231, "noun_10k_in_pool": 0 },
+    "steps_4_7":  { "bins": ["1K", "2K", "5K"],        "noun_pool": 384, "noun_10k_in_pool": 0 },
+    "steps_8_15": { "bins": ["2K", "5K", "10K"],       "noun_pool": 290, "noun_10k_in_pool": 13, "limit_24_pool_noun_10k_in_draw": 0 },
+    "steps_16_21":{ "bins": ["5K", "10K", "20K"],      "noun_pool": 166, "noun_10k_in_pool": 13, "limit_24_pool_noun_10k_in_draw": 13 },
+    "steps_22_23":{ "bins": ["5K", "10K", "20K"],      "noun_pool": 166, "noun_10k_in_pool": 13, "limit_24_pool_noun_10k_in_draw": 13 }
+  },
+
+  "stage_mechanisms": {
+    "steps_0_7": {
+      "mechanism": "HARD_WHERE_EXCLUSION",
+      "detail": "soft_start_bins ('1K','2K') / ('1K','2K','5K') does not include '10K'. WHERE bin_name IN (...) eliminates all noun/10K from SQL result.",
+      "noun_10k_eligible": false,
+      "intended": true
+    },
+    "steps_8_15": {
+      "mechanism": "POOL_CROWDING",
+      "detail": "10K in WHERE clause (soft_start_bins includes '10K'), but target_bin='5K' puts 5K items first in ORDER BY. LIMIT 24 is filled entirely by noun/5K (153 available > 24 limit). noun/10K never enters the random selection pool.",
+      "noun_10k_eligible": true,
+      "noun_10k_reachable": false,
+      "pool_limit": 24,
+      "noun_5k_available": 153,
+      "noun_10k_available": 13,
+      "crowdout_threshold": "153 > 24 → all 24 pool slots taken by 5K items",
+      "intended": "EMERGENT — side effect of LIMIT 24, not an explicit design choice"
+    },
+    "steps_16_21": {
+      "mechanism": "PRIMARY_TARGET_WINDOW",
+      "detail": "target_bin='10K'. ORDER BY CASE WHEN bin_name='10K' THEN 0 ELSE 1 END ASC puts all 13 noun/10K items first in the random pool. Random draw from LIMIT 24: 13/24 ≈ 54% probability per noun slot.",
+      "noun_10k_eligible": true,
+      "noun_10k_reachable": true,
+      "prob_10k_per_noun_slot": 0.54,
+      "intended": true
+    },
+    "steps_22_23": {
+      "mechanism": "LATE_RESCUE_PATH",
+      "detail": "Same as steps_16_21 for normal path. Additionally, step >= question_limit - 4 triggers rescue with target_bin=None, soft_start_bins=None — full bank unrestricted.",
+      "noun_10k_eligible": true,
+      "noun_10k_reachable": true,
+      "intended": true
+    }
+  },
+
+  "observed_signal": {
+    "synthetic_runs": 20,
+    "total_hits": 12,
+    "hit_steps": [17, 18, 19, 20, 23],
+    "hits_in_steps_1_16": 0,
+    "context": "Runs performed with 1 active noun/10K item (travesseiro only, pre-activation). 12/20 = 60% hit rate consistent with 1 item available in the primary window.",
+    "post_activation_expected_hits_per_run": "2–3 (13 items, ~54% per noun slot, ~4 noun slots at steps 16–21)"
+  },
+
+  "first_step_eligibility": {
+    "eligible_at_step": 8,
+    "reachable_at_step": 16,
+    "note": "Eligible from step 8 (in WHERE), but crowded out until step 16 where target_bin='10K'"
+  },
+
+  "six_choice_filter_risk": {
+    "modes_vocab_selector_filter": "HAVING COUNT(*) = 6 in _fetch_candidates",
+    "items_affected": 12,
+    "items_affected_ids": [10729, 10732, 10735, 10737, 10739, 10741, 10744, 10747, 10750, 10753, 10759, 10769],
+    "runtime_impact": "NONE — modes/vocab/selector.py is not wired to runtime. services/vocab_runtime/selector.py has no choice count filter.",
+    "future_risk": "If async selector (modes/vocab/selector.py) is ever activated, 12 of 13 noun/10K items would be invisible. Flag for async migration."
+  },
+
+  "verdict": {
+    "is_bug": false,
+    "behavior": "INTENDED",
+    "explanation": "Starvation in steps 0–15 is the correct behavior of the bin-ladder design. Steps 0–7 are intentionally restricted to 1K–2K for warm-up. Steps 8–15 target 5K. Steps 16–21 are the designated 10K window. The emergent crowding at steps 8–15 is not a design flaw."
+  },
+
+  "recommendation": {
+    "action": "keep_current_activation",
+    "rationale": [
+      "13 active noun/10K items is adequate for initial diagnostics",
+      "No selector logic needs patching",
+      "Late appearance is by design, not a bug",
+      "Activate next tranche only after observing real learner data on current 13 items"
+    ],
+    "watch_signal": "If same noun/10K items repeat within 3 consecutive sessions, activate next tranche (~10 items from READY pool)",
+    "deferred_action": "Flag 6-choice incompatibility in modes/vocab/selector.py for async migration — no immediate action needed"
+  }
+}

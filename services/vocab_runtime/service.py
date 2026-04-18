@@ -1,4 +1,5 @@
 from __future__ import annotations
+import uuid
 
 import sqlite3
 
@@ -15,7 +16,6 @@ from services.cat_runtime import build_cat_runtime_native_payload
 
 
 def _start_or_resume_attempt_legacy(conn: sqlite3.Connection, *, user_id: int) -> dict[str, object]:
-    import uuid
     mode_run_id = str(uuid.uuid4())
     attempt_id = start_attempt(conn, user_id=user_id, mode_run_id=mode_run_id)
     return get_attempt_stats(conn, attempt_id=attempt_id)

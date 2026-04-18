@@ -1,0 +1,278 @@
+{
+  "report_generated_at": "2026-04-18T09:18:09Z",
+  "db_path": "/Users/andreytelegraf/Projects/lingua_bot_v2/data/lingua_staging.db",
+  "real_session_filter": "status = 'finished' AND completion_reason = 'question_limit_reached'",
+  "real_session_filter_note": "PROVISIONAL: 'question_limit_reached' set only by modes/vocab/router.py:332",
+  "summary": {
+    "total_real_sessions": 21,
+    "distinct_real_users": 2,
+    "sessions_with_noun10k": 13,
+    "mean_noun10k_per_session": 2.0769,
+    "active_noun10k_items": 13
+  },
+  "signal1_items_per_session": [
+    {
+      "attempt_id": 9,
+      "noun10k_shown": 1
+    },
+    {
+      "attempt_id": 10,
+      "noun10k_shown": 1
+    },
+    {
+      "attempt_id": 11,
+      "noun10k_shown": 2
+    },
+    {
+      "attempt_id": 12,
+      "noun10k_shown": 2
+    },
+    {
+      "attempt_id": 13,
+      "noun10k_shown": 2
+    },
+    {
+      "attempt_id": 14,
+      "noun10k_shown": 1
+    },
+    {
+      "attempt_id": 15,
+      "noun10k_shown": 1
+    },
+    {
+      "attempt_id": 17,
+      "noun10k_shown": 1
+    },
+    {
+      "attempt_id": 18,
+      "noun10k_shown": 1
+    },
+    {
+      "attempt_id": 19,
+      "noun10k_shown": 3
+    },
+    {
+      "attempt_id": 20,
+      "noun10k_shown": 4
+    },
+    {
+      "attempt_id": 21,
+      "noun10k_shown": 4
+    },
+    {
+      "attempt_id": 22,
+      "noun10k_shown": 4
+    }
+  ],
+  "signal2_exposure_per_item": [
+    {
+      "item_id": 10727,
+      "lemma": "travesseiro",
+      "sessions_shown": 0,
+      "total_answers": 0
+    },
+    {
+      "item_id": 10729,
+      "lemma": "cotovelo",
+      "sessions_shown": 0,
+      "total_answers": 0
+    },
+    {
+      "item_id": 10732,
+      "lemma": "sobrancelha",
+      "sessions_shown": 0,
+      "total_answers": 0
+    },
+    {
+      "item_id": 10735,
+      "lemma": "sótão",
+      "sessions_shown": 0,
+      "total_answers": 0
+    },
+    {
+      "item_id": 10737,
+      "lemma": "brejo",
+      "sessions_shown": 0,
+      "total_answers": 0
+    },
+    {
+      "item_id": 10739,
+      "lemma": "granizo",
+      "sessions_shown": 0,
+      "total_answers": 0
+    },
+    {
+      "item_id": 10741,
+      "lemma": "nora",
+      "sessions_shown": 0,
+      "total_answers": 0
+    },
+    {
+      "item_id": 10744,
+      "lemma": "muleta",
+      "sessions_shown": 0,
+      "total_answers": 0
+    },
+    {
+      "item_id": 10747,
+      "lemma": "chaleira",
+      "sessions_shown": 0,
+      "total_answers": 0
+    },
+    {
+      "item_id": 10750,
+      "lemma": "repolho",
+      "sessions_shown": 0,
+      "total_answers": 0
+    },
+    {
+      "item_id": 10753,
+      "lemma": "galho",
+      "sessions_shown": 0,
+      "total_answers": 0
+    },
+    {
+      "item_id": 10759,
+      "lemma": "tartaruga",
+      "sessions_shown": 0,
+      "total_answers": 0
+    },
+    {
+      "item_id": 10769,
+      "lemma": "rascunho",
+      "sessions_shown": 0,
+      "total_answers": 0
+    }
+  ],
+  "signal3_repeat_rate": {
+    "pairs_evaluated": 12,
+    "mean_repeat_rate": 0.0,
+    "max_repeat_rate": 0.0,
+    "pairs": [
+      {
+        "user_id": 721,
+        "session_n_minus_1": 9,
+        "session_n": 10,
+        "items_n_minus_1": 1,
+        "items_n": 1,
+        "overlap": 0,
+        "repeat_rate": 0.0
+      },
+      {
+        "user_id": 721,
+        "session_n_minus_1": 10,
+        "session_n": 11,
+        "items_n_minus_1": 1,
+        "items_n": 2,
+        "overlap": 0,
+        "repeat_rate": 0.0
+      },
+      {
+        "user_id": 721,
+        "session_n_minus_1": 11,
+        "session_n": 12,
+        "items_n_minus_1": 2,
+        "items_n": 2,
+        "overlap": 0,
+        "repeat_rate": 0.0
+      },
+      {
+        "user_id": 721,
+        "session_n_minus_1": 12,
+        "session_n": 13,
+        "items_n_minus_1": 2,
+        "items_n": 2,
+        "overlap": 0,
+        "repeat_rate": 0.0
+      },
+      {
+        "user_id": 721,
+        "session_n_minus_1": 13,
+        "session_n": 14,
+        "items_n_minus_1": 2,
+        "items_n": 1,
+        "overlap": 0,
+        "repeat_rate": 0.0
+      },
+      {
+        "user_id": 721,
+        "session_n_minus_1": 14,
+        "session_n": 15,
+        "items_n_minus_1": 1,
+        "items_n": 1,
+        "overlap": 0,
+        "repeat_rate": 0.0
+      },
+      {
+        "user_id": 721,
+        "session_n_minus_1": 15,
+        "session_n": 17,
+        "items_n_minus_1": 1,
+        "items_n": 1,
+        "overlap": 0,
+        "repeat_rate": 0.0
+      },
+      {
+        "user_id": 721,
+        "session_n_minus_1": 17,
+        "session_n": 18,
+        "items_n_minus_1": 1,
+        "items_n": 1,
+        "overlap": 0,
+        "repeat_rate": 0.0
+      },
+      {
+        "user_id": 721,
+        "session_n_minus_1": 18,
+        "session_n": 19,
+        "items_n_minus_1": 1,
+        "items_n": 3,
+        "overlap": 0,
+        "repeat_rate": 0.0
+      },
+      {
+        "user_id": 721,
+        "session_n_minus_1": 19,
+        "session_n": 20,
+        "items_n_minus_1": 3,
+        "items_n": 4,
+        "overlap": 0,
+        "repeat_rate": 0.0
+      },
+      {
+        "user_id": 721,
+        "session_n_minus_1": 20,
+        "session_n": 21,
+        "items_n_minus_1": 4,
+        "items_n": 4,
+        "overlap": 0,
+        "repeat_rate": 0.0
+      },
+      {
+        "user_id": 721,
+        "session_n_minus_1": 21,
+        "session_n": 22,
+        "items_n_minus_1": 4,
+        "items_n": 4,
+        "overlap": 0,
+        "repeat_rate": 0.0
+      }
+    ]
+  },
+  "signal4_correctness": [],
+  "trigger_evaluation": {
+    "minimum_sample_met": false,
+    "total_sessions": 21,
+    "distinct_users": 2,
+    "minimum_sessions_required": 30,
+    "minimum_users_required": 3,
+    "T1": null,
+    "T2": null,
+    "T3": null,
+    "T4": null,
+    "verdict": "INSUFFICIENT_DATA",
+    "verdict_note": "Need 30 complete sessions and 3 users. Currently 21 sessions, 2 users."
+  },
+  "verdict": "INSUFFICIENT_DATA",
+  "verdict_note": "Need 30 complete sessions and 3 users. Currently 21 sessions, 2 users."
+}

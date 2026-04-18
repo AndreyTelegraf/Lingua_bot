@@ -1,0 +1,35 @@
+{
+  "recommended_segment": {
+    "pos": "noun",
+    "bin_name": "10K",
+    "cefr_target": "B2",
+    "current_active_count": 1,
+    "target_count": 40,
+    "gap": 39
+  },
+  "rationale": [
+    "noun/10K has only 1 active item (travesseiro) — the largest coverage gap in the bank",
+    "All other main pos/bins have 30–153 active items; noun/10K is an outlier",
+    "Nouns are the highest-density testable POS across all other bins",
+    "10K frequency band corresponds to B2–C1 CEFR — exam-relevant range for CIPLE",
+    "Verb/10K (41) and adjective/10K (47) already have meaningful coverage; noun/10K is the missing leg",
+    "New noun/10K items should use sentence-context question format (not bare-word), consistent with B2 diagnostic contract"
+  ],
+  "preconditions": [
+    "Validate this audit output before proceeding",
+    "Resolve perto duplicate (items 3383 vs 10722) before next build",
+    "Do not mix noun/10K generation with any other segment in the same wave",
+    "Reject any transparent cognate (ável/ível) at B2 level in the candidate pool",
+    "Items must have 4 choices exactly — the 6-choice format (ids 10699–10728) must be reviewed first"
+  ],
+  "deferred_issues": [
+    "5 adverb/1K items with 'аж' distractor — fix in separate patch",
+    "3 concept_group misassignments (trair→food_daily, cena→shopping_money, feliz→time_basic) — patch separately",
+    "94 items missing cefr_estimate — audit wave separate from generation",
+    "6-choice items (20 items, ids 10699–10728) — selector smoke verification needed",
+    "vocab_item_exposure.answered_count not updating — flag to runtime team, do not fix in bank work"
+  ],
+  "audit_date": "2026-04-17",
+  "db_snapshot": "data/lingua_staging.db",
+  "total_active_items": 797
+}
