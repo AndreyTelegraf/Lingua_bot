@@ -1,0 +1,214 @@
+{
+  "workstream": "adverb_5k_rebuild",
+  "mode": "prepare-only",
+  "db": "data/lingua_staging.db",
+  "total_items": 6,
+  "total_deletes": 36,
+  "total_inserts": 24,
+  "operations": [
+    {
+      "item_id": 3958,
+      "lemma": "frequentemente",
+      "correct_answer": "часто",
+      "delete": {
+        "table": "vocab_choices",
+        "where": "item_id = 3958",
+        "count": 6
+      },
+      "inserts": [
+        {
+          "choice_text": "часто",
+          "is_correct": 1,
+          "position_index": 0
+        },
+        {
+          "choice_text": "редко",
+          "is_correct": 0,
+          "position_index": 1
+        },
+        {
+          "choice_text": "иногда",
+          "is_correct": 0,
+          "position_index": 2
+        },
+        {
+          "choice_text": "давно",
+          "is_correct": 0,
+          "position_index": 3
+        }
+      ],
+      "total_rows_after": 4
+    },
+    {
+      "item_id": 3960,
+      "lemma": "geralmente",
+      "correct_answer": "обычно",
+      "delete": {
+        "table": "vocab_choices",
+        "where": "item_id = 3960",
+        "count": 6
+      },
+      "inserts": [
+        {
+          "choice_text": "обычно",
+          "is_correct": 1,
+          "position_index": 0
+        },
+        {
+          "choice_text": "постепенно",
+          "is_correct": 0,
+          "position_index": 1
+        },
+        {
+          "choice_text": "сначала",
+          "is_correct": 0,
+          "position_index": 2
+        },
+        {
+          "choice_text": "раньше",
+          "is_correct": 0,
+          "position_index": 3
+        }
+      ],
+      "total_rows_after": 4
+    },
+    {
+      "item_id": 10017,
+      "lemma": "novamente",
+      "correct_answer": "снова",
+      "delete": {
+        "table": "vocab_choices",
+        "where": "item_id = 10017",
+        "count": 6
+      },
+      "inserts": [
+        {
+          "choice_text": "снова",
+          "is_correct": 1,
+          "position_index": 0
+        },
+        {
+          "choice_text": "сразу",
+          "is_correct": 0,
+          "position_index": 1
+        },
+        {
+          "choice_text": "впервые",
+          "is_correct": 0,
+          "position_index": 2
+        },
+        {
+          "choice_text": "вдруг",
+          "is_correct": 0,
+          "position_index": 3
+        }
+      ],
+      "total_rows_after": 4
+    },
+    {
+      "item_id": 3963,
+      "lemma": "principalmente",
+      "correct_answer": "главным образом",
+      "delete": {
+        "table": "vocab_choices",
+        "where": "item_id = 3963",
+        "count": 6
+      },
+      "inserts": [
+        {
+          "choice_text": "главным образом",
+          "is_correct": 1,
+          "position_index": 0
+        },
+        {
+          "choice_text": "всё-таки",
+          "is_correct": 0,
+          "position_index": 1
+        },
+        {
+          "choice_text": "совсем",
+          "is_correct": 0,
+          "position_index": 2
+        },
+        {
+          "choice_text": "тоже",
+          "is_correct": 0,
+          "position_index": 3
+        }
+      ],
+      "total_rows_after": 4
+    },
+    {
+      "item_id": 10019,
+      "lemma": "exatamente",
+      "correct_answer": "точно",
+      "delete": {
+        "table": "vocab_choices",
+        "where": "item_id = 10019",
+        "count": 6
+      },
+      "inserts": [
+        {
+          "choice_text": "точно",
+          "is_correct": 1,
+          "position_index": 0
+        },
+        {
+          "choice_text": "слегка",
+          "is_correct": 0,
+          "position_index": 1
+        },
+        {
+          "choice_text": "немного",
+          "is_correct": 0,
+          "position_index": 2
+        },
+        {
+          "choice_text": "едва",
+          "is_correct": 0,
+          "position_index": 3
+        }
+      ],
+      "total_rows_after": 4
+    },
+    {
+      "item_id": 3970,
+      "lemma": "facilmente",
+      "correct_answer": "легко",
+      "delete": {
+        "table": "vocab_choices",
+        "where": "item_id = 3970",
+        "count": 6
+      },
+      "inserts": [
+        {
+          "choice_text": "легко",
+          "is_correct": 1,
+          "position_index": 0
+        },
+        {
+          "choice_text": "трудно",
+          "is_correct": 0,
+          "position_index": 1
+        },
+        {
+          "choice_text": "тихо",
+          "is_correct": 0,
+          "position_index": 2
+        },
+        {
+          "choice_text": "крепко",
+          "is_correct": 0,
+          "position_index": 3
+        }
+      ],
+      "total_rows_after": 4
+    }
+  ],
+  "apply_gate": "stage3_accept must be True before executing apply script",
+  "forbidden": [
+    "DO NOT activate any item",
+    "DO NOT run apply script without operator review",
+    "DO NOT modify correct_answers or lemmas"
+  ]
+}

@@ -1,0 +1,144 @@
+{
+  "checks": [
+    "item_exists_inactive_5k_adverb",
+    "correct_answer_matches",
+    "no_r1b_violation",
+    "no_r1a_risk",
+    "distractor_not_own_ca",
+    "no_cross_group_ca_reference",
+    "all_distractors_unique_across_batch"
+  ],
+  "total_items": 6,
+  "items_pass": 6,
+  "items_fail": 0,
+  "group_pass": true,
+  "stage3_accept": true,
+  "results": [
+    {
+      "item_id": 3958,
+      "lemma": "frequentemente",
+      "correct_answer": "часто",
+      "new_distractors": [
+        "редко",
+        "иногда",
+        "давно"
+      ],
+      "checks_pass": {
+        "item_exists_inactive_5k_adverb": true,
+        "correct_answer_matches": true,
+        "no_r1b_violation": true,
+        "no_r1a_risk": true,
+        "distractor_not_own_ca": true,
+        "no_cross_group_ca_reference": true,
+        "all_distractors_unique_across_batch": true
+      },
+      "check_details": {},
+      "item_pass": true
+    },
+    {
+      "item_id": 3960,
+      "lemma": "geralmente",
+      "correct_answer": "обычно",
+      "new_distractors": [
+        "постепенно",
+        "сначала",
+        "раньше"
+      ],
+      "checks_pass": {
+        "item_exists_inactive_5k_adverb": true,
+        "correct_answer_matches": true,
+        "no_r1b_violation": true,
+        "no_r1a_risk": true,
+        "distractor_not_own_ca": true,
+        "no_cross_group_ca_reference": true,
+        "all_distractors_unique_across_batch": true
+      },
+      "check_details": {},
+      "item_pass": true
+    },
+    {
+      "item_id": 10017,
+      "lemma": "novamente",
+      "correct_answer": "снова",
+      "new_distractors": [
+        "сразу",
+        "впервые",
+        "вдруг"
+      ],
+      "checks_pass": {
+        "item_exists_inactive_5k_adverb": true,
+        "correct_answer_matches": true,
+        "no_r1b_violation": true,
+        "no_r1a_risk": true,
+        "distractor_not_own_ca": true,
+        "no_cross_group_ca_reference": true,
+        "all_distractors_unique_across_batch": true
+      },
+      "check_details": {},
+      "item_pass": true
+    },
+    {
+      "item_id": 3963,
+      "lemma": "principalmente",
+      "correct_answer": "главным образом",
+      "new_distractors": [
+        "всё-таки",
+        "совсем",
+        "тоже"
+      ],
+      "checks_pass": {
+        "item_exists_inactive_5k_adverb": true,
+        "correct_answer_matches": true,
+        "no_r1b_violation": true,
+        "no_r1a_risk": true,
+        "distractor_not_own_ca": true,
+        "no_cross_group_ca_reference": true,
+        "all_distractors_unique_across_batch": true
+      },
+      "check_details": {},
+      "item_pass": true
+    },
+    {
+      "item_id": 10019,
+      "lemma": "exatamente",
+      "correct_answer": "точно",
+      "new_distractors": [
+        "слегка",
+        "немного",
+        "едва"
+      ],
+      "checks_pass": {
+        "item_exists_inactive_5k_adverb": true,
+        "correct_answer_matches": true,
+        "no_r1b_violation": true,
+        "no_r1a_risk": true,
+        "distractor_not_own_ca": true,
+        "no_cross_group_ca_reference": true,
+        "all_distractors_unique_across_batch": true
+      },
+      "check_details": {},
+      "item_pass": true
+    },
+    {
+      "item_id": 3970,
+      "lemma": "facilmente",
+      "correct_answer": "легко",
+      "new_distractors": [
+        "трудно",
+        "тихо",
+        "крепко"
+      ],
+      "checks_pass": {
+        "item_exists_inactive_5k_adverb": true,
+        "correct_answer_matches": true,
+        "no_r1b_violation": true,
+        "no_r1a_risk": true,
+        "distractor_not_own_ca": true,
+        "no_cross_group_ca_reference": true,
+        "all_distractors_unique_across_batch": true
+      },
+      "check_details": {},
+      "item_pass": true
+    }
+  ]
+}
