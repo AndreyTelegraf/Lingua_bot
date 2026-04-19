@@ -2,9 +2,9 @@
 """
 noun10k_monitoring_runner.py
 
-Read-only monitoring runner for noun/10K post-activation diagnostics.
-Computes the 4 canonical signals from the monitoring plan and evaluates
-T1-T4 activation triggers.
+Read-only monitoring runner for noun/10K and verb/10K post-activation diagnostics.
+Computes the 4 canonical signals from the monitoring plan and evaluates T1-T4
+activation triggers for each POS/bin track separately.
 
 REAL SESSION FILTER (PROVISIONAL)
   status='finished' AND completion_reason='question_limit_reached'
@@ -27,6 +27,13 @@ OUTPUT
   Prints a human-readable summary to stdout.
   Writes a JSON report to --output-dir (default: diagnostics_exports/).
   Report filename: noun10k_monitoring_report_<YYYYMMDDTHHMMSSZ>.json
+
+  Report structure:
+    {
+      "noun_10k": { ... noun/10K signals and triggers ... },
+      "verb_10k": { ... verb/10K signals and triggers ... },
+      ... flat top-level keys (noun/10K, backward compat) ...
+    }
 """
 from __future__ import annotations
 
@@ -39,7 +46,7 @@ import statistics
 import sys
 
 # ---------------------------------------------------------------------------
-# Constants — all thresholds from noun10k_post_activation_monitoring_plan.md
+# Constants — noun/10K thresholds from noun10k_post_activation_monitoring_plan.md
 # ---------------------------------------------------------------------------
 
 REAL_SESSION_FILTER = (
@@ -64,9 +71,21 @@ T4_SKEW_MEDIAN_THRESHOLD = 3
 NOUN_10K_POS = "noun"
 NOUN_10K_BIN = "10K"
 
+# ---------------------------------------------------------------------------
+# Constants — verb/10K thresholds from pos_next_track_execution_plan.md Stage E
+# ---------------------------------------------------------------------------
+
+VERB_10K_POS = "verb"
+VERB_10K_BIN = "10K"
+
+# T2: verbs have higher selector target (7/session vs nouns) → pool depletes faster
+VERB_T2_MEAN_ITEMS_DEPLETION = 2.0
+# T3: 9 verb items active → threshold is 8 (vs 10 for 13 nouns)
+VERB_T3_MIN_ITEMS_WITH_3_SHOWN = 8
+
 
 # ---------------------------------------------------------------------------
-# Data fetch functions (all read-only)
+# Data fetch functions (all read-only, parameterized by pos/bin_name)
 # ---------------------------------------------------------------------------
 
 
@@ -92,16 +111,19 @@ def fetch_real_session_user_count(conn: sqlite3.Connection, session_ids: list[in
 
 
 def fetch_signal1_items_per_session(
-    conn: sqlite3.Connection, session_ids: list[int]
+    conn: sqlite3.Connection,
+    session_ids: list[int],
+    pos: str = NOUN_10K_POS,
+    bin_name: str = NOUN_10K_BIN,
 ) -> list[dict]:
-    """Signal 1: noun/10K items shown per complete real session."""
+    """Signal 1: items shown per complete real session for the given pos/bin."""
     if not session_ids:
         return []
     placeholders = ",".join("?" * len(session_ids))
     rows = conn.execute(
         f"""
         SELECT att.id AS attempt_id,
-               COUNT(DISTINCT va.item_id) AS noun10k_shown
+               COUNT(DISTINCT va.item_id) AS items_shown
         FROM vocab_attempts att
         JOIN vocab_answers va ON va.attempt_id = att.id
         JOIN vocab_items vi ON vi.id = va.item_id
@@ -112,23 +134,21 @@ def fetch_signal1_items_per_session(
         GROUP BY att.id
         ORDER BY att.id
         """,
-        [NOUN_10K_POS, NOUN_10K_BIN] + session_ids,
+        [pos, bin_name] + session_ids,
     ).fetchall()
-    return [{"attempt_id": r[0], "noun10k_shown": r[1]} for r in rows]
+    return [{"attempt_id": r[0], "items_shown": r[1]} for r in rows]
 
 
 def fetch_signal2_exposure_per_item(
-    conn: sqlite3.Connection, session_ids: list[int]
+    conn: sqlite3.Connection,
+    session_ids: list[int],
+    pos: str = NOUN_10K_POS,
+    bin_name: str = NOUN_10K_BIN,
 ) -> list[dict]:
-    """Signal 2: per-item exposure counts, computed from real sessions only.
+    """Signal 2: per-item exposure counts from real sessions only.
 
     Deliberately avoids vocab_item_exposure (which includes synthetic runs).
     """
-    if not session_ids:
-        placeholders_empty = "SELECT NULL WHERE 1=0"
-    else:
-        placeholders_empty = None
-
     placeholders = ",".join("?" * len(session_ids)) if session_ids else ""
 
     if session_ids:
@@ -148,7 +168,7 @@ def fetch_signal2_exposure_per_item(
             GROUP BY vi.id, vi.lemma
             ORDER BY sessions_shown DESC
             """,
-            session_ids + [NOUN_10K_POS, NOUN_10K_BIN],
+            session_ids + [pos, bin_name],
         ).fetchall()
     else:
         rows = conn.execute(
@@ -158,7 +178,7 @@ def fetch_signal2_exposure_per_item(
             WHERE vi.pos = ? AND vi.bin_name = ? AND vi.is_active = 1
             ORDER BY vi.id
             """,
-            [NOUN_10K_POS, NOUN_10K_BIN],
+            [pos, bin_name],
         ).fetchall()
 
     return [
@@ -173,19 +193,21 @@ def fetch_signal2_exposure_per_item(
 
 
 def fetch_signal3_repeat_rate(
-    conn: sqlite3.Connection, session_ids: list[int]
+    conn: sqlite3.Connection,
+    session_ids: list[int],
+    pos: str = NOUN_10K_POS,
+    bin_name: str = NOUN_10K_BIN,
 ) -> dict:
     """Signal 3: per-user repeat rate across consecutive sessions.
 
     For each user, iterates consecutive session pairs (N-1, N) and computes
-    what fraction of noun/10K items in session N were also in session N-1.
+    what fraction of pos/bin items in session N were also in session N-1.
     """
     if not session_ids:
         return {"pairs_evaluated": 0, "mean_repeat_rate": None, "max_repeat_rate": None}
 
     placeholders = ",".join("?" * len(session_ids))
 
-    # Fetch noun/10K items per real session per user, ordered by session id
     rows = conn.execute(
         f"""
         SELECT att.user_id,
@@ -200,10 +222,9 @@ def fetch_signal3_repeat_rate(
           AND att.id IN ({placeholders})
         ORDER BY att.user_id, att.id
         """,
-        [NOUN_10K_POS, NOUN_10K_BIN] + session_ids,
+        [pos, bin_name] + session_ids,
     ).fetchall()
 
-    # Group by user → sorted list of (attempt_id, set_of_item_ids)
     user_sessions: dict[int, dict[int, set]] = {}
     for user_id, attempt_id, item_id in rows:
         if user_id not in user_sessions:
@@ -251,7 +272,10 @@ def fetch_signal3_repeat_rate(
 
 
 def fetch_signal4_correctness(
-    conn: sqlite3.Connection, session_ids: list[int]
+    conn: sqlite3.Connection,
+    session_ids: list[int],
+    pos: str = NOUN_10K_POS,
+    bin_name: str = NOUN_10K_BIN,
 ) -> list[dict]:
     """Signal 4: per-item correctness rate from real sessions, min 5 answers."""
     if not session_ids:
@@ -278,7 +302,7 @@ def fetch_signal4_correctness(
         HAVING COUNT(*) >= ?
         ORDER BY pct_correct DESC
         """,
-        [NOUN_10K_POS, NOUN_10K_BIN] + session_ids + [MINIMUM_ANSWERS_PER_ITEM],
+        [pos, bin_name] + session_ids + [MINIMUM_ANSWERS_PER_ITEM],
     ).fetchall()
     return [
         {
@@ -294,7 +318,7 @@ def fetch_signal4_correctness(
 
 
 # ---------------------------------------------------------------------------
-# Trigger evaluation
+# Trigger evaluation (parameterized thresholds for noun vs verb)
 # ---------------------------------------------------------------------------
 
 
@@ -305,9 +329,14 @@ def evaluate_triggers(
     signal2: list[dict],
     signal3: dict,
     signal4: list[dict],
+    t2_depletion: float = T2_MEAN_ITEMS_DEPLETION,
+    t3_min_items: int = T3_MIN_ITEMS_WITH_3_SHOWN,
 ) -> dict:
-    """Evaluate T1-T4. Returns trigger results and a final verdict."""
+    """Evaluate T1-T4. Returns trigger results and a final verdict.
 
+    t2_depletion: threshold for T2 (noun=1.5, verb=2.0)
+    t3_min_items: minimum items needing sessions_shown>=3 for T3 (noun=10, verb=8)
+    """
     total_sessions = len(session_ids)
     minimum_met = total_sessions >= MINIMUM_SESSIONS and distinct_users >= MINIMUM_USERS
 
@@ -339,36 +368,36 @@ def evaluate_triggers(
         "threshold": T1_REPEAT_RATE_CONCERN,
     }
 
-    # T2: mean items per session < 1.5 over last 10 consecutive sessions
+    # T2: mean items per session < threshold over last 10 consecutive sessions
     if len(signal1) >= T2_CONSECUTIVE_WINDOW:
         last_n = signal1[-T2_CONSECUTIVE_WINDOW:]
-        mean_items = statistics.mean(r["noun10k_shown"] for r in last_n)
+        mean_items = statistics.mean(r["items_shown"] for r in last_n)
     elif signal1:
         last_n = signal1
-        mean_items = statistics.mean(r["noun10k_shown"] for r in signal1)
+        mean_items = statistics.mean(r["items_shown"] for r in signal1)
     else:
         mean_items = 0.0
         last_n = []
-    t2_fires = mean_items < T2_MEAN_ITEMS_DEPLETION
+    t2_fires = mean_items < t2_depletion
     t2 = {
         "code": "POOL_DEPLETION",
         "fires": t2_fires,
         "mean_items_per_session": round(mean_items, 4),
         "sessions_evaluated": len(last_n),
-        "threshold": T2_MEAN_ITEMS_DEPLETION,
+        "threshold": t2_depletion,
     }
 
-    # T3: fewer than 10 of 13 items have sessions_shown >= 3
+    # T3: fewer than t3_min_items items have sessions_shown >= 3
     items_with_sufficient_exposure = sum(
         1 for r in signal2 if r["sessions_shown"] >= T3_MIN_SHOWN
     )
-    t3_fires = items_with_sufficient_exposure < T3_MIN_ITEMS_WITH_3_SHOWN
+    t3_fires = items_with_sufficient_exposure < t3_min_items
     t3 = {
         "code": "COVERAGE_FAILURE",
         "fires": t3_fires,
         "items_with_shown_gte_3": items_with_sufficient_exposure,
         "total_active_items": len(signal2),
-        "threshold": T3_MIN_ITEMS_WITH_3_SHOWN,
+        "threshold": t3_min_items,
     }
 
     # T4: any item sessions_shown >= 8 while pool median < 3
@@ -422,41 +451,51 @@ def evaluate_triggers(
 
 
 # ---------------------------------------------------------------------------
-# Report assembly
+# Section builder (shared by noun/10K and verb/10K)
 # ---------------------------------------------------------------------------
 
 
-def build_report(conn: sqlite3.Connection) -> dict:
-    session_ids = fetch_real_session_ids(conn)
-    distinct_users = fetch_real_session_user_count(conn, session_ids)
-    signal1 = fetch_signal1_items_per_session(conn, session_ids)
-    signal2 = fetch_signal2_exposure_per_item(conn, session_ids)
-    signal3 = fetch_signal3_repeat_rate(conn, session_ids)
-    signal4 = fetch_signal4_correctness(conn, session_ids)
-    triggers = evaluate_triggers(session_ids, distinct_users, signal1, signal2, signal3, signal4)
+def _build_section(
+    conn: sqlite3.Connection,
+    session_ids: list[int],
+    distinct_users: int,
+    pos: str,
+    bin_name: str,
+    t2_depletion: float,
+    t3_min_items: int,
+) -> dict:
+    """Build one monitoring section (all 4 signals + trigger eval) for a pos/bin."""
+    label = f"{pos}/{bin_name}"
+    signal1 = fetch_signal1_items_per_session(conn, session_ids, pos, bin_name)
+    signal2 = fetch_signal2_exposure_per_item(conn, session_ids, pos, bin_name)
+    signal3 = fetch_signal3_repeat_rate(conn, session_ids, pos, bin_name)
+    signal4 = fetch_signal4_correctness(conn, session_ids, pos, bin_name)
+    triggers = evaluate_triggers(
+        session_ids, distinct_users, signal1, signal2, signal3, signal4,
+        t2_depletion=t2_depletion,
+        t3_min_items=t3_min_items,
+    )
 
     mean_items = (
-        round(statistics.mean(r["noun10k_shown"] for r in signal1), 4)
+        round(statistics.mean(r["items_shown"] for r in signal1), 4)
         if signal1
         else None
     )
 
     return {
-        "report_generated_at": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "db_path": conn.execute("PRAGMA database_list").fetchone()[2],
-        "real_session_filter": REAL_SESSION_FILTER,
-        "real_session_filter_note": REAL_SESSION_FILTER_NOTE,
+        "pos": pos,
+        "bin_name": bin_name,
         "summary": {
             "total_real_sessions": len(session_ids),
             "distinct_real_users": distinct_users,
-            "sessions_with_noun10k": len(signal1),
-            "mean_noun10k_per_session": mean_items,
-            "active_noun10k_items": len(signal2),
+            "sessions_with_items": len(signal1),
+            "mean_items_per_session": mean_items,
+            "active_items": len(signal2),
         },
         "signal_scope_note": (
-            "Signal 1 and Signal 3 count only items currently active in the noun/10K pool "
-            "(vi.is_active=1). Legacy noun/10K items deactivated before the monitoring "
-            "window are excluded. Signal 2 and Signal 4 were already filtering is_active=1."
+            f"Signal 1 and Signal 3 count only items currently active in the {label} pool "
+            f"(vi.is_active=1). Legacy {label} items deactivated before the monitoring "
+            f"window are excluded. Signal 2 and Signal 4 were already filtering is_active=1."
         ),
         "signal1_items_per_session": signal1,
         "signal2_exposure_per_item": signal2,
@@ -469,43 +508,104 @@ def build_report(conn: sqlite3.Connection) -> dict:
 
 
 # ---------------------------------------------------------------------------
+# Report assembly
+# ---------------------------------------------------------------------------
+
+
+def build_report(conn: sqlite3.Connection) -> dict:
+    session_ids = fetch_real_session_ids(conn)
+    distinct_users = fetch_real_session_user_count(conn, session_ids)
+
+    noun_section = _build_section(
+        conn, session_ids, distinct_users,
+        NOUN_10K_POS, NOUN_10K_BIN,
+        T2_MEAN_ITEMS_DEPLETION, T3_MIN_ITEMS_WITH_3_SHOWN,
+    )
+    verb_section = _build_section(
+        conn, session_ids, distinct_users,
+        VERB_10K_POS, VERB_10K_BIN,
+        VERB_T2_MEAN_ITEMS_DEPLETION, VERB_T3_MIN_ITEMS_WITH_3_SHOWN,
+    )
+
+    noun_s1 = noun_section["signal1_items_per_session"]
+    noun_s2 = noun_section["signal2_exposure_per_item"]
+
+    return {
+        "report_generated_at": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "db_path": conn.execute("PRAGMA database_list").fetchone()[2],
+        "real_session_filter": REAL_SESSION_FILTER,
+        "real_session_filter_note": REAL_SESSION_FILTER_NOTE,
+        # ---- Backward-compat flat keys (noun/10K) ----
+        "summary": {
+            "total_real_sessions": len(session_ids),
+            "distinct_real_users": distinct_users,
+            "sessions_with_noun10k": len(noun_s1),
+            "mean_noun10k_per_session": noun_section["summary"]["mean_items_per_session"],
+            "active_noun10k_items": len(noun_s2),
+        },
+        "signal_scope_note": noun_section["signal_scope_note"],
+        "signal1_items_per_session": noun_s1,
+        "signal2_exposure_per_item": noun_s2,
+        "signal3_repeat_rate": noun_section["signal3_repeat_rate"],
+        "signal4_correctness": noun_section["signal4_correctness"],
+        "trigger_evaluation": noun_section["trigger_evaluation"],
+        "verdict": noun_section["verdict"],
+        "verdict_note": noun_section["verdict_note"],
+        # ---- Nested per-track sections ----
+        "noun_10k": noun_section,
+        "verb_10k": verb_section,
+    }
+
+
+# ---------------------------------------------------------------------------
 # Output
 # ---------------------------------------------------------------------------
 
 
+def _print_section(section: dict) -> None:
+    label = f"{section['pos'].upper()}/{section['bin_name']}"
+    tr = section["trigger_evaluation"]
+    s = section["summary"]
+
+    print(f"\n  --- {label} ---")
+    print(f"  Sessions with {label}: {s['sessions_with_items']}")
+    print(f"  Mean {label}/session:  {s['mean_items_per_session']}")
+    print(f"  Active {label} items:  {s['active_items']}")
+
+    if not tr["minimum_sample_met"]:
+        print(f"  MINIMUM SAMPLE: NOT MET — {tr['verdict_note']}")
+    else:
+        print(f"  MINIMUM SAMPLE: MET")
+        for key in ["T1", "T2", "T3", "T4"]:
+            t = tr[key]
+            status = "FIRES" if t["fires"] else "ok"
+            print(f"    {key} ({t['code']}): {status}")
+        if tr.get("broken_items"):
+            print(f"  BROKEN ITEMS (pct_correct < 20): {[r['lemma'] for r in tr['broken_items']]}")
+        if tr.get("too_easy_items"):
+            print(f"  TOO EASY (pct_correct > 85):     {[r['lemma'] for r in tr['too_easy_items']]}")
+
+    print(f"  VERDICT: {section['verdict']}")
+    print(f"    {section['verdict_note']}")
+
+
 def print_summary(report: dict) -> None:
-    tr = report["trigger_evaluation"]
     s = report["summary"]
 
     print("=" * 60)
-    print("NOUN/10K MONITORING REPORT")
+    print("VOCAB MONITORING REPORT (noun/10K + verb/10K)")
     print(f"Generated: {report['report_generated_at']}")
     print(f"DB: {report['db_path']}")
     print("=" * 60)
     print(f"\nREAL SESSION FILTER ({report['real_session_filter_note']}):")
     print(f"  {report['real_session_filter']}")
     print(f"\nSAMPLE SIZE:")
-    print(f"  Total real sessions:     {s['total_real_sessions']} (need {MINIMUM_SESSIONS})")
-    print(f"  Distinct real users:     {s['distinct_real_users']} (need {MINIMUM_USERS})")
-    print(f"  Sessions with noun/10K:  {s['sessions_with_noun10k']}")
-    print(f"  Mean noun/10K/session:   {s['mean_noun10k_per_session']}")
-    print(f"  Active noun/10K items:   {s['active_noun10k_items']}")
+    print(f"  Total real sessions:   {s['total_real_sessions']} (need {MINIMUM_SESSIONS})")
+    print(f"  Distinct real users:   {s['distinct_real_users']} (need {MINIMUM_USERS})")
 
-    if not tr["minimum_sample_met"]:
-        print(f"\nMINIMUM SAMPLE: NOT MET — {tr['verdict_note']}")
-    else:
-        print("\nMINIMUM SAMPLE: MET")
-        for key in ["T1", "T2", "T3", "T4"]:
-            t = tr[key]
-            status = "FIRES" if t["fires"] else "ok"
-            print(f"  {key} ({t['code']}): {status}")
-        if tr["broken_items"]:
-            print(f"\n  BROKEN ITEMS (pct_correct < 20): {[r['lemma'] for r in tr['broken_items']]}")
-        if tr["too_easy_items"]:
-            print(f"  TOO EASY ITEMS (pct_correct > 85): {[r['lemma'] for r in tr['too_easy_items']]}")
+    _print_section(report["noun_10k"])
+    _print_section(report["verb_10k"])
 
-    print(f"\nVERDICT: {report['verdict']}")
-    print(f"  {report['verdict_note']}")
     print("=" * 60)
 
 
@@ -526,7 +626,7 @@ def write_json_report(report: dict, output_dir: str) -> str:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        description="Read-only noun/10K monitoring runner."
+        description="Read-only noun/10K + verb/10K monitoring runner."
     )
     parser.add_argument(
         "--db",
@@ -563,6 +663,7 @@ def main(argv: list[str] | None = None) -> int:
         path = write_json_report(report, args.output_dir)
         print(f"\nJSON report written to: {path}")
 
+    # Exit code based on noun/10K verdict (primary track)
     verdict = report["verdict"]
     if verdict == "INSUFFICIENT_DATA":
         return 0
