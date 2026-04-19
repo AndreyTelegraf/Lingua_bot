@@ -34,6 +34,8 @@ from noun10k_monitoring_runner import (
     write_json_report,
     MINIMUM_SESSIONS,
     MINIMUM_USERS,
+    ADVERB_5K_POS,
+    ADVERB_5K_BIN,
 )
 
 DEFAULT_OUTPUT_DIR = "diagnostics_exports/current"
@@ -53,6 +55,7 @@ def derive_global_status(report: dict) -> str:
     verdicts = [
         report["noun_10k"]["verdict"],
         report["verb_10k"]["verdict"],
+        report["adverb_5k"]["verdict"],
     ]
     return max(verdicts, key=lambda v: _VERDICT_PRIORITY.get(v, 0))
 
@@ -101,9 +104,9 @@ _FORBIDDEN_ALWAYS: list[str] = [
     "DO_NOT_ACTIVATE_ANYTHING",   # activation requires a dedicated gate-check workstream
     "DO_NOT_TOUCH_SELECTOR",
     "DO_NOT_TOUCH_RUNTIME",
-    "DO_NOT_OPEN_ADVERBS",
     "DO_NOT_MODIFY_NOUN10K",
     "DO_NOT_MODIFY_VERB10K",
+    "DO_NOT_MODIFY_ADVERB5K",
 ]
 
 
@@ -134,6 +137,7 @@ def build_policy(report: dict, global_status: str) -> dict:
     tracks = {
         "noun_10k": report["noun_10k"]["verdict"],
         "verb_10k": report["verb_10k"]["verdict"],
+        "adverb_5k": report["adverb_5k"]["verdict"],
     }
     per_track = {k: derive_track_next_action(v) for k, v in tracks.items()}
     global_action = derive_global_next_action(per_track)
@@ -245,10 +249,11 @@ def build_operator_summary(
     s = report["summary"]
     noun_s = report["noun_10k"]
     verb_s = report["verb_10k"]
+    adverb_s = report["adverb_5k"]
 
     trigger_eligible_tracks = [
         f"{t['pos'].upper()}/{t['bin_name']}"
-        for t in [noun_s, verb_s]
+        for t in [noun_s, verb_s, adverb_s]
         if t["verdict"] == "PREPARE_NEXT_TRANCHE"
     ]
     any_trigger_eligible = bool(trigger_eligible_tracks)
@@ -271,7 +276,7 @@ def build_operator_summary(
         next_step = "No action required. Continue monitoring. Rerun when more sessions accumulate."
 
     lines: list[str] = [
-        "# Vocab 10K Monitoring — Operator Summary",
+        "# Vocab Monitoring — Operator Summary (noun/10K · verb/10K · adverb/5K)",
         "",
         f"**Generated:** {ts}",
         f"**DB:** {db}",
@@ -337,6 +342,7 @@ def build_operator_summary(
 
     lines += _track_md(noun_s)
     lines += _track_md(verb_s)
+    lines += _track_md(adverb_s)
 
     lines += [
         "---",

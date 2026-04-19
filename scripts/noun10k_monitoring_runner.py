@@ -83,6 +83,18 @@ VERB_T2_MEAN_ITEMS_DEPLETION = 2.0
 # T3: 9 verb items active → threshold is 8 (vs 10 for 13 nouns)
 VERB_T3_MIN_ITEMS_WITH_3_SHOWN = 8
 
+# ---------------------------------------------------------------------------
+# Constants — adverb/5K thresholds
+# ---------------------------------------------------------------------------
+
+ADVERB_5K_POS = "adverb"
+ADVERB_5K_BIN = "5K"
+
+# T2: adverb/5K has 16 active items — depletion threshold matches noun (1.5)
+ADVERB_T2_MEAN_ITEMS_DEPLETION = 1.5
+# T3: 16 adverb/5K items → 12 items must reach sessions_shown>=3 (≈75%)
+ADVERB_T3_MIN_ITEMS_WITH_3_SHOWN = 12
+
 
 # ---------------------------------------------------------------------------
 # Data fetch functions (all read-only, parameterized by pos/bin_name)
@@ -526,6 +538,11 @@ def build_report(conn: sqlite3.Connection) -> dict:
         VERB_10K_POS, VERB_10K_BIN,
         VERB_T2_MEAN_ITEMS_DEPLETION, VERB_T3_MIN_ITEMS_WITH_3_SHOWN,
     )
+    adverb_section = _build_section(
+        conn, session_ids, distinct_users,
+        ADVERB_5K_POS, ADVERB_5K_BIN,
+        ADVERB_T2_MEAN_ITEMS_DEPLETION, ADVERB_T3_MIN_ITEMS_WITH_3_SHOWN,
+    )
 
     noun_s1 = noun_section["signal1_items_per_session"]
     noun_s2 = noun_section["signal2_exposure_per_item"]
@@ -554,6 +571,7 @@ def build_report(conn: sqlite3.Connection) -> dict:
         # ---- Nested per-track sections ----
         "noun_10k": noun_section,
         "verb_10k": verb_section,
+        "adverb_5k": adverb_section,
     }
 
 
@@ -593,7 +611,7 @@ def print_summary(report: dict) -> None:
     s = report["summary"]
 
     print("=" * 60)
-    print("VOCAB MONITORING REPORT (noun/10K + verb/10K)")
+    print("VOCAB MONITORING REPORT (noun/10K + verb/10K + adverb/5K)")
     print(f"Generated: {report['report_generated_at']}")
     print(f"DB: {report['db_path']}")
     print("=" * 60)
@@ -605,6 +623,7 @@ def print_summary(report: dict) -> None:
 
     _print_section(report["noun_10k"])
     _print_section(report["verb_10k"])
+    _print_section(report["adverb_5k"])
 
     print("=" * 60)
 
