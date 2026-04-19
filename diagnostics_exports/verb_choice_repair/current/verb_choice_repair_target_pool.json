@@ -1,0 +1,714 @@
+{
+  "total": 70,
+  "bin_distribution": {
+    "NULL": 2,
+    "10K": 3,
+    "1K": 53,
+    "20K": 8,
+    "5K": 4
+  },
+  "null_correct_answer": 0,
+  "lemma_already_active_count": 60,
+  "items": [
+    {
+      "item_id": 10628,
+      "lemma": "reconhecer",
+      "bin_name": null,
+      "correct_answer": "узнавать",
+      "cefr_estimate": null,
+      "freq_rank": null,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices"
+    },
+    {
+      "item_id": 10647,
+      "lemma": "ferir",
+      "bin_name": null,
+      "correct_answer": "ранить",
+      "cefr_estimate": null,
+      "freq_rank": null,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices"
+    },
+    {
+      "item_id": 9689,
+      "lemma": "registrar",
+      "bin_name": "10K",
+      "correct_answer": "регистрировать",
+      "cefr_estimate": "B2",
+      "freq_rank": 5787,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 9324,
+      "lemma": "interpretar",
+      "bin_name": "10K",
+      "correct_answer": "интерпретировать",
+      "cefr_estimate": "C1",
+      "freq_rank": 7172,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 9322,
+      "lemma": "interessar",
+      "bin_name": "10K",
+      "correct_answer": "интересовать",
+      "cefr_estimate": "C1",
+      "freq_rank": 9872,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 2627,
+      "lemma": "ver",
+      "bin_name": "1K",
+      "correct_answer": "видеть",
+      "cefr_estimate": "A1",
+      "freq_rank": 94,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 2698,
+      "lemma": "ver",
+      "bin_name": "1K",
+      "correct_answer": "видеть",
+      "cefr_estimate": "A1",
+      "freq_rank": 94,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 2699,
+      "lemma": "falar",
+      "bin_name": "1K",
+      "correct_answer": "сказать",
+      "cefr_estimate": "A1",
+      "freq_rank": 157,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices"
+    },
+    {
+      "item_id": 1572,
+      "lemma": "ficar",
+      "bin_name": "1K",
+      "correct_answer": "оставаться",
+      "cefr_estimate": "A1",
+      "freq_rank": 169,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 2700,
+      "lemma": "ficar",
+      "bin_name": "1K",
+      "correct_answer": "оставаться",
+      "cefr_estimate": "A1",
+      "freq_rank": 169,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 2603,
+      "lemma": "usar",
+      "bin_name": "1K",
+      "correct_answer": "использовать",
+      "cefr_estimate": "A1",
+      "freq_rank": 359,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 2701,
+      "lemma": "usar",
+      "bin_name": "1K",
+      "correct_answer": "использовать",
+      "cefr_estimate": "A1",
+      "freq_rank": 359,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 898,
+      "lemma": "ajudar",
+      "bin_name": "1K",
+      "correct_answer": "помочь",
+      "cefr_estimate": "A1",
+      "freq_rank": 383,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 2702,
+      "lemma": "ajudar",
+      "bin_name": "1K",
+      "correct_answer": "помочь",
+      "cefr_estimate": "A1",
+      "freq_rank": 383,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 23,
+      "lemma": "comer",
+      "bin_name": "1K",
+      "correct_answer": "есть",
+      "cefr_estimate": "A1",
+      "freq_rank": 450,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 1455,
+      "lemma": "encontrar",
+      "bin_name": "1K",
+      "correct_answer": "найти",
+      "cefr_estimate": "A1",
+      "freq_rank": 460,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 2704,
+      "lemma": "encontrar",
+      "bin_name": "1K",
+      "correct_answer": "найти",
+      "cefr_estimate": "A1",
+      "freq_rank": 460,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 1242,
+      "lemma": "começar",
+      "bin_name": "1K",
+      "correct_answer": "начать",
+      "cefr_estimate": "A2",
+      "freq_rank": 501,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 2705,
+      "lemma": "começar",
+      "bin_name": "1K",
+      "correct_answer": "начать",
+      "cefr_estimate": "A2",
+      "freq_rank": 501,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 2095,
+      "lemma": "ouvir",
+      "bin_name": "1K",
+      "correct_answer": "слушать",
+      "cefr_estimate": "A2",
+      "freq_rank": 507,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 2706,
+      "lemma": "ouvir",
+      "bin_name": "1K",
+      "correct_answer": "слышать",
+      "cefr_estimate": "A2",
+      "freq_rank": 507,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 148,
+      "lemma": "trabalhar",
+      "bin_name": "1K",
+      "correct_answer": "работать",
+      "cefr_estimate": "A2",
+      "freq_rank": 575,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 2554,
+      "lemma": "trabalhar",
+      "bin_name": "1K",
+      "correct_answer": "работать",
+      "cefr_estimate": "A2",
+      "freq_rank": 575,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 2707,
+      "lemma": "trabalhar",
+      "bin_name": "1K",
+      "correct_answer": "работать",
+      "cefr_estimate": "A2",
+      "freq_rank": 575,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 2656,
+      "lemma": "viver",
+      "bin_name": "1K",
+      "correct_answer": "жить",
+      "cefr_estimate": "A2",
+      "freq_rank": 577,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 2708,
+      "lemma": "viver",
+      "bin_name": "1K",
+      "correct_answer": "жить",
+      "cefr_estimate": "A2",
+      "freq_rank": 577,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 2408,
+      "lemma": "seguir",
+      "bin_name": "1K",
+      "correct_answer": "следовать",
+      "cefr_estimate": "A2",
+      "freq_rank": 590,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 2709,
+      "lemma": "seguir",
+      "bin_name": "1K",
+      "correct_answer": "следовать",
+      "cefr_estimate": "A2",
+      "freq_rank": 590,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 2548,
+      "lemma": "tomar",
+      "bin_name": "1K",
+      "correct_answer": "пить",
+      "cefr_estimate": "A2",
+      "freq_rank": 611,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 2710,
+      "lemma": "tomar",
+      "bin_name": "1K",
+      "correct_answer": "пить",
+      "cefr_estimate": "A2",
+      "freq_rank": 611,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 1249,
+      "lemma": "comprar",
+      "bin_name": "1K",
+      "correct_answer": "покупать",
+      "cefr_estimate": "A2",
+      "freq_rank": 642,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 2711,
+      "lemma": "comprar",
+      "bin_name": "1K",
+      "correct_answer": "покупать",
+      "cefr_estimate": "A2",
+      "freq_rank": 642,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 1848,
+      "lemma": "ler",
+      "bin_name": "1K",
+      "correct_answer": "читать",
+      "cefr_estimate": "A2",
+      "freq_rank": 648,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 2712,
+      "lemma": "ler",
+      "bin_name": "1K",
+      "correct_answer": "читать",
+      "cefr_estimate": "A2",
+      "freq_rank": 648,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 2120,
+      "lemma": "parar",
+      "bin_name": "1K",
+      "correct_answer": "остановить",
+      "cefr_estimate": "A2",
+      "freq_rank": 656,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 2713,
+      "lemma": "parar",
+      "bin_name": "1K",
+      "correct_answer": "остановить",
+      "cefr_estimate": "A2",
+      "freq_rank": 656,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 2521,
+      "lemma": "tentar",
+      "bin_name": "1K",
+      "correct_answer": "стараться",
+      "cefr_estimate": "A2",
+      "freq_rank": 659,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 2714,
+      "lemma": "tentar",
+      "bin_name": "1K",
+      "correct_answer": "стараться",
+      "cefr_estimate": "A2",
+      "freq_rank": 659,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 2429,
+      "lemma": "sentir",
+      "bin_name": "1K",
+      "correct_answer": "чувствовать",
+      "cefr_estimate": "A2",
+      "freq_rank": 691,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 2715,
+      "lemma": "sentir",
+      "bin_name": "1K",
+      "correct_answer": "чувствовать",
+      "cefr_estimate": "A2",
+      "freq_rank": 691,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 1265,
+      "lemma": "conhecer",
+      "bin_name": "1K",
+      "correct_answer": "знать",
+      "cefr_estimate": "A2",
+      "freq_rank": 709,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices"
+    },
+    {
+      "item_id": 2716,
+      "lemma": "conhecer",
+      "bin_name": "1K",
+      "correct_answer": "знать",
+      "cefr_estimate": "A2",
+      "freq_rank": 709,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices"
+    },
+    {
+      "item_id": 2006,
+      "lemma": "mostrar",
+      "bin_name": "1K",
+      "correct_answer": "показать",
+      "cefr_estimate": "A2",
+      "freq_rank": 712,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 2717,
+      "lemma": "mostrar",
+      "bin_name": "1K",
+      "correct_answer": "показать",
+      "cefr_estimate": "A2",
+      "freq_rank": 712,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 1273,
+      "lemma": "contar",
+      "bin_name": "1K",
+      "correct_answer": "читать",
+      "cefr_estimate": "A2",
+      "freq_rank": 740,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices"
+    },
+    {
+      "item_id": 2718,
+      "lemma": "contar",
+      "bin_name": "1K",
+      "correct_answer": "читать",
+      "cefr_estimate": "A2",
+      "freq_rank": 740,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices"
+    },
+    {
+      "item_id": 1240,
+      "lemma": "comer",
+      "bin_name": "1K",
+      "correct_answer": "есть",
+      "cefr_estimate": "A2",
+      "freq_rank": 753,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 2719,
+      "lemma": "comer",
+      "bin_name": "1K",
+      "correct_answer": "есть",
+      "cefr_estimate": "A2",
+      "freq_rank": 753,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 1462,
+      "lemma": "entender",
+      "bin_name": "1K",
+      "correct_answer": "понять",
+      "cefr_estimate": "A2",
+      "freq_rank": 757,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 2720,
+      "lemma": "entender",
+      "bin_name": "1K",
+      "correct_answer": "понять",
+      "cefr_estimate": "A2",
+      "freq_rank": 757,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 2100,
+      "lemma": "pagar",
+      "bin_name": "1K",
+      "correct_answer": "платить",
+      "cefr_estimate": "A2",
+      "freq_rank": 809,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 2721,
+      "lemma": "pagar",
+      "bin_name": "1K",
+      "correct_answer": "платить",
+      "cefr_estimate": "A2",
+      "freq_rank": 809,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 1501,
+      "lemma": "esperar",
+      "bin_name": "1K",
+      "correct_answer": "ждать",
+      "cefr_estimate": "A2",
+      "freq_rank": 891,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 2722,
+      "lemma": "esperar",
+      "bin_name": "1K",
+      "correct_answer": "ждать",
+      "cefr_estimate": "A2",
+      "freq_rank": 891,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 1418,
+      "lemma": "dormir",
+      "bin_name": "1K",
+      "correct_answer": "спать",
+      "cefr_estimate": "A2",
+      "freq_rank": 912,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 2723,
+      "lemma": "dormir",
+      "bin_name": "1K",
+      "correct_answer": "спать",
+      "cefr_estimate": "A2",
+      "freq_rank": 912,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 27,
+      "lemma": "trabalhar",
+      "bin_name": "1K",
+      "correct_answer": "работать",
+      "cefr_estimate": "A2",
+      "freq_rank": 980,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 50,
+      "lemma": "trabalhar",
+      "bin_name": "1K",
+      "correct_answer": "работать",
+      "cefr_estimate": "A2",
+      "freq_rank": 980,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 8804,
+      "lemma": "ativar",
+      "bin_name": "20K",
+      "correct_answer": "активизировать",
+      "cefr_estimate": "C1",
+      "freq_rank": 10312,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 9620,
+      "lemma": "preferir",
+      "bin_name": "20K",
+      "correct_answer": "предпочесть",
+      "cefr_estimate": "C1",
+      "freq_rank": 10589,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 8881,
+      "lemma": "calcular",
+      "bin_name": "20K",
+      "correct_answer": "считать",
+      "cefr_estimate": "C1",
+      "freq_rank": 10664,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 8742,
+      "lemma": "admirar",
+      "bin_name": "20K",
+      "correct_answer": "восхищаться",
+      "cefr_estimate": "C1",
+      "freq_rank": 10822,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices"
+    },
+    {
+      "item_id": 9908,
+      "lemma": "vomitar",
+      "bin_name": "20K",
+      "correct_answer": "рвать",
+      "cefr_estimate": "C1",
+      "freq_rank": 11191,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 9063,
+      "lemma": "diferenciar",
+      "bin_name": "20K",
+      "correct_answer": "отличать",
+      "cefr_estimate": "C1",
+      "freq_rank": 11438,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 9197,
+      "lemma": "fomentar",
+      "bin_name": "20K",
+      "correct_answer": "возбуждать",
+      "cefr_estimate": "C1",
+      "freq_rank": 11464,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 8736,
+      "lemma": "acomodar",
+      "bin_name": "20K",
+      "correct_answer": "вмещать",
+      "cefr_estimate": "C1",
+      "freq_rank": 11572,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 8784,
+      "lemma": "aproveitar",
+      "bin_name": "5K",
+      "correct_answer": "иметь выгоду",
+      "cefr_estimate": "B1",
+      "freq_rank": 2408,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    },
+    {
+      "item_id": 9692,
+      "lemma": "regular",
+      "bin_name": "5K",
+      "correct_answer": "регулировать",
+      "cefr_estimate": "B1",
+      "freq_rank": 3285,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices"
+    },
+    {
+      "item_id": 9195,
+      "lemma": "foder",
+      "bin_name": "5K",
+      "correct_answer": "ети",
+      "cefr_estimate": "B2",
+      "freq_rank": 3562,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices"
+    },
+    {
+      "item_id": 8769,
+      "lemma": "analisar",
+      "bin_name": "5K",
+      "correct_answer": "анализировать",
+      "cefr_estimate": "B2",
+      "freq_rank": 3816,
+      "choice_count": 0,
+      "reason_in_scope": "inactive_verb_zero_choices,lemma_already_active"
+    }
+  ]
+}

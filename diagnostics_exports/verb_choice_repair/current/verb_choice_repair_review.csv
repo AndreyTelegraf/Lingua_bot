@@ -1,0 +1,71 @@
+item_id,lemma,bin_name,correct_answer,proposed_distractor_1,proposed_distractor_2,proposed_distractor_3,collision_check_status,semantic_note,confidence,proposal_status,reject_reason
+10628,reconhecer,,узнавать,признавать,наблюдать,запоминать,clean,"All three relate to perception/cognition: признавать (to acknowledge), наблюдать (to observe), запоминать (to memorize). Plausible but semantically distinct from узнавать (to recognize).",high,READY,
+10647,ferir,,ранить,бить,избивать,повреждать,clean,"All three relate to physical harm: бить (to hit), избивать (to beat), повреждать (to damage). Plausible in same domain but semantically distinct from ранить (to wound with a cutting/penetrating object).",high,READY,
+9689,registrar,10K,регистрировать,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'registrar' already has an active verb item
+9324,interpretar,10K,интерпретировать,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'interpretar' already has an active verb item
+9322,interessar,10K,интересовать,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'interessar' already has an active verb item
+2627,ver,1K,видеть,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'ver' already has an active verb item
+2698,ver,1K,видеть,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'ver' already has an active verb item
+2699,falar,1K,сказать,,,,rejected_by_policy,,n/a,REJECT,dup_ca_and_r1a: CA 'сказать' is both an active correct_answer and active distractor
+1572,ficar,1K,оставаться,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'ficar' already has an active verb item
+2700,ficar,1K,оставаться,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'ficar' already has an active verb item
+2603,usar,1K,использовать,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'usar' already has an active verb item
+2701,usar,1K,использовать,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'usar' already has an active verb item
+898,ajudar,1K,помочь,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'ajudar' already has an active verb item
+2702,ajudar,1K,помочь,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'ajudar' already has an active verb item
+23,comer,1K,есть,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'comer' already has an active verb item
+1455,encontrar,1K,найти,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'encontrar' already has an active verb item
+2704,encontrar,1K,найти,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'encontrar' already has an active verb item
+1242,começar,1K,начать,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'começar' already has an active verb item
+2705,começar,1K,начать,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'começar' already has an active verb item
+2095,ouvir,1K,слушать,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'ouvir' already has an active verb item
+2706,ouvir,1K,слышать,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'ouvir' already has an active verb item
+148,trabalhar,1K,работать,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'trabalhar' already has an active verb item
+2554,trabalhar,1K,работать,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'trabalhar' already has an active verb item
+2707,trabalhar,1K,работать,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'trabalhar' already has an active verb item
+2656,viver,1K,жить,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'viver' already has an active verb item
+2708,viver,1K,жить,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'viver' already has an active verb item
+2408,seguir,1K,следовать,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'seguir' already has an active verb item
+2709,seguir,1K,следовать,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'seguir' already has an active verb item
+2548,tomar,1K,пить,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'tomar' already has an active verb item
+2710,tomar,1K,пить,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'tomar' already has an active verb item
+1249,comprar,1K,покупать,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'comprar' already has an active verb item
+2711,comprar,1K,покупать,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'comprar' already has an active verb item
+1848,ler,1K,читать,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'ler' already has an active verb item
+2712,ler,1K,читать,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'ler' already has an active verb item
+2120,parar,1K,остановить,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'parar' already has an active verb item
+2713,parar,1K,остановить,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'parar' already has an active verb item
+2521,tentar,1K,стараться,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'tentar' already has an active verb item
+2714,tentar,1K,стараться,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'tentar' already has an active verb item
+2429,sentir,1K,чувствовать,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'sentir' already has an active verb item
+2715,sentir,1K,чувствовать,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'sentir' already has an active verb item
+1265,conhecer,1K,знать,,,,rejected_by_policy,,n/a,REJECT,dup_ca_and_r1a: CA 'знать' is both an active correct_answer and active distractor; pool duplicate
+2716,conhecer,1K,знать,,,,rejected_by_policy,,n/a,REJECT,dup_ca_and_r1a: CA 'знать' is both an active correct_answer and active distractor; pool duplicate
+2006,mostrar,1K,показать,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'mostrar' already has an active verb item
+2717,mostrar,1K,показать,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'mostrar' already has an active verb item
+1273,contar,1K,читать,,,,rejected_by_policy,,n/a,REJECT,wrong_gloss_and_conflicts: contar means 'рассказывать/считать' not 'читать'; CA also dup_ca+r1a
+2718,contar,1K,читать,,,,rejected_by_policy,,n/a,REJECT,wrong_gloss_and_conflicts: contar means 'рассказывать/считать' not 'читать'; CA also dup_ca+r1a; pool duplicate
+1240,comer,1K,есть,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'comer' already has an active verb item
+2719,comer,1K,есть,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'comer' already has an active verb item
+1462,entender,1K,понять,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'entender' already has an active verb item
+2720,entender,1K,понять,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'entender' already has an active verb item
+2100,pagar,1K,платить,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'pagar' already has an active verb item
+2721,pagar,1K,платить,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'pagar' already has an active verb item
+1501,esperar,1K,ждать,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'esperar' already has an active verb item
+2722,esperar,1K,ждать,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'esperar' already has an active verb item
+1418,dormir,1K,спать,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'dormir' already has an active verb item
+2723,dormir,1K,спать,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'dormir' already has an active verb item
+27,trabalhar,1K,работать,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'trabalhar' already has an active verb item
+50,trabalhar,1K,работать,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'trabalhar' already has an active verb item
+8804,ativar,20K,активизировать,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'ativar' already has an active verb item
+9620,preferir,20K,предпочесть,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'preferir' already has an active verb item
+8881,calcular,20K,считать,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'calcular' already has an active verb item
+8742,admirar,20K,восхищаться,удивляться,любоваться,ценить,r1a_clash,"All three relate to positive emotional response: удивляться (to be surprised), любоваться (to admire scenery), ценить (to value/appreciate). Plausible alternatives to восхищаться (to admire/be admired).",medium,REVIEW,r1a_clash: CA 'восхищаться' appears as distractor in active items; Rule 1a would fire on activation. Distractor bank rebuild needed first.
+9908,vomitar,20K,рвать,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'vomitar' already has an active verb item
+9063,diferenciar,20K,отличать,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'diferenciar' already has an active verb item
+9197,fomentar,20K,возбуждать,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'fomentar' already has an active verb item
+8736,acomodar,20K,вмещать,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'acomodar' already has an active verb item
+8784,aproveitar,5K,иметь выгоду,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'aproveitar' already has an active verb item
+9692,regular,5K,регулировать,контролировать,определять,координировать,r1a_clash,"All three relate to management/control: контролировать (to control), определять (to determine), координировать (to coordinate). Plausible but distinct from регулировать (to regulate/adjust).",medium,REVIEW,r1a_clash: CA 'регулировать' appears as distractor in active items; Rule 1a would fire on activation. Distractor bank rebuild needed first.
+9195,foder,5K,ети,,,,rejected_by_policy,,n/a,REJECT,vulgar_content: CA 'ети' is vulgar/obscene; not suitable for vocab bank
+8769,analisar,5K,анализировать,,,,dup_lemma_active,Lemma is already present in the active verb bank.,n/a,REJECT,dup_lemma: 'analisar' already has an active verb item
