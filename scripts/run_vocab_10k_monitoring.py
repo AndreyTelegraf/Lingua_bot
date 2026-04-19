@@ -1,0 +1,282 @@
+#!/usr/bin/env python3
+"""
+run_vocab_10k_monitoring.py
+
+Single-command orchestrator for multi-track 10K vocabulary monitoring.
+Wraps noun10k_monitoring_runner.build_report() — zero logic duplication.
+
+Produces four artifacts under --output-dir (default: diagnostics_exports/current/):
+  vocab_10k_monitoring_report_<ts>.json         — timestamped JSON report
+  vocab_10k_monitoring_operator_summary_<ts>.md — timestamped operator summary
+  vocab_10k_monitoring_latest.json              — latest copy (overwritten each run)
+  vocab_10k_monitoring_latest_summary.md        — latest summary copy
+
+Read-only. Zero DB writes. Zero bank/selector/runtime changes.
+
+USAGE
+  python3 scripts/run_vocab_10k_monitoring.py
+  python3 scripts/run_vocab_10k_monitoring.py --db data/lingua_staging.db
+  python3 scripts/run_vocab_10k_monitoring.py --db data/lingua_staging.db \\
+      --output-dir diagnostics_exports/current/
+"""
+from __future__ import annotations
+
+import argparse
+import os
+import shutil
+import sqlite3
+import sys
+
+sys.path.insert(0, os.path.dirname(__file__))
+from noun10k_monitoring_runner import (
+    build_report,
+    print_summary,
+    write_json_report,
+    MINIMUM_SESSIONS,
+    MINIMUM_USERS,
+)
+
+DEFAULT_OUTPUT_DIR = "diagnostics_exports/current"
+
+# Global status derivation: higher priority wins (conservative — surface the
+# most-restrictive state so operators don't accidentally skip blocked tracks).
+_VERDICT_PRIORITY: dict[str, int] = {
+    "HOLD": 0,
+    "PREPARE_NEXT_TRANCHE": 1,
+    "INSUFFICIENT_DATA": 2,
+    "INVESTIGATE_SIGNAL": 3,
+}
+
+
+def derive_global_status(report: dict) -> str:
+    """Return the most restrictive verdict across all active tracks."""
+    verdicts = [
+        report["noun_10k"]["verdict"],
+        report["verb_10k"]["verdict"],
+    ]
+    return max(verdicts, key=lambda v: _VERDICT_PRIORITY.get(v, 0))
+
+
+def _track_md(section: dict) -> list[str]:
+    label = f"{section['pos'].upper()}/{section['bin_name']}"
+    s = section["summary"]
+    tr = section["trigger_evaluation"]
+    verdict = section["verdict"]
+
+    lines = [
+        f"### Track: {label}",
+        "",
+        "| Field | Value |",
+        "|-------|-------|",
+        f"| Active items | {s['active_items']} |",
+        f"| Complete sessions counted | {s['total_real_sessions']} (need {MINIMUM_SESSIONS}) |",
+        f"| Distinct users counted | {s['distinct_real_users']} (need {MINIMUM_USERS}) |",
+        f"| Minimum sample gate met | {'YES' if tr['minimum_sample_met'] else 'NO'} |",
+        f"| Verdict | **{verdict}** |",
+        "",
+    ]
+
+    if tr["minimum_sample_met"]:
+        lines += [
+            "**Trigger states:**",
+            "",
+            "| Trigger | Code | State | Detail |",
+            "|---------|------|-------|--------|",
+        ]
+        for key in ["T1", "T2", "T3", "T4"]:
+            t = tr[key]
+            state = "**FIRES**" if t["fires"] else "ok"
+            if key == "T1":
+                detail = (
+                    f"mean_repeat_rate={t['mean_repeat_rate']} "
+                    f"(fires if >{t['threshold']})"
+                )
+            elif key == "T2":
+                detail = (
+                    f"mean_items/session={t['mean_items_per_session']} "
+                    f"(fires if <{t['threshold']}, last {t['sessions_evaluated']} sessions)"
+                )
+            elif key == "T3":
+                detail = (
+                    f"items_shown≥3: {t['items_with_shown_gte_3']}/{t['total_active_items']} "
+                    f"(fires if <{t['threshold']})"
+                )
+            else:
+                detail = (
+                    f"max_shown={t['max_sessions_shown']}, "
+                    f"pool_median={t['pool_median_sessions_shown']}"
+                )
+            lines.append(f"| {key} | {t['code']} | {state} | {detail} |")
+        lines.append("")
+
+        if tr.get("broken_items"):
+            lemmas = [r["lemma"] for r in tr["broken_items"]]
+            lines.append(f"**BROKEN ITEMS (pct_correct < 20):** {lemmas}")
+            lines.append("")
+        if tr.get("too_easy_items"):
+            lemmas = [r["lemma"] for r in tr["too_easy_items"]]
+            lines.append(f"**TOO EASY (pct_correct > 85):** {lemmas}")
+            lines.append("")
+    else:
+        lines += [
+            f"Minimum sample gate not met: {tr['verdict_note']}",
+            "",
+        ]
+
+    if verdict == "INVESTIGATE_SIGNAL":
+        next_action = "Investigate broken items. Fix distractor or content issues before any action."
+        do_not = "DO NOT activate any tranche for this track until broken items are resolved."
+    elif verdict == "PREPARE_NEXT_TRANCHE":
+        next_action = "Review activation execution plan. Prepare next tranche activation pack."
+        do_not = "DO NOT activate without completing the tranche prep checklist and stage gate review."
+    elif verdict == "INSUFFICIENT_DATA":
+        next_action = "Continue collecting live session data. Rerun monitoring after more sessions accumulate."
+        do_not = "DO NOT prepare or activate any tranche for this track."
+    else:
+        next_action = "Continue monitoring. No activation prep authorized at this time."
+        do_not = "DO NOT prepare or activate any tranche for this track."
+
+    lines += [
+        f"**Next allowed action:** {next_action}",
+        "",
+        f"> {do_not}",
+        "",
+    ]
+    return lines
+
+
+def build_operator_summary(report: dict, global_status: str, json_path: str) -> str:
+    ts = report["report_generated_at"]
+    db = report.get("db_path", "unknown")
+    s = report["summary"]
+    noun_s = report["noun_10k"]
+    verb_s = report["verb_10k"]
+
+    trigger_eligible_tracks = [
+        f"{t['pos'].upper()}/{t['bin_name']}"
+        for t in [noun_s, verb_s]
+        if t["verdict"] == "PREPARE_NEXT_TRANCHE"
+    ]
+    any_trigger_eligible = bool(trigger_eligible_tracks)
+    tranche_prep_authorized = any_trigger_eligible and global_status == "PREPARE_NEXT_TRANCHE"
+
+    if global_status == "INVESTIGATE_SIGNAL":
+        next_step = "Identify broken items across all tracks and remediate before any activation."
+    elif global_status == "PREPARE_NEXT_TRANCHE":
+        next_step = (
+            f"Prepare next tranche activation pack for: {', '.join(trigger_eligible_tracks)}. "
+            "Follow the staged gate workflow."
+        )
+    elif global_status == "INSUFFICIENT_DATA":
+        next_step = (
+            f"Collect more live sessions. Currently {s['total_real_sessions']} sessions, "
+            f"{s['distinct_real_users']} users. "
+            f"Gate requires {MINIMUM_SESSIONS} sessions / {MINIMUM_USERS} users."
+        )
+    else:
+        next_step = "No action required. Continue monitoring. Rerun when more sessions accumulate."
+
+    lines: list[str] = [
+        "# Vocab 10K Monitoring — Operator Summary",
+        "",
+        f"**Generated:** {ts}",
+        f"**DB:** {db}",
+        f"**JSON report:** {json_path}",
+        "",
+        "---",
+        "",
+        "## Global Status",
+        "",
+        "| Field | Value |",
+        "|-------|-------|",
+        f"| Overall status | **{global_status}** |",
+        f"| Any track trigger-eligible | {'YES — ' + ', '.join(trigger_eligible_tracks) if any_trigger_eligible else 'NO'} |",
+        f"| Any tranche prep/apply authorized | {'YES' if tranche_prep_authorized else 'NO'} |",
+        f"| Total real sessions | {s['total_real_sessions']} |",
+        f"| Distinct real users | {s['distinct_real_users']} |",
+        "",
+        f"**Exact next operational step:** {next_step}",
+        "",
+        "---",
+        "",
+        "## Per-Track Decision Table",
+        "",
+    ]
+
+    lines += _track_md(noun_s)
+    lines += _track_md(verb_s)
+
+    lines += [
+        "---",
+        "",
+        "*Generated by scripts/run_vocab_10k_monitoring.py — read-only, no DB writes.*",
+    ]
+
+    return "\n".join(lines) + "\n"
+
+
+def _write_text(content: str, path: str) -> None:
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(content)
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(
+        description="Multi-track 10K monitoring orchestrator. Read-only."
+    )
+    parser.add_argument(
+        "--db",
+        default="data/lingua_staging.db",
+        help="Path to SQLite DB (default: data/lingua_staging.db)",
+    )
+    parser.add_argument(
+        "--output-dir",
+        default=DEFAULT_OUTPUT_DIR,
+        help=f"Output directory (default: {DEFAULT_OUTPUT_DIR})",
+    )
+    args = parser.parse_args(argv)
+
+    if not os.path.exists(args.db):
+        print(f"ERROR: DB not found: {args.db}", file=sys.stderr)
+        return 1
+
+    conn = sqlite3.connect(f"file:{args.db}?mode=ro", uri=True)
+    conn.row_factory = sqlite3.Row
+    try:
+        report = build_report(conn)
+    finally:
+        conn.close()
+
+    print_summary(report)
+
+    global_status = derive_global_status(report)
+
+    # Timestamped JSON
+    json_path = write_json_report(report, args.output_dir)
+
+    # Timestamped operator summary
+    ts_tag = report["report_generated_at"].replace(":", "").replace("-", "")
+    summary_content = build_operator_summary(report, global_status, json_path)
+    md_filename = f"vocab_10k_monitoring_operator_summary_{ts_tag}.md"
+    md_path = os.path.join(args.output_dir, md_filename)
+    _write_text(summary_content, md_path)
+
+    # Latest copies (overwritten each run)
+    latest_json = os.path.join(args.output_dir, "vocab_10k_monitoring_latest.json")
+    latest_md = os.path.join(args.output_dir, "vocab_10k_monitoring_latest_summary.md")
+    shutil.copy2(json_path, latest_json)
+    shutil.copy2(md_path, latest_md)
+
+    print(f"\nGLOBAL STATUS: {global_status}")
+    print(f"\nArtifacts written to: {args.output_dir}")
+    print(f"  {os.path.basename(json_path)}")
+    print(f"  {os.path.basename(md_path)}")
+    print(f"  vocab_10k_monitoring_latest.json        [latest]")
+    print(f"  vocab_10k_monitoring_latest_summary.md  [latest]")
+
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
