@@ -26,7 +26,7 @@ USAGE
 OUTPUT
   Prints a human-readable summary to stdout.
   Writes a JSON report to --output-dir (default: diagnostics_exports/).
-  Report filename: noun10k_monitoring_report_<YYYYMMDDTHHMMSSZ>.json
+  Report filename: vocab_10k_monitoring_report_<YYYYMMDDTHHMMSSZ>.json
 
   Report structure:
     {
@@ -612,7 +612,7 @@ def print_summary(report: dict) -> None:
 def write_json_report(report: dict, output_dir: str) -> str:
     os.makedirs(output_dir, exist_ok=True)
     ts = report["report_generated_at"].replace(":", "").replace("-", "")
-    filename = f"noun10k_monitoring_report_{ts}.json"
+    filename = f"vocab_10k_monitoring_report_{ts}.json"
     path = os.path.join(output_dir, filename)
     with open(path, "w", encoding="utf-8") as f:
         json.dump(report, f, indent=2, ensure_ascii=False)
