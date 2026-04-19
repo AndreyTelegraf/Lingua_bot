@@ -57,6 +57,95 @@ def derive_global_status(report: dict) -> str:
     return max(verdicts, key=lambda v: _VERDICT_PRIORITY.get(v, 0))
 
 
+# ---------------------------------------------------------------------------
+# Policy layer — per-track and global next-action derivation
+# ---------------------------------------------------------------------------
+
+_VERDICT_TO_NEXT_ACTION: dict[str, str] = {
+    "INSUFFICIENT_DATA": "WAIT_FOR_MORE_REAL_SESSIONS",
+    "HOLD": "HOLD_AND_OBSERVE",
+    "PREPARE_NEXT_TRANCHE": "PREPARE_NEXT_TRANCHE_ALLOWED",
+    "INVESTIGATE_SIGNAL": "INVESTIGATE_REQUIRED",
+}
+
+# Higher value = more restrictive = wins in global derivation.
+_NEXT_ACTION_PRIORITY: dict[str, int] = {
+    "PREPARE_NEXT_TRANCHE_ALLOWED": 0,
+    "HOLD_AND_OBSERVE": 1,
+    "WAIT_FOR_MORE_REAL_SESSIONS": 2,
+    "INVESTIGATE_REQUIRED": 3,
+}
+
+_NEXT_ACTION_DESCRIPTION: dict[str, str] = {
+    "WAIT_FOR_MORE_REAL_SESSIONS": (
+        "Collect more live sessions. Monitor passively. "
+        f"Gate requires {MINIMUM_SESSIONS} complete sessions / {MINIMUM_USERS} distinct users."
+    ),
+    "HOLD_AND_OBSERVE": (
+        "All signals nominal. Observe only. "
+        "No tranche preparation or activation authorized."
+    ),
+    "PREPARE_NEXT_TRANCHE_ALLOWED": (
+        "Eligible track(s) have fired triggers. "
+        "Prepare next tranche activation pack via the staged gate workflow. "
+        "Activation itself still requires a separate explicit activation workstream."
+    ),
+    "INVESTIGATE_REQUIRED": (
+        "Broken items detected. Investigate and remediate before any other action. "
+        "No preparation or activation authorized until resolved."
+    ),
+}
+
+# Forbidden actions always enforced regardless of state.
+_FORBIDDEN_ALWAYS: list[str] = [
+    "DO_NOT_ACTIVATE_ANYTHING",   # activation requires a dedicated gate-check workstream
+    "DO_NOT_TOUCH_SELECTOR",
+    "DO_NOT_TOUCH_RUNTIME",
+    "DO_NOT_OPEN_ADVERBS",
+    "DO_NOT_MODIFY_NOUN10K",
+    "DO_NOT_MODIFY_VERB10K",
+]
+
+
+def derive_track_next_action(verdict: str) -> str:
+    """Map a single track's verdict to its operator action code."""
+    return _VERDICT_TO_NEXT_ACTION.get(verdict, "HOLD_AND_OBSERVE")
+
+
+def derive_global_next_action(per_track_actions: dict[str, str]) -> str:
+    """Return the most restrictive action across all per-track actions."""
+    return max(
+        per_track_actions.values(),
+        key=lambda a: _NEXT_ACTION_PRIORITY.get(a, 0),
+    )
+
+
+def derive_forbidden_actions(global_next_action: str) -> list[str]:
+    """Return the deterministic ordered list of forbidden actions for the current state."""
+    forbidden = list(_FORBIDDEN_ALWAYS)
+    if global_next_action != "PREPARE_NEXT_TRANCHE_ALLOWED":
+        # Tranche prep is unlocked only when the global action explicitly permits it.
+        forbidden.insert(1, "DO_NOT_PREPARE_NEW_TRANCHE")
+    return forbidden
+
+
+def build_policy(report: dict, global_status: str) -> dict:
+    """Assemble per-track next actions, global next action, and forbidden actions."""
+    tracks = {
+        "noun_10k": report["noun_10k"]["verdict"],
+        "verb_10k": report["verb_10k"]["verdict"],
+    }
+    per_track = {k: derive_track_next_action(v) for k, v in tracks.items()}
+    global_action = derive_global_next_action(per_track)
+    return {
+        "global_status": global_status,
+        "per_track_next_actions": per_track,
+        "global_next_action": global_action,
+        "global_next_action_description": _NEXT_ACTION_DESCRIPTION.get(global_action, ""),
+        "forbidden_actions": derive_forbidden_actions(global_action),
+    }
+
+
 def _track_md(section: dict) -> list[str]:
     label = f"{section['pos'].upper()}/{section['bin_name']}"
     s = section["summary"]
@@ -145,7 +234,12 @@ def _track_md(section: dict) -> list[str]:
     return lines
 
 
-def build_operator_summary(report: dict, global_status: str, json_path: str) -> str:
+def build_operator_summary(
+    report: dict,
+    global_status: str,
+    json_path: str,
+    policy: dict | None = None,
+) -> str:
     ts = report["report_generated_at"]
     db = report.get("db_path", "unknown")
     s = report["summary"]
@@ -195,10 +289,48 @@ def build_operator_summary(report: dict, global_status: str, json_path: str) -> 
         f"| Total real sessions | {s['total_real_sessions']} |",
         f"| Distinct real users | {s['distinct_real_users']} |",
         "",
-        f"**Exact next operational step:** {next_step}",
+        f"**Exact next step:** {next_step}",
         "",
         "---",
         "",
+    ]
+
+    # Policy sections (present when policy is provided)
+    if policy:
+        global_action = policy["global_next_action"]
+        action_desc = policy.get("global_next_action_description", "")
+        forbidden = policy["forbidden_actions"]
+        per_track = policy["per_track_next_actions"]
+
+        lines += [
+            "## Authorized Now",
+            "",
+            f"**Global action:** `{global_action}`",
+            "",
+            f"{action_desc}",
+            "",
+            "**Per-track:**",
+            "",
+        ]
+        for track_key, action in per_track.items():
+            track_label = track_key.replace("_", "/").upper()
+            lines.append(f"- {track_label}: `{action}`")
+        lines += [
+            "",
+            "---",
+            "",
+            "## Forbidden Now",
+            "",
+        ]
+        for item in forbidden:
+            lines.append(f"- `{item}`")
+        lines += [
+            "",
+            "---",
+            "",
+        ]
+
+    lines += [
         "## Per-Track Decision Table",
         "",
     ]
@@ -251,13 +383,17 @@ def main(argv: list[str] | None = None) -> int:
     print_summary(report)
 
     global_status = derive_global_status(report)
+    policy = build_policy(report, global_status)
+
+    # Inject policy into report dict so JSON is self-contained.
+    report["policy"] = policy
 
     # Timestamped JSON
     json_path = write_json_report(report, args.output_dir)
 
     # Timestamped operator summary
     ts_tag = report["report_generated_at"].replace(":", "").replace("-", "")
-    summary_content = build_operator_summary(report, global_status, json_path)
+    summary_content = build_operator_summary(report, global_status, json_path, policy=policy)
     md_filename = f"vocab_10k_monitoring_operator_summary_{ts_tag}.md"
     md_path = os.path.join(args.output_dir, md_filename)
     _write_text(summary_content, md_path)
@@ -268,7 +404,8 @@ def main(argv: list[str] | None = None) -> int:
     shutil.copy2(json_path, latest_json)
     shutil.copy2(md_path, latest_md)
 
-    print(f"\nGLOBAL STATUS: {global_status}")
+    print(f"\nGLOBAL STATUS:      {global_status}")
+    print(f"GLOBAL NEXT ACTION: {policy['global_next_action']}")
     print(f"\nArtifacts written to: {args.output_dir}")
     print(f"  {os.path.basename(json_path)}")
     print(f"  {os.path.basename(md_path)}")

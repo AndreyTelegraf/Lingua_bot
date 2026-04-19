@@ -1,6 +1,8 @@
 """
 Unit tests for run_vocab_10k_monitoring.py orchestration layer.
-Covers: derive_global_status, build_operator_summary structure.
+Covers: derive_global_status, build_operator_summary structure,
+policy layer (derive_track_next_action, derive_global_next_action,
+derive_forbidden_actions, build_policy).
 Does NOT re-test runner signal logic (covered in test_noun10k_monitoring_runner.py).
 """
 from __future__ import annotations
@@ -9,7 +11,14 @@ import sys
 import os
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../scripts"))
-from run_vocab_10k_monitoring import derive_global_status, build_operator_summary
+from run_vocab_10k_monitoring import (
+    derive_global_status,
+    build_operator_summary,
+    derive_track_next_action,
+    derive_global_next_action,
+    derive_forbidden_actions,
+    build_policy,
+)
 
 
 # ---------------------------------------------------------------------------
@@ -222,3 +231,210 @@ def test_summary_json_path_referenced():
     report = _make_report("HOLD", "HOLD")
     md = build_operator_summary(report, "HOLD", "/tmp/my_report.json")
     assert "/tmp/my_report.json" in md
+
+
+# ---------------------------------------------------------------------------
+# derive_track_next_action tests
+# ---------------------------------------------------------------------------
+
+
+def test_track_action_insufficient_data():
+    assert derive_track_next_action("INSUFFICIENT_DATA") == "WAIT_FOR_MORE_REAL_SESSIONS"
+
+
+def test_track_action_hold():
+    assert derive_track_next_action("HOLD") == "HOLD_AND_OBSERVE"
+
+
+def test_track_action_prepare():
+    assert derive_track_next_action("PREPARE_NEXT_TRANCHE") == "PREPARE_NEXT_TRANCHE_ALLOWED"
+
+
+def test_track_action_investigate():
+    assert derive_track_next_action("INVESTIGATE_SIGNAL") == "INVESTIGATE_REQUIRED"
+
+
+def test_track_action_unknown_defaults_to_hold():
+    assert derive_track_next_action("SOMETHING_NEW") == "HOLD_AND_OBSERVE"
+
+
+# ---------------------------------------------------------------------------
+# derive_global_next_action tests
+# ---------------------------------------------------------------------------
+
+
+def test_global_action_all_hold():
+    per_track = {"noun_10k": "HOLD_AND_OBSERVE", "verb_10k": "HOLD_AND_OBSERVE"}
+    assert derive_global_next_action(per_track) == "HOLD_AND_OBSERVE"
+
+
+def test_global_action_wait_beats_hold():
+    per_track = {"noun_10k": "WAIT_FOR_MORE_REAL_SESSIONS", "verb_10k": "HOLD_AND_OBSERVE"}
+    assert derive_global_next_action(per_track) == "WAIT_FOR_MORE_REAL_SESSIONS"
+
+
+def test_global_action_investigate_beats_wait():
+    per_track = {
+        "noun_10k": "INVESTIGATE_REQUIRED",
+        "verb_10k": "WAIT_FOR_MORE_REAL_SESSIONS",
+    }
+    assert derive_global_next_action(per_track) == "INVESTIGATE_REQUIRED"
+
+
+def test_global_action_investigate_beats_prepare():
+    per_track = {
+        "noun_10k": "INVESTIGATE_REQUIRED",
+        "verb_10k": "PREPARE_NEXT_TRANCHE_ALLOWED",
+    }
+    assert derive_global_next_action(per_track) == "INVESTIGATE_REQUIRED"
+
+
+def test_global_action_wait_beats_prepare():
+    per_track = {
+        "noun_10k": "WAIT_FOR_MORE_REAL_SESSIONS",
+        "verb_10k": "PREPARE_NEXT_TRANCHE_ALLOWED",
+    }
+    assert derive_global_next_action(per_track) == "WAIT_FOR_MORE_REAL_SESSIONS"
+
+
+def test_global_action_prepare_when_both_eligible():
+    per_track = {
+        "noun_10k": "PREPARE_NEXT_TRANCHE_ALLOWED",
+        "verb_10k": "PREPARE_NEXT_TRANCHE_ALLOWED",
+    }
+    assert derive_global_next_action(per_track) == "PREPARE_NEXT_TRANCHE_ALLOWED"
+
+
+# ---------------------------------------------------------------------------
+# derive_forbidden_actions tests
+# ---------------------------------------------------------------------------
+
+
+def test_forbidden_always_contains_do_not_activate():
+    forbidden = derive_forbidden_actions("WAIT_FOR_MORE_REAL_SESSIONS")
+    assert "DO_NOT_ACTIVATE_ANYTHING" in forbidden
+
+
+def test_forbidden_always_contains_selector_and_runtime():
+    forbidden = derive_forbidden_actions("HOLD_AND_OBSERVE")
+    assert "DO_NOT_TOUCH_SELECTOR" in forbidden
+    assert "DO_NOT_TOUCH_RUNTIME" in forbidden
+
+
+def test_forbidden_always_contains_bank_guards():
+    forbidden = derive_forbidden_actions("HOLD_AND_OBSERVE")
+    assert "DO_NOT_MODIFY_NOUN10K" in forbidden
+    assert "DO_NOT_MODIFY_VERB10K" in forbidden
+    assert "DO_NOT_OPEN_ADVERBS" in forbidden
+
+
+def test_forbidden_includes_no_tranche_when_not_prepare_allowed():
+    for action in ["WAIT_FOR_MORE_REAL_SESSIONS", "HOLD_AND_OBSERVE", "INVESTIGATE_REQUIRED"]:
+        forbidden = derive_forbidden_actions(action)
+        assert "DO_NOT_PREPARE_NEW_TRANCHE" in forbidden, f"missing for {action}"
+
+
+def test_forbidden_excludes_no_tranche_when_prepare_allowed():
+    forbidden = derive_forbidden_actions("PREPARE_NEXT_TRANCHE_ALLOWED")
+    assert "DO_NOT_PREPARE_NEW_TRANCHE" not in forbidden
+
+
+def test_forbidden_still_blocks_activation_when_prepare_allowed():
+    forbidden = derive_forbidden_actions("PREPARE_NEXT_TRANCHE_ALLOWED")
+    assert "DO_NOT_ACTIVATE_ANYTHING" in forbidden
+
+
+def test_forbidden_is_deterministic():
+    a = derive_forbidden_actions("HOLD_AND_OBSERVE")
+    b = derive_forbidden_actions("HOLD_AND_OBSERVE")
+    assert a == b
+
+
+# ---------------------------------------------------------------------------
+# build_policy tests
+# ---------------------------------------------------------------------------
+
+
+def test_build_policy_returns_required_keys():
+    report = _make_report("INSUFFICIENT_DATA", "INSUFFICIENT_DATA")
+    policy = build_policy(report, "INSUFFICIENT_DATA")
+    assert "per_track_next_actions" in policy
+    assert "global_next_action" in policy
+    assert "forbidden_actions" in policy
+    assert "global_next_action_description" in policy
+
+
+def test_build_policy_per_track_has_both_tracks():
+    report = _make_report("HOLD", "INSUFFICIENT_DATA")
+    policy = build_policy(report, "INSUFFICIENT_DATA")
+    assert "noun_10k" in policy["per_track_next_actions"]
+    assert "verb_10k" in policy["per_track_next_actions"]
+
+
+def test_build_policy_global_action_conservative():
+    report = _make_report("HOLD", "INSUFFICIENT_DATA")
+    policy = build_policy(report, "INSUFFICIENT_DATA")
+    # One HOLD, one INSUFFICIENT → global must be WAIT_FOR_MORE_REAL_SESSIONS
+    assert policy["global_next_action"] == "WAIT_FOR_MORE_REAL_SESSIONS"
+
+
+def test_build_policy_description_not_empty():
+    report = _make_report("INSUFFICIENT_DATA", "INSUFFICIENT_DATA")
+    policy = build_policy(report, "INSUFFICIENT_DATA")
+    assert len(policy["global_next_action_description"]) > 10
+
+
+# ---------------------------------------------------------------------------
+# Operator summary with policy sections
+# ---------------------------------------------------------------------------
+
+
+def test_summary_authorized_section_present_with_policy():
+    report = _make_report("INSUFFICIENT_DATA", "INSUFFICIENT_DATA")
+    policy = build_policy(report, "INSUFFICIENT_DATA")
+    md = build_operator_summary(report, "INSUFFICIENT_DATA", "/tmp/r.json", policy=policy)
+    assert "## Authorized Now" in md
+
+
+def test_summary_forbidden_section_present_with_policy():
+    report = _make_report("INSUFFICIENT_DATA", "INSUFFICIENT_DATA")
+    policy = build_policy(report, "INSUFFICIENT_DATA")
+    md = build_operator_summary(report, "INSUFFICIENT_DATA", "/tmp/r.json", policy=policy)
+    assert "## Forbidden Now" in md
+
+
+def test_summary_forbidden_lists_do_not_activate():
+    report = _make_report("HOLD", "HOLD")
+    policy = build_policy(report, "HOLD")
+    md = build_operator_summary(report, "HOLD", "/tmp/r.json", policy=policy)
+    assert "DO_NOT_ACTIVATE_ANYTHING" in md
+
+
+def test_summary_forbidden_lists_no_prepare_when_blocked():
+    report = _make_report("INSUFFICIENT_DATA", "HOLD")
+    policy = build_policy(report, "INSUFFICIENT_DATA")
+    md = build_operator_summary(report, "INSUFFICIENT_DATA", "/tmp/r.json", policy=policy)
+    assert "DO_NOT_PREPARE_NEW_TRANCHE" in md
+
+
+def test_summary_policy_absent_when_no_policy_arg():
+    """Existing callers that omit policy arg still get a valid summary."""
+    report = _make_report("HOLD", "HOLD")
+    md = build_operator_summary(report, "HOLD", "/tmp/r.json")
+    assert "## Authorized Now" not in md
+    assert "## Forbidden Now" not in md
+
+
+def test_summary_global_action_code_in_authorized_section():
+    report = _make_report("HOLD", "HOLD")
+    policy = build_policy(report, "HOLD")
+    md = build_operator_summary(report, "HOLD", "/tmp/r.json", policy=policy)
+    assert "HOLD_AND_OBSERVE" in md
+
+
+def test_summary_per_track_actions_listed():
+    report = _make_report("HOLD", "INSUFFICIENT_DATA")
+    policy = build_policy(report, "INSUFFICIENT_DATA")
+    md = build_operator_summary(report, "INSUFFICIENT_DATA", "/tmp/r.json", policy=policy)
+    assert "NOUN/10K" in md
+    assert "VERB/10K" in md
