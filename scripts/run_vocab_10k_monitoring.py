@@ -353,6 +353,155 @@ def build_operator_summary(
     return "\n".join(lines) + "\n"
 
 
+_CURRENT_POSITION: dict[str, str] = {
+    "INSUFFICIENT_DATA": (
+        "The monitoring system is tracking three active vocab pools: noun/10K, verb/10K, and "
+        "adverb/5K. All pools are in observation-only mode. The real-session sample has not yet "
+        "reached the minimum gate ({min_sessions} complete sessions from {min_users} distinct "
+        "users). No bank-growth work — tranche prep, activation, or any pool modification — is "
+        "authorized until the gate is met and signals are evaluated."
+    ),
+    "HOLD": (
+        "The monitoring system is tracking three active vocab pools: noun/10K, verb/10K, and "
+        "adverb/5K. The minimum sample gate has been met. All signals are nominal; no triggers "
+        "have fired. The system is in hold-and-observe mode. No tranche preparation or activation "
+        "is authorized at this time. Continue collecting sessions and rerun monitoring periodically."
+    ),
+    "PREPARE_NEXT_TRANCHE": (
+        "The monitoring system is tracking three active vocab pools: noun/10K, verb/10K, and "
+        "adverb/5K. One or more tracks have fired activation triggers. Tranche preparation is "
+        "authorized for eligible tracks only. Activation itself still requires a separate "
+        "gate-check workstream. No direct activation may occur in the same session as tranche prep."
+    ),
+    "INVESTIGATE_SIGNAL": (
+        "The monitoring system is tracking three active vocab pools: noun/10K, verb/10K, and "
+        "adverb/5K. One or more tracks have items with anomalous correctness rates (pct_correct "
+        "< 20). Broken items must be investigated and remediated before any other bank-growth "
+        "work. No preparation or activation is authorized until broken items are resolved."
+    ),
+}
+
+
+def build_status_snapshot(
+    report: dict,
+    global_status: str,
+    policy: dict,
+) -> str:
+    """Build a compact operator-facing status snapshot for handoff/next-chat context.
+
+    Derived entirely from the existing report and policy dicts — no new DB queries.
+    """
+    ts = report["report_generated_at"]
+    db = report.get("db_path", "unknown")
+    s = report["summary"]
+    total_sessions = s["total_real_sessions"]
+    distinct_users = s["distinct_real_users"]
+
+    track_keys = [("noun_10k", "noun/10K"), ("verb_10k", "verb/10K"), ("adverb_5k", "adverb/5K")]
+    per_track_actions = policy["per_track_next_actions"]
+    global_action = policy["global_next_action"]
+    forbidden = policy["forbidden_actions"]
+    tranche_authorized = global_action == "PREPARE_NEXT_TRANCHE_ALLOWED"
+
+    # ---- EXACT NEXT STEP derivation (deterministic) ----
+    if global_status == "INSUFFICIENT_DATA":
+        exact_next_step = (
+            f"Rerun monitoring after >={MINIMUM_SESSIONS} complete sessions from "
+            f">={MINIMUM_USERS} users. Currently {total_sessions} sessions, {distinct_users} users."
+        )
+    elif global_status == "INVESTIGATE_SIGNAL":
+        broken = []
+        for tk, _ in track_keys:
+            tr = report[tk].get("trigger_evaluation", {})
+            for item in tr.get("broken_items", []):
+                broken.append(f"{report[tk]['pos']}/{report[tk]['bin_name']}: {item['lemma']}")
+        exact_next_step = f"Investigate broken items: {', '.join(broken)}. Fix before any action."
+    elif global_status == "PREPARE_NEXT_TRANCHE":
+        eligible = [
+            label for tk, label in track_keys
+            if report[tk]["verdict"] == "PREPARE_NEXT_TRANCHE"
+        ]
+        exact_next_step = (
+            f"Prepare next tranche activation pack for: {', '.join(eligible)}. "
+            "Follow the staged gate workflow. Activation requires a separate workstream."
+        )
+    else:
+        exact_next_step = (
+            "Continue monitoring. No action required. "
+            "Rerun when more sessions accumulate."
+        )
+
+    # ---- Current position paragraph ----
+    template = _CURRENT_POSITION.get(global_status, _CURRENT_POSITION["HOLD"])
+    current_position = template.format(
+        min_sessions=MINIMUM_SESSIONS, min_users=MINIMUM_USERS
+    )
+
+    # ---- Build markdown ----
+    lines = [
+        "# Vocab Monitoring — Status Snapshot",
+        "",
+        f"**Generated:** {ts}",
+        f"**DB:** {db}",
+        "",
+        "---",
+        "",
+        "## 1. Track Summary",
+        "",
+        "| Track | Active items | Verdict | Sessions counted | Users counted | Gate met | Next action |",
+        "|-------|-------------|---------|-----------------|---------------|----------|-------------|",
+    ]
+    for tk, label in track_keys:
+        sec = report[tk]
+        sec_s = sec["summary"]
+        tr = sec["trigger_evaluation"]
+        gate_met = "YES" if tr.get("minimum_sample_met") else "NO"
+        action = per_track_actions.get(tk, "—")
+        lines.append(
+            f"| {label} | {sec_s['active_items']} | {sec['verdict']} "
+            f"| {total_sessions} | {distinct_users} | {gate_met} | `{action}` |"
+        )
+
+    lines += [
+        "",
+        "---",
+        "",
+        "## 2. Global Summary",
+        "",
+        "| Field | Value |",
+        "|-------|-------|",
+        f"| Global status | **{global_status}** |",
+        f"| Global next action | `{global_action}` |",
+        f"| Any tranche/apply authorized | {'**YES**' if tranche_authorized else 'NO'} |",
+        "",
+        "**Forbidden actions:**",
+        "",
+    ]
+    for item in forbidden:
+        lines.append(f"- `{item}`")
+
+    lines += [
+        "",
+        "---",
+        "",
+        "## 3. Current Position",
+        "",
+        current_position,
+        "",
+        "---",
+        "",
+        "## 4. Exact Next Step",
+        "",
+        f"> {exact_next_step}",
+        "",
+        "---",
+        "",
+        "*Read-only snapshot. No DB writes. Generated by scripts/run_vocab_10k_monitoring.py.*",
+    ]
+
+    return "\n".join(lines) + "\n"
+
+
 def _write_text(content: str, path: str) -> None:
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
@@ -404,6 +553,14 @@ def main(argv: list[str] | None = None) -> int:
     md_path = os.path.join(args.output_dir, md_filename)
     _write_text(summary_content, md_path)
 
+    # Status snapshot
+    snapshot_content = build_status_snapshot(report, global_status, policy)
+    snapshot_filename = f"vocab_10k_status_snapshot_{ts_tag}.md"
+    snapshot_path = os.path.join(args.output_dir, snapshot_filename)
+    _write_text(snapshot_content, snapshot_path)
+    snapshot_latest = os.path.join(args.output_dir, "vocab_10k_status_snapshot_latest.md")
+    shutil.copy2(snapshot_path, snapshot_latest)
+
     # Latest copies (overwritten each run)
     latest_json = os.path.join(args.output_dir, "vocab_10k_monitoring_latest.json")
     latest_md = os.path.join(args.output_dir, "vocab_10k_monitoring_latest_summary.md")
@@ -415,8 +572,10 @@ def main(argv: list[str] | None = None) -> int:
     print(f"\nArtifacts written to: {args.output_dir}")
     print(f"  {os.path.basename(json_path)}")
     print(f"  {os.path.basename(md_path)}")
+    print(f"  {os.path.basename(snapshot_path)}")
     print(f"  vocab_10k_monitoring_latest.json        [latest]")
     print(f"  vocab_10k_monitoring_latest_summary.md  [latest]")
+    print(f"  vocab_10k_status_snapshot_latest.md     [latest]")
 
     return 0
 
