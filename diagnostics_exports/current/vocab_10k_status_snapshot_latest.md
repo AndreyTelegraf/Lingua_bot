@@ -1,6 +1,6 @@
 # Vocab Monitoring — Status Snapshot
 
-**Generated:** 2026-04-19T23:27:49Z
+**Generated:** 2026-04-20T08:06:21Z
 **DB:** /Users/andreytelegraf/Projects/lingua_bot_v2/data/lingua_staging.db
 
 ---

@@ -53,8 +53,18 @@ REAL_SESSION_FILTER = (
     "status = 'finished' AND completion_reason = 'question_limit_reached'"
 )
 REAL_SESSION_FILTER_NOTE = (
-    "PROVISIONAL: 'question_limit_reached' set only by modes/vocab/router.py:332"
+    "'question_limit_reached' is set exclusively by modes/vocab/router.py:332 "
+    "(live Telegram bot runtime). Synthetic harness sessions use "
+    "completion_reason='simulation_exhausted' and mode_runs.source='synthetic_harness' "
+    "— both are excluded by this filter by design."
 )
+
+# Synthetic sessions are marked with BOTH:
+#   mode_runs.source = 'synthetic_harness'  (creation-time marker)
+#   completion_reason = 'simulation_exhausted'  (completion-time marker)
+# The filter above excludes them without requiring a JOIN to mode_runs.
+SYNTHETIC_SESSION_SOURCE = "synthetic_harness"
+SYNTHETIC_SESSION_COMPLETION_REASON = "simulation_exhausted"
 
 MINIMUM_SESSIONS = 30
 MINIMUM_USERS = 3

@@ -1,8 +1,8 @@
 {
-  "report_generated_at": "2026-04-19T23:27:49Z",
+  "report_generated_at": "2026-04-20T08:06:21Z",
   "db_path": "/Users/andreytelegraf/Projects/lingua_bot_v2/data/lingua_staging.db",
   "real_session_filter": "status = 'finished' AND completion_reason = 'question_limit_reached'",
-  "real_session_filter_note": "PROVISIONAL: 'question_limit_reached' set only by modes/vocab/router.py:332",
+  "real_session_filter_note": "'question_limit_reached' is set exclusively by modes/vocab/router.py:332 (live Telegram bot runtime). Synthetic harness sessions use completion_reason='simulation_exhausted' and mode_runs.source='synthetic_harness' — both are excluded by this filter by design.",
   "summary": {
     "total_real_sessions": 21,
     "distinct_real_users": 2,

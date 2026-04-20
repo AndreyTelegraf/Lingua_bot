@@ -1,8 +1,8 @@
 # Vocab Monitoring — Operator Summary (noun/10K · verb/10K · adverb/5K)
 
-**Generated:** 2026-04-19T23:27:49Z
+**Generated:** 2026-04-20T08:06:21Z
 **DB:** /Users/andreytelegraf/Projects/lingua_bot_v2/data/lingua_staging.db
-**JSON report:** diagnostics_exports/current/vocab_10k_monitoring_report_20260419T232749Z.json
+**JSON report:** diagnostics_exports/current/vocab_10k_monitoring_report_20260420T080621Z.json
 
 ---
 
