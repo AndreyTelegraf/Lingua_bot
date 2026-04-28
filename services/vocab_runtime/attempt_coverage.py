@@ -40,14 +40,14 @@ def _base_targets(total_questions: int) -> dict[str, int]:
 
 
 def _observed_pos_counts(conn: sqlite3.Connection, *, attempt_id: int) -> dict[str, int]:
-    if not _has_column(conn, "vocab_items", "pos"):
+    if not _has_column(conn, "vocab_items_runtime_v3", "pos"):
         return {}
 
     rows = conn.execute(
         '''
         SELECT COALESCE(NULLIF(TRIM(LOWER(vi.pos)), ''), 'other') AS pos, COUNT(*) AS cnt
         FROM vocab_answers va
-        JOIN vocab_items vi ON vi.id = va.item_id
+        JOIN vocab_items_runtime_v3 vi ON vi.id = va.item_id
         WHERE va.attempt_id = ?
         GROUP BY COALESCE(NULLIF(TRIM(LOWER(vi.pos)), ''), 'other')
         ''',
