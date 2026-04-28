@@ -69,7 +69,7 @@ class VocabSelector:
         base_sql = """
         WITH ready_items AS (
             SELECT vc.item_id
-            FROM vocab_choices vc
+            FROM vocab_choices_v3 vc
             GROUP BY vc.item_id
             HAVING COUNT(*) = 6
         ),
@@ -77,7 +77,7 @@ class VocabSelector:
             SELECT
                 vi2.bin_name AS bin_name,
                 AVG(COALESCE(vie2.shown_count, 0)) AS bin_avg_shown
-            FROM vocab_items vi2
+            FROM vocab_items_runtime_v3 vi2
             LEFT JOIN vocab_item_exposure vie2 ON vie2.item_id = vi2.id
             WHERE vi2.is_active = 1
             GROUP BY vi2.bin_name
@@ -94,7 +94,7 @@ class VocabSelector:
             COALESCE(vie.shown_count, 0) AS global_shown_count,
             vie.last_shown_at AS last_shown_at,
             COALESCE(be.bin_avg_shown, 0.0) AS bin_avg_shown
-        FROM vocab_items vi
+        FROM vocab_items_runtime_v3 vi
         INNER JOIN ready_items ri ON ri.item_id = vi.id
         LEFT JOIN vocab_item_exposure vie ON vie.item_id = vi.id
         LEFT JOIN bin_exposure be ON be.bin_name = vi.bin_name

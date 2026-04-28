@@ -53,8 +53,8 @@ async def _load_attempt_answers_by_attempt_id(*, telegram_user_id: int, attempt_
             va.is_correct AS is_correct,
             va.answer_kind AS answer_kind
         FROM vocab_answers va
-        LEFT JOIN vocab_items vi ON vi.id = va.item_id
-        LEFT JOIN vocab_choices vc ON vc.id = va.selected_choice_id
+        LEFT JOIN vocab_items_runtime_v3 vi ON vi.id = va.item_id
+        LEFT JOIN vocab_choices_v3 vc ON vc.id = va.selected_choice_id
         WHERE va.attempt_id = ?
         ORDER BY va.id ASC
         """,
