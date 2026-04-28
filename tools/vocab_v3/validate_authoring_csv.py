@@ -28,11 +28,7 @@ ALLOWED_AUDIT = {"candidate", "rejected", "needs_rewrite", "certified", "retired
 def fail(msg: str) -> None:
     raise SystemExit(f"FAIL: {msg}")
 
-def main() -> None:
-    if len(sys.argv) != 2:
-        fail("usage: validate_authoring_csv.py <csv_path>")
-
-    path = Path(sys.argv[1])
+def validate_path(path: Path) -> None:
     if not path.exists():
         fail(f"missing file: {path}")
 
@@ -78,6 +74,12 @@ def main() -> None:
         seen.add(key)
 
     print(f"PASS: {path} rows={len(rows)}")
+
+def main() -> None:
+    if len(sys.argv) != 2:
+        fail("usage: validate_authoring_csv.py <csv_path>")
+
+    validate_path(Path(sys.argv[1]))
 
 if __name__ == "__main__":
     main()

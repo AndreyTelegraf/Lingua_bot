@@ -5,7 +5,10 @@ import sqlite3
 import sys
 from pathlib import Path
 
-from tools.vocab_v3.validate_authoring_csv import main as validate_main
+try:
+    from tools.vocab_v3.validate_authoring_csv import validate_path
+except ModuleNotFoundError:
+    from validate_authoring_csv import validate_path
 
 DB = "data/lingua_staging.db"
 
@@ -32,7 +35,7 @@ def main() -> None:
         fail(f"missing file: {path}")
 
     # validate first (fail-fast)
-    validate_main()
+    validate_path(path)
 
     conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
