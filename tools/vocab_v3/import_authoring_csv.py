@@ -12,18 +12,29 @@ DB = "data/lingua_staging.db"
 def fail(msg: str) -> None:
     raise SystemExit(f"FAIL: {msg}")
 
-def main() -> None:
-    if len(sys.argv) != 2:
-        fail("usage: import_authoring_csv.py <csv_path>")
+def _parse_args() -> tuple[Path, str]:
+    args = sys.argv[1:]
+    db_path = DB
 
-    path = Path(sys.argv[1])
+    if len(args) == 3 and args[0] == "--db":
+        db_path = args[1]
+        csv_path = Path(args[2])
+    elif len(args) == 1:
+        csv_path = Path(args[0])
+    else:
+        fail("usage: import_authoring_csv.py [--db <db_path>] <csv_path>")
+
+    return csv_path, db_path
+
+def main() -> None:
+    path, db_path = _parse_args()
     if not path.exists():
         fail(f"missing file: {path}")
 
     # validate first (fail-fast)
     validate_main()
 
-    conn = sqlite3.connect(DB)
+    conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
     cur = conn.cursor()
 
