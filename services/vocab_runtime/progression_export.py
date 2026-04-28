@@ -14,7 +14,7 @@ def _table_columns(conn: sqlite3.Connection, table: str) -> set[str]:
 
 def _fetch_answer_rows(conn: sqlite3.Connection, *, attempt_id: int) -> list[dict[str, Any]]:
     answer_cols = _table_columns(conn, "vocab_answers")
-    item_cols = _table_columns(conn, "vocab_items")
+    item_cols = _table_columns(conn, "vocab_items_runtime_v3")
 
     has_is_correct = "is_correct" in answer_cols
     has_concept = "concept_group" in item_cols
@@ -35,7 +35,7 @@ def _fetch_answer_rows(conn: sqlite3.Connection, *, attempt_id: int) -> list[dic
       { "vi.freq_rank" if has_freq else "NULL" } AS freq_rank,
       { "vi.correct_answer" if has_correct_answer else "NULL" } AS correct_answer
     FROM vocab_answers va
-    LEFT JOIN vocab_items vi ON vi.id = va.item_id
+    LEFT JOIN vocab_items_runtime_v3 vi ON vi.id = va.item_id
     WHERE va.attempt_id = ?
     ORDER BY va.id
     """
@@ -71,11 +71,11 @@ def _count_map(rows: list[dict[str, Any]], key: str, *, meaningful_concept_only:
 
 
 def _bank_active_counts(conn: sqlite3.Connection, column: str, *, meaningful_concept_only: bool = False) -> dict[str, int]:
-    item_cols = _table_columns(conn, "vocab_items")
+    item_cols = _table_columns(conn, "vocab_items_runtime_v3")
     if column not in item_cols:
         return {}
 
-    q = f"SELECT {column} AS v, lemma FROM vocab_items WHERE is_active = 1"
+    q = f"SELECT {column} AS v, lemma FROM vocab_items_runtime_v3 WHERE is_active = 1"
     rows = conn.execute(q).fetchall()
     out: dict[str, int] = {}
     for r in rows:
