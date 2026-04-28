@@ -60,7 +60,7 @@ def _submit_answer_legacy(
 ) -> dict[str, object]:
     conn.row_factory = sqlite3.Row
     row = conn.execute(
-        "SELECT correct_answer FROM vocab_items WHERE id = ?",
+        "SELECT correct_answer FROM vocab_items_runtime_v3 WHERE id = ?",
         (item_id,),
     ).fetchone()
     if row is None:
@@ -123,7 +123,7 @@ def _submit_choice_legacy(
 ) -> dict[str, object]:
     conn.row_factory = sqlite3.Row
     row = conn.execute(
-        "SELECT choice_text, is_correct FROM vocab_choices WHERE id = ? AND item_id = ?",
+        "SELECT choice_text, is_correct FROM vocab_choices_v3 WHERE id = ? AND item_id = ?",
         (choice_id, item_id),
     ).fetchone()
     if row is None:
