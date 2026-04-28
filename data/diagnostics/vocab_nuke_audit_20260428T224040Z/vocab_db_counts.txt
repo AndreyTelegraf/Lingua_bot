@@ -1,0 +1,11 @@
+object                        n    
+----------------------------  -----
+vocab_items                   9141 
+vocab_choices                 11020
+vocab_certified_inventory_v3  8    
+vocab_choices_v3              48   
+vocab_items_runtime_v3        8    
+vocab_attempts                160  
+vocab_answers                 696  
+vocab_attempt_events          3957 
+vocab_item_exposure           866  

@@ -1,0 +1,40 @@
+# /etc/systemd/system/lingua-bot-staging.service
+[Unit]
+Description=LinguaBot v2 staging
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Environment=VOCAB_SELECTOR_ITEM_COOLDOWN_SEC=21600
+Type=simple
+User=andrey
+WorkingDirectory=/home/andrey/Projects/lingua_bot_v2
+EnvironmentFile=/etc/lingua/staging.env
+ExecStart=/home/andrey/Projects/lingua_bot_v2/.venv/bin/python -m app.main
+Restart=always
+RestartSec=3
+TimeoutStopSec=20
+
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ReadWritePaths=/home/andrey/Projects/lingua_bot_v2
+
+[Install]
+WantedBy=multi-user.target
+
+# /etc/systemd/system/lingua-bot-staging.service.d/10-vocab-selector-pressure-v2.conf
+[Service]
+Environment="VOCAB_SELECTOR_PRESSURE_V2=1"
+
+# /etc/systemd/system/lingua-bot-staging.service.d/cat-live.conf
+[Service]
+Environment=VOCAB_V2_CAT_LIVE_ENABLED=1
+
+# /etc/systemd/system/lingua-bot-staging.service.d/community-ai-openai.conf
+[Service]
+EnvironmentFile=/etc/lingua-bot-staging/community-ai-openai.env
+
+# /etc/systemd/system/lingua-bot-staging.service.d/override.conf
+[Service]
+Environment=LINGUA_VOCAB_SCORING_MODEL=runtime_scoring_v2

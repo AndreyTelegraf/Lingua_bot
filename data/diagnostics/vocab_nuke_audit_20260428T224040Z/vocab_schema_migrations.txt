@@ -1,0 +1,12 @@
+filename                                 applied_at         
+---------------------------------------  -------------------
+010_vocab_bank.sql                       2026-03-27 14:39:49
+011_vocab_attempts.sql                   2026-03-27 14:39:49
+012_vocab_events.sql                     2026-03-27 14:39:49
+013_vocab_contract_v2.sql                2026-03-27 14:39:49
+014_vocab_selector_runtime.sql           2026-03-27 14:39:49
+015_vocab_rejects_and_result_fields.sql  2026-03-27 14:39:49
+016_vocab_bank_build_tables.sql          2026-03-27 14:39:49
+017_vocab_item_exposure.sql              2026-03-27 14:39:49
+018_vocab_v3_certified_runtime.sql       2026-04-28 16:54:04
+019_vocab_v3_choices.sql                 2026-04-28 17:07:26
