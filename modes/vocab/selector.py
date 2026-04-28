@@ -139,11 +139,9 @@ class VocabSelector:
         actual = state.pos_counters.get(pos_str, 0)
 
         if pos_str in POS_TARGETS and target > 0:
-            pos_ratio = actual / target
-            pos_actual = actual
+            pos_deficit = target - actual
         else:
-            pos_ratio = 999999.0
-            pos_actual = 999999
+            pos_deficit = -999999
 
         global_shown_count = int(row["global_shown_count"]) if row["global_shown_count"] is not None else 0
         bin_avg_shown = float(row["bin_avg_shown"]) if row["bin_avg_shown"] is not None else 0.0
@@ -162,7 +160,7 @@ class VocabSelector:
             freq_rank = int(row_rank)
 
         return (
-            pos_ratio,
+            -pos_deficit,
             pos_actual,
             global_shown_count,
             bin_avg_shown,
