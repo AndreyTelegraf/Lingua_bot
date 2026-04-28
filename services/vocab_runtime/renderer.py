@@ -7,14 +7,14 @@ def build_question_payload(conn: sqlite3.Connection, *, item_id: int, attempt_id
     conn.row_factory = sqlite3.Row
 
     item = conn.execute(
-        'SELECT id, lemma, question_text, pos FROM vocab_items WHERE id = ?',
+        'SELECT id, lemma, question_text, pos FROM vocab_items_runtime_v3 WHERE id = ?',
         (item_id,),
     ).fetchone()
     if item is None:
         raise RuntimeError("item_not_found")
 
     choices = conn.execute(
-        'SELECT id, choice_text, position_index FROM vocab_choices WHERE item_id = ? ORDER BY position_index',
+        'SELECT id, choice_text, position_index FROM vocab_choices_v3 WHERE item_id = ? ORDER BY position_index',
         (item_id,),
     ).fetchall()
     if len(choices) != 6:
