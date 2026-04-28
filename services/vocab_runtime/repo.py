@@ -327,7 +327,7 @@ def _load_scoring_rows(conn: sqlite3.Connection, *, attempt_id: int) -> list[dic
     conn.row_factory = sqlite3.Row
 
     has_answers = _table_exists(conn, table="vocab_answers")
-    has_items = _table_exists(conn, table="vocab_items")
+    has_items = _table_exists(conn, table="vocab_items_runtime_v3")
 
     if has_answers and has_items:
         rows = conn.execute(
@@ -337,7 +337,7 @@ def _load_scoring_rows(conn: sqlite3.Connection, *, attempt_id: int) -> list[dic
                 vi.bin_name AS bin_name,
                 vi.freq_rank AS freq_rank
             FROM vocab_answers va
-            LEFT JOIN vocab_items vi ON vi.id = va.item_id
+            LEFT JOIN vocab_items_runtime_v3 vi ON vi.id = va.item_id
             WHERE va.attempt_id = ?
             ORDER BY va.id ASC
             """,
@@ -578,8 +578,8 @@ def get_attempt_stats(conn: sqlite3.Connection, *, attempt_id: int) -> dict[str,
     wrong_answers = max(total_questions - correct_answers, 0)
     accuracy_pct = _format_accuracy_pct(correct_answers, total_questions)
 
-    has_bin_name = _has_column(conn, table="vocab_items", column="bin_name")
-    has_freq_rank = _has_column(conn, table="vocab_items", column="freq_rank")
+    has_bin_name = _has_column(conn, table="vocab_items_runtime_v3", column="bin_name")
+    has_freq_rank = _has_column(conn, table="vocab_items_runtime_v3", column="freq_rank")
 
     select_bits = ["vae.is_correct AS is_correct"]
     select_bits.append("vi.bin_name AS bin_name" if has_bin_name else "NULL AS bin_name")
@@ -590,7 +590,7 @@ def get_attempt_stats(conn: sqlite3.Connection, *, attempt_id: int) -> dict[str,
             f"""
             SELECT {', '.join(select_bits)}
             FROM vocab_attempt_events vae
-            LEFT JOIN vocab_items vi ON vi.id = vae.item_id
+            LEFT JOIN vocab_items_runtime_v3 vi ON vi.id = vae.item_id
             WHERE vae.attempt_id = ?
               AND vae.event_type = 'answer'
             ORDER BY vae.id ASC
