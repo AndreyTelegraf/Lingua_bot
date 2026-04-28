@@ -1,3 +1,0 @@
-  backup/vocab-v3-before-rebase-20260428T164651Z b53b7bb chore(vocab): apply v3 certified runtime schema to staging db
-  freeze/vocab-rc1-20260330                      2c9f10a vocab: add recent exposure hard cap to runtime selector
-* main                                           6ec968b [origin/main] fix(vocab): enforce POS balancing via deficit instead of ratio

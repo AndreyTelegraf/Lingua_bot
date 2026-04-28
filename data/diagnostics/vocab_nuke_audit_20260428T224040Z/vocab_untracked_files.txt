@@ -1,6 +1,0 @@
-data/diagnostics/vocab_nuke_audit_20260428T224040Z/ahead_behind.txt
-data/diagnostics/vocab_nuke_audit_20260428T224040Z/git_log_80.txt
-data/diagnostics/vocab_nuke_audit_20260428T224040Z/local_head.txt
-data/diagnostics/vocab_nuke_audit_20260428T224040Z/origin_main_head.txt
-data/diagnostics/vocab_nuke_audit_20260428T224040Z/vocab_tracked_files.txt
-data/diagnostics/vocab_nuke_audit_20260428T224040Z/vocab_untracked_files.txt

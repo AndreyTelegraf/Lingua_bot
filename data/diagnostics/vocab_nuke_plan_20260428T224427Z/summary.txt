@@ -1,5 +1,0 @@
-OUT=data/diagnostics/vocab_nuke_plan_20260428T224427Z
-HEAD=6ec968b
-STATUS_LINES=2
-EXISTING_DELETE_TARGETS=86
-DB_DROP_SQL=data/diagnostics/vocab_nuke_plan_20260428T224427Z/drop_vocab_db_objects.sql
