@@ -68,6 +68,8 @@ def rebalance_pos_weights(
 
 _SHOWN_EVENT_TYPES = ("question_prepared", "shown", "question_shown")
 
+_VOCAB_RUNTIME_SOURCE = "vocab_items_runtime_v3"
+
 
 def _selector_trace_enabled() -> bool:
     return os.getenv("VOCAB_SELECTOR_TRACE", "").strip().lower() in {"1", "true", "yes", "on"}
@@ -241,7 +243,7 @@ def _shift_bin(bin_name: str | None, delta: int) -> str | None:
 def _load_recent_answer_signals(conn: sqlite3.Connection, *, attempt_id: int, limit: int = 2) -> list[dict[str, object]]:
     conn.row_factory = sqlite3.Row
     has_is_correct = _has_column(conn, table="vocab_attempt_events", column="is_correct")
-    has_bin_name = _has_column(conn, table="vocab_items", column="bin_name")
+    has_bin_name = _has_column(conn, table=_VOCAB_RUNTIME_SOURCE, column="bin_name")
 
     if not has_is_correct or not has_bin_name:
         return []
@@ -252,7 +254,7 @@ def _load_recent_answer_signals(conn: sqlite3.Connection, *, attempt_id: int, li
             vae.is_correct AS is_correct,
             vi.bin_name AS bin_name
         FROM vocab_attempt_events vae
-        LEFT JOIN vocab_items vi ON vi.id = vae.item_id
+        LEFT JOIN vocab_items_runtime_v3 vi ON vi.id = vae.item_id
         WHERE vae.attempt_id = ?
           AND vae.event_type = 'answer'
         ORDER BY vae.id DESC
@@ -302,7 +304,7 @@ def _load_attempt_pos_counts(conn: sqlite3.Connection, *, attempt_id: int) -> di
         f'''
         SELECT vi.pos AS pos, COUNT(*) AS n
         FROM vocab_attempt_events vae
-        JOIN vocab_items vi ON vi.id = vae.item_id
+        JOIN vocab_items_runtime_v3 vi ON vi.id = vae.item_id
         WHERE vae.attempt_id = ?
           AND vae.event_type IN ({placeholders})
           AND vi.pos IS NOT NULL
@@ -321,13 +323,13 @@ def _load_available_pos_counts(
     conn.row_factory = sqlite3.Row
     where_parts = ["is_active = 1", "pos IS NOT NULL"]
     params: list[object] = []
-    if _has_column(conn, table="vocab_items", column="bin_name") and soft_start_bins:
+    if _has_column(conn, table=_VOCAB_RUNTIME_SOURCE, column="bin_name") and soft_start_bins:
         placeholders = ", ".join("?" for _ in soft_start_bins)
         where_parts.append(f"bin_name IN ({placeholders})")
         params.extend(list(soft_start_bins))
     sql = f'''
         SELECT pos, COUNT(*) AS n
-        FROM vocab_items
+        FROM vocab_items_runtime_v3
         WHERE {" AND ".join(where_parts)}
         GROUP BY pos
     '''
@@ -386,7 +388,7 @@ def _build_selector_sql(
         and _has_column(conn, table="vocab_item_exposure", column="shown_count")
     )
     has_last_shown_at = has_exposure and _has_column(conn, table="vocab_item_exposure", column="last_shown_at")
-    has_bin_name = _has_column(conn, table="vocab_items", column="bin_name")
+    has_bin_name = _has_column(conn, table=_VOCAB_RUNTIME_SOURCE, column="bin_name")
     has_recent_exposure = (
         attempt_id is not None
         and _table_exists(conn, table="vocab_attempts")
@@ -425,7 +427,7 @@ def _build_selector_sql(
         select_cols += (
             ", COALESCE(( "
             "SELECT AVG(COALESCE(vie2.shown_count, 0)) "
-            "FROM vocab_items vi2 "
+            "FROM vocab_items_runtime_v3 vi2 "
             "LEFT JOIN vocab_item_exposure vie2 ON vie2.item_id = vi2.id "
             "WHERE vi2.is_active = 1 "
             "AND ( "
@@ -463,7 +465,7 @@ def _build_selector_sql(
     elif has_bin_name:
         order_parts.append("CASE WHEN vi.bin_name IS NULL THEN 1 ELSE 0 END ASC")
 
-    if _has_column(conn, table="vocab_items", column="freq_rank"):
+    if _has_column(conn, table=_VOCAB_RUNTIME_SOURCE, column="freq_rank"):
         order_parts.extend(
             [
                 "CASE WHEN vi.freq_rank IS NULL THEN 1 ELSE 0 END ASC",
@@ -477,7 +479,7 @@ def _build_selector_sql(
 
     sql = f"""
         SELECT {select_cols}
-        FROM vocab_items vi
+        FROM vocab_items_runtime_v3 vi
         {join_sql}
         WHERE {where_sql}
         {{shown_filter_sql}}
@@ -548,7 +550,7 @@ def _shown_lemmas_for_attempt(conn: sqlite3.Connection, *, attempt_id: int) -> s
         f"""
         SELECT DISTINCT COALESCE(NULLIF(TRIM(LOWER(vi.lemma)), ''), '__none__') AS lemma_norm
         FROM vocab_attempt_events vae
-        JOIN vocab_items vi ON vi.id = vae.item_id
+        JOIN vocab_items_runtime_v3 vi ON vi.id = vae.item_id
         WHERE vae.attempt_id = ?
           AND vae.event_type IN ({placeholders})
         """,
@@ -568,7 +570,7 @@ def _shown_pos_counts_for_attempt(conn: sqlite3.Connection, *, attempt_id: int) 
         f"""
         SELECT vi.pos AS pos, COUNT(DISTINCT vae.item_id) AS n
         FROM vocab_attempt_events vae
-        JOIN vocab_items vi ON vi.id = vae.item_id
+        JOIN vocab_items_runtime_v3 vi ON vi.id = vae.item_id
         WHERE vae.attempt_id = ?
           AND vae.event_type IN ({placeholders})
           AND vae.item_id IS NOT NULL
@@ -645,7 +647,7 @@ def get_next_item(conn: sqlite3.Connection, *, attempt_id: int) -> sqlite3.Row |
       AND COALESCE(NULLIF(TRIM(LOWER(vi.lemma)), ''), '__none__') NOT IN (
         SELECT COALESCE(NULLIF(TRIM(LOWER(vi2.lemma)), ''), '__none__')
         FROM vocab_attempt_events vae2
-        JOIN vocab_items vi2 ON vi2.id = vae2.item_id
+        JOIN vocab_items_runtime_v3 vi2 ON vi2.id = vae2.item_id
         WHERE vae2.attempt_id = ?
           AND vae2.event_type IN ({placeholders})
       )
