@@ -65,7 +65,7 @@ def main() -> None:
 
         for idx, (txt, is_correct) in enumerate(choices):
             cur.execute("""
-            INSERT INTO vocab_choices (item_id, choice_text, is_correct, position_index)
+            INSERT INTO vocab_choices_v3 (item_id, choice_text, is_correct, position_index)
             VALUES (?, ?, ?, ?)
             """, (item_id, txt.strip(), is_correct, idx))
 
