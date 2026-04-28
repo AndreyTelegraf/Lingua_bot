@@ -649,7 +649,7 @@ class VocabRepository:
                 vi.bin_name AS bin_name,
                 vi.freq_rank AS freq_rank
             FROM vocab_answers va
-            LEFT JOIN vocab_items vi ON vi.id = va.item_id
+            LEFT JOIN vocab_items_runtime_v3 vi ON vi.id = va.item_id
             WHERE va.attempt_id = ?
             ORDER BY va.id ASC
             """,
