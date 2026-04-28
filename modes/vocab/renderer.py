@@ -23,7 +23,7 @@ class VocabRenderer:
         cursor = await self.conn.execute(
             """
             SELECT id, choice_text, is_correct, position_index
-            FROM vocab_choices
+            FROM vocab_choices_v3
             WHERE item_id = ?
             ORDER BY position_index
             """,
