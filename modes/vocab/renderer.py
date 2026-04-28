@@ -11,7 +11,7 @@ class VocabRenderer:
         cursor = await self.conn.execute(
             """
             SELECT id, lemma, question_text, correct_answer
-            FROM vocab_items
+            FROM vocab_items_runtime_v3
             WHERE id = ?
             """,
             (item_id,),

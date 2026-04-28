@@ -490,7 +490,7 @@ class VocabRepository:
                 vi.bin_name AS bin_name,
                 vi.freq_rank AS freq_rank
             FROM vocab_choices_v3 vc
-            JOIN vocab_items vi ON vi.id = vc.item_id
+            JOIN vocab_items_runtime_v3 vi ON vi.id = vc.item_id
             WHERE vc.id = ?
             """,
             (choice_id,),
@@ -581,7 +581,7 @@ class VocabRepository:
         cursor = await self.conn.execute(
             """
             SELECT id, lemma, question_text, correct_answer, pos, level, bin_name, freq_rank
-            FROM vocab_items
+            FROM vocab_items_runtime_v3
             WHERE id = ?
             """,
             (item_id,),
