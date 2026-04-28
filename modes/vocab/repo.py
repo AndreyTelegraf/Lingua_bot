@@ -625,7 +625,7 @@ class VocabRepository:
         cursor = await self.conn.execute(
             """
             SELECT COUNT(*) AS n
-            FROM vocab_items vi
+            FROM vocab_items_runtime_v3 vi
             WHERE vi.is_active = 1
               AND vi.id NOT IN (
                   SELECT item_id
