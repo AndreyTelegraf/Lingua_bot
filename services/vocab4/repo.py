@@ -188,3 +188,20 @@ def abandon_attempt(conn: sqlite3.Connection, attempt_id: int) -> None:
     )
     if cursor.rowcount == 0:
         raise AttemptStateError(attempt_id, "attempt is not in_progress")
+
+
+def load_answers_for_attempt(
+    conn: sqlite3.Connection,
+    attempt_id: int,
+) -> list[dict]:
+    conn.row_factory = sqlite3.Row
+    rows = conn.execute(
+        """
+        SELECT attempt_id, item_id, selected_choice_id, is_correct, answered_at
+        FROM vocab4_answers
+        WHERE attempt_id = ?
+        ORDER BY id ASC
+        """,
+        (attempt_id,),
+    ).fetchall()
+    return [_row_to_dict(row) for row in rows]
